@@ -1,0 +1,1304 @@
+
+> milky-server@0.0.1 test /home/euhan/projects/milky.server
+> jest
+
+FAIL src/modules/table/table.service.spec.ts (6.874 s)
+  ● TableService › should be defined
+
+    Nest can't resolve dependencies of the TableService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [TableService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/table/table.service.spec.ts:8:35)
+
+FAIL src/modules/menu/menu.controller.spec.ts (6.92 s)
+  ● MenuController › should be defined
+
+    Nest can't resolve dependencies of the MenuController (?). Please make sure that the argument MenuService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If MenuService is a provider, is it part of the current RootTestModule?
+    - If MenuService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing MenuService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [MenuController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/menu/menu.controller.spec.ts:8:35)
+
+FAIL src/modules/session/session.service.spec.ts (6.851 s)
+  ● SessionService › should be defined
+
+    Nest can't resolve dependencies of the SessionService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [SessionService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/session/session.service.spec.ts:8:35)
+
+FAIL src/modules/menu/menu.service.spec.ts (6.987 s)
+  ● MenuService › should be defined
+
+    Nest can't resolve dependencies of the MenuService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [MenuService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/menu/menu.service.spec.ts:8:35)
+
+FAIL src/modules/restaurant/restaurant.controller.spec.ts (7.08 s)
+  ● RestaurantController › should be defined
+
+    Nest can't resolve dependencies of the RestaurantController (?). Please make sure that the argument RestaurantService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If RestaurantService is a provider, is it part of the current RootTestModule?
+    - If RestaurantService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing RestaurantService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [RestaurantController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/restaurant/restaurant.controller.spec.ts:8:35)
+
+FAIL src/modules/branch/branch.service.spec.ts
+  ● BranchService › should be defined
+
+    Nest can't resolve dependencies of the BranchService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [BranchService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch/branch.service.spec.ts:8:35)
+
+FAIL src/modules/branch-settings/branch-settings.service.spec.ts
+  ● BranchSettingsService › should be defined
+
+    Nest can't resolve dependencies of the BranchSettingsService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [BranchSettingsService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch-settings/branch-settings.service.spec.ts:8:35)
+
+FAIL src/modules/restaurant/restaurant.service.spec.ts
+  ● RestaurantService › should be defined
+
+    Nest can't resolve dependencies of the RestaurantService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [RestaurantService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/restaurant/restaurant.service.spec.ts:8:35)
+
+FAIL src/modules/branch-settings/branch-settings.controller.spec.ts (7.214 s)
+  ● BranchSettingsController › should be defined
+
+    Nest can't resolve dependencies of the BranchSettingsController (?). Please make sure that the argument BranchSettingsService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If BranchSettingsService is a provider, is it part of the current RootTestModule?
+    - If BranchSettingsService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing BranchSettingsService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [BranchSettingsController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch-settings/branch-settings.controller.spec.ts:8:35)
+
+FAIL src/modules/organization/organization.service.spec.ts
+  ● OrganizationService › should be defined
+
+    Nest can't resolve dependencies of the OrganizationService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [OrganizationService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/organization/organization.service.spec.ts:8:35)
+
+FAIL src/modules/staff/staff.service.spec.ts
+  ● StaffService › should be defined
+
+    Nest can't resolve dependencies of the StaffService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [StaffService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/staff/staff.service.spec.ts:8:35)
+
+FAIL src/modules/organization/organization.controller.spec.ts (7.266 s)
+  ● OrganizationController › should be defined
+
+    Nest can't resolve dependencies of the OrganizationController (?, RestaurantService). Please make sure that the argument OrganizationService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If OrganizationService is a provider, is it part of the current RootTestModule?
+    - If OrganizationService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing OrganizationService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [OrganizationController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/organization/organization.controller.spec.ts:8:35)
+
+PASS src/modules/audit-log/audit-log.controller.spec.ts
+PASS src/modules/dashboard/dashboard.controller.spec.ts
+FAIL src/modules/branch/branch.controller.spec.ts (7.377 s)
+  ● BranchController › should be defined
+
+    Nest can't resolve dependencies of the BranchController (?). Please make sure that the argument BranchService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If BranchService is a provider, is it part of the current RootTestModule?
+    - If BranchService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing BranchService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [BranchController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch/branch.controller.spec.ts:8:35)
+
+PASS src/modules/payment/payment.controller.spec.ts
+FAIL src/modules/staff/staff.controller.spec.ts (7.604 s)
+  ● StaffController › should be defined
+
+    Nest can't resolve dependencies of the StaffController (?). Please make sure that the argument StaffService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If StaffService is a provider, is it part of the current RootTestModule?
+    - If StaffService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing StaffService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [StaffController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/staff/staff.controller.spec.ts:8:35)
+
+PASS src/modules/qr-config/qr-config.controller.spec.ts
+PASS src/modules/order/order.service.spec.ts
+PASS src/modules/dashboard/dashboard.service.spec.ts
+PASS src/modules/display/display.service.spec.ts
+PASS src/modules/qr-config/qr-config.service.spec.ts
+FAIL src/modules/session/session.controller.spec.ts (7.565 s)
+  ● SessionController › should be defined
+
+    Nest can't resolve dependencies of the SessionController (?). Please make sure that the argument SessionService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If SessionService is a provider, is it part of the current RootTestModule?
+    - If SessionService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing SessionService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [SessionController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/session/session.controller.spec.ts:8:35)
+
+PASS src/modules/payment/payment.service.spec.ts
+PASS src/modules/display/display.controller.spec.ts
+PASS src/modules/audit-log/audit-log.service.spec.ts
+PASS src/modules/order/order.controller.spec.ts
+FAIL src/modules/table/table.controller.spec.ts (7.673 s)
+  ● TableController › should be defined
+
+    Nest can't resolve dependencies of the TableController (?). Please make sure that the argument TableService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If TableService is a provider, is it part of the current RootTestModule?
+    - If TableService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing TableService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [TableController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/table/table.controller.spec.ts:8:35)
+
+Summary of all failing tests
+FAIL modules/table/table.service.spec.ts (6.874 s)
+  ● TableService › should be defined
+
+    Nest can't resolve dependencies of the TableService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [TableService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/table/table.service.spec.ts:8:35)
+
+FAIL modules/menu/menu.controller.spec.ts (6.92 s)
+  ● MenuController › should be defined
+
+    Nest can't resolve dependencies of the MenuController (?). Please make sure that the argument MenuService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If MenuService is a provider, is it part of the current RootTestModule?
+    - If MenuService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing MenuService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [MenuController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/menu/menu.controller.spec.ts:8:35)
+
+FAIL modules/session/session.service.spec.ts (6.851 s)
+  ● SessionService › should be defined
+
+    Nest can't resolve dependencies of the SessionService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [SessionService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/session/session.service.spec.ts:8:35)
+
+FAIL modules/menu/menu.service.spec.ts (6.987 s)
+  ● MenuService › should be defined
+
+    Nest can't resolve dependencies of the MenuService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [MenuService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/menu/menu.service.spec.ts:8:35)
+
+FAIL modules/restaurant/restaurant.controller.spec.ts (7.08 s)
+  ● RestaurantController › should be defined
+
+    Nest can't resolve dependencies of the RestaurantController (?). Please make sure that the argument RestaurantService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If RestaurantService is a provider, is it part of the current RootTestModule?
+    - If RestaurantService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing RestaurantService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [RestaurantController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/restaurant/restaurant.controller.spec.ts:8:35)
+
+FAIL modules/branch/branch.service.spec.ts
+  ● BranchService › should be defined
+
+    Nest can't resolve dependencies of the BranchService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [BranchService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch/branch.service.spec.ts:8:35)
+
+FAIL modules/branch-settings/branch-settings.service.spec.ts
+  ● BranchSettingsService › should be defined
+
+    Nest can't resolve dependencies of the BranchSettingsService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [BranchSettingsService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch-settings/branch-settings.service.spec.ts:8:35)
+
+FAIL modules/restaurant/restaurant.service.spec.ts
+  ● RestaurantService › should be defined
+
+    Nest can't resolve dependencies of the RestaurantService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [RestaurantService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/restaurant/restaurant.service.spec.ts:8:35)
+
+FAIL modules/branch-settings/branch-settings.controller.spec.ts (7.214 s)
+  ● BranchSettingsController › should be defined
+
+    Nest can't resolve dependencies of the BranchSettingsController (?). Please make sure that the argument BranchSettingsService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If BranchSettingsService is a provider, is it part of the current RootTestModule?
+    - If BranchSettingsService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing BranchSettingsService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [BranchSettingsController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch-settings/branch-settings.controller.spec.ts:8:35)
+
+FAIL modules/organization/organization.service.spec.ts
+  ● OrganizationService › should be defined
+
+    Nest can't resolve dependencies of the OrganizationService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [OrganizationService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/organization/organization.service.spec.ts:8:35)
+
+FAIL modules/staff/staff.service.spec.ts
+  ● StaffService › should be defined
+
+    Nest can't resolve dependencies of the StaffService (?, AuditLogService). Please make sure that the argument PrismaService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If PrismaService is a provider, is it part of the current RootTestModule?
+    - If PrismaService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing PrismaService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       providers: [StaffService],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadProvider (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:103:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+          at async Promise.all (index 3)
+      at TestingInstanceLoader.createInstancesOfProviders (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/staff/staff.service.spec.ts:8:35)
+
+FAIL modules/organization/organization.controller.spec.ts (7.266 s)
+  ● OrganizationController › should be defined
+
+    Nest can't resolve dependencies of the OrganizationController (?, RestaurantService). Please make sure that the argument OrganizationService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If OrganizationService is a provider, is it part of the current RootTestModule?
+    - If OrganizationService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing OrganizationService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [OrganizationController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/organization/organization.controller.spec.ts:8:35)
+
+FAIL modules/branch/branch.controller.spec.ts (7.377 s)
+  ● BranchController › should be defined
+
+    Nest can't resolve dependencies of the BranchController (?). Please make sure that the argument BranchService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If BranchService is a provider, is it part of the current RootTestModule?
+    - If BranchService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing BranchService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [BranchController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/branch/branch.controller.spec.ts:8:35)
+
+FAIL modules/staff/staff.controller.spec.ts (7.604 s)
+  ● StaffController › should be defined
+
+    Nest can't resolve dependencies of the StaffController (?). Please make sure that the argument StaffService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If StaffService is a provider, is it part of the current RootTestModule?
+    - If StaffService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing StaffService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [StaffController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/staff/staff.controller.spec.ts:8:35)
+
+FAIL modules/session/session.controller.spec.ts (7.565 s)
+  ● SessionController › should be defined
+
+    Nest can't resolve dependencies of the SessionController (?). Please make sure that the argument SessionService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If SessionService is a provider, is it part of the current RootTestModule?
+    - If SessionService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing SessionService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [SessionController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/session/session.controller.spec.ts:8:35)
+
+FAIL modules/table/table.controller.spec.ts (7.673 s)
+  ● TableController › should be defined
+
+    Nest can't resolve dependencies of the TableController (?). Please make sure that the argument TableService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - Is RootTestModule a valid NestJS module?
+    - If TableService is a provider, is it part of the current RootTestModule?
+    - If TableService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing TableService */ ]
+      })
+
+       6 |
+       7 |   beforeEach(async () => {
+    >  8 |     const module: TestingModule = await Test.createTestingModule({
+         |                                   ^
+       9 |       controllers: [TableController],
+      10 |     }).compile();
+      11 |
+
+      at TestingInjector.lookupComponentInParentModules (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:286:19)
+      at TestingInjector.resolveComponentWrapper (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-injector.js:19:45)
+      at resolveParam (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:141:38)
+          at async Promise.all (index 0)
+      at TestingInjector.resolveConstructorParams (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:169:27)
+      at TestingInjector.loadInstance (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:75:13)
+      at TestingInjector.loadController (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/injector.js:94:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:68:13
+          at async Promise.all (index 0)
+      at TestingInstanceLoader.createInstancesOfControllers (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:67:9)
+      at ../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:42:13
+          at async Promise.all (index 1)
+      at TestingInstanceLoader.createInstances (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._eee9c3e244596ac016a0e95477e40580/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+      at TestingInstanceLoader.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+      at TestingModuleBuilder.createInstancesOfDependencies (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+      at TestingModuleBuilder.compile (../node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._4c74e21d168b77223d525be10e870e1b/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+      at Object.<anonymous> (modules/table/table.controller.spec.ts:8:35)
+
+
+Test Suites: 16 failed, 12 passed, 28 total
+Tests:       16 failed, 12 passed, 28 total
+Snapshots:   0 total
+Time:        8.493 s, estimated 10 s
+Ran all test suites.
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,909 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table organizations {
+  id String [pk]
+  name String [not null]
+  ownerId String [not null]
+  owner users [not null]
+  slug String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  restaurants restaurants [not null]
+}
+
+Table restaurants {
+  id String [pk]
+  organizationId String [not null]
+  organization organizations [not null]
+  name String [not null]
+  slug String [unique, not null]
+  logoUrl String
+  description String
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  branches branches [not null]
+  menuItems menu_items [not null]
+  menuCategories menu_categories [not null]
+}
+
+Table branches {
+  id String [pk]
+  restaurantId String [not null]
+  restaurant restaurants [not null]
+  name String [not null]
+  address Address [not null]
+  phone String
+  timezone String [not null, default: 'UTC']
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  staffAssignments staff_assignments [not null]
+  tables tables [not null]
+  reservations reservations [not null]
+  orders orders [not null]
+  waiterAssignments waiter_table_assignments [not null]
+  workShifts work_shifts [not null]
+  suppliers suppliers [not null]
+  inventoryItems inventory_items [not null]
+  inventoryCategories inventory_categories [not null]
+  operatingHours branch_operating_hours [not null]
+  holidays branch_holidays [not null]
+  tableSessions table_sessions [not null]
+  settings branch_settings
+  auditLogs audit_logs [not null]
+}
+
+Table branch_settings {
+  id String [pk]
+  branchId String [unique, not null]
+  branch branches [not null]
+  orderAcceptanceMode OrderAcceptanceMode [not null, default: 'WAITER_APPROVAL']
+  backupAccepterRoles StaffRole[] [not null]
+  hideUnavailableItems Boolean [not null, default: false]
+  allowMultipleGuestSessions Boolean [not null, default: true]
+  requireOtpPerGuest Boolean [not null, default: true]
+  allowSplitBill Boolean [not null, default: true]
+  allowGuestCheckoutWithoutAccount Boolean [not null, default: true]
+  autoCloseIdleSessionMins Int
+  currency String [not null, default: 'USD']
+  taxPercent Float [not null, default: 0]
+  serviceChargePct Float [not null, default: 0]
+  tipEnabled Boolean [not null, default: true]
+  reservationsEnabled Boolean [not null, default: true]
+  waitlistEnabled Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table users {
+  id String [pk]
+  email String [unique, not null]
+  contactNo String [unique]
+  password String
+  fcmToken String
+  name String [not null]
+  role GlobalRole [not null, default: 'CUSTOMER']
+  avatar String
+  status UserStatus [not null, default: 'ACTIVE']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  ownedOrganizations organizations [not null]
+  customer customers
+  admin admins
+  staff staff
+  owner owners
+  auditLogs audit_logs [not null]
+  orderStatusChangeLogs status_change_logs [not null]
+  orderItemStatusChangeLogs order_item_status_change_logs [not null]
+}
+
+Table admins {
+  id String [pk]
+  userId String [unique, not null]
+  user users [not null]
+  intro String [not null, default: '']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table staff {
+  id String [pk]
+  userId String [unique, not null]
+  user users [not null]
+  staffAssignments staff_assignments [not null]
+  waiterAssignments waiter_table_assignments [not null]
+  createdAssignments waiter_table_assignments [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table owners {
+  id String [pk]
+  userId String [unique, not null]
+  user users [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table staff_assignments {
+  id String [pk]
+  staffId String [not null]
+  staff staff [not null]
+  branchId String [not null]
+  branch branches [not null]
+  role StaffRole [not null]
+  permissions PermissionAction[] [not null]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  workShifts work_shifts [not null]
+
+  indexes {
+    (staffId, branchId) [unique]
+  }
+}
+
+Table customers {
+  id String [pk]
+  userId String [unique, not null]
+  user users [not null]
+  defaultAddress Address
+  loyaltyPoints Int [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  reservations reservations [not null]
+  orders orders [not null]
+  reviews order_reviews [not null]
+  guestSessions guest_sessions [not null]
+}
+
+Table menu_categories {
+  id String [pk]
+  restaurantId String [not null]
+  restaurant restaurants [not null]
+  name String [not null]
+  description String
+  displayOrder Int [not null, default: 0]
+  isActive Boolean [not null, default: true]
+  menuItems menu_items [not null]
+}
+
+Table menu_items {
+  id String [pk]
+  restaurantId String [not null]
+  restaurant restaurants [not null]
+  categoryId String [not null]
+  category menu_categories [not null]
+  name String [not null]
+  description String
+  imageUrl String
+  basePrice Float [not null]
+  isAvailable Boolean [not null, default: true]
+  isVegetarian Boolean [not null, default: false]
+  spiceLevel Int
+  displayOrder Int [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  modifierGroups modifier_groups [not null]
+  orderItems order_items [not null]
+}
+
+Table modifier_groups {
+  id String [pk]
+  menuItemId String [not null]
+  menuItem menu_items [not null]
+  name String [not null]
+  isRequired Boolean [not null, default: false]
+  minSelect Int [not null, default: 0]
+  maxSelect Int [not null, default: 1]
+  modifiers modifiers [not null]
+}
+
+Table modifiers {
+  id String [pk]
+  modifierGroupId String [not null]
+  modifierGroup modifier_groups [not null]
+  name String [not null]
+  priceDelta Float [not null, default: 0]
+  isAvailable Boolean [not null, default: true]
+}
+
+Table tables {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  label String [not null]
+  capacity Int [not null]
+  serviceStatus TableServiceStatus [not null, default: 'AVAILABLE']
+  operationalFlag TableOperationalFlag [not null, default: 'NORMAL']
+  qrCodeToken String [unique]
+  shape Shape [not null, default: 'SQUARE']
+  floor Int [not null, default: 1]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  reservations reservations [not null]
+  orders orders [not null]
+  waiterAssignments waiter_table_assignments [not null]
+  tableSessions table_sessions [not null]
+  tableAuthOtps table_auth_otps [not null]
+}
+
+Table reservations {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  tableId String
+  table tables
+  customerId String
+  customer customers
+  tableSessionId String [unique]
+  tableSession table_sessions
+  guestName String [not null]
+  guestPhone String [not null]
+  partySize Int [not null]
+  reservedFor DateTime [not null]
+  durationMins Int [not null, default: 90]
+  status ReservationStatus [not null, default: 'PENDING']
+  specialRequest String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table waiter_table_assignments {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  tableId String [not null]
+  table tables [not null]
+  waiterId String [not null]
+  waiter staff [not null]
+  assignedById String [not null]
+  assignedBy staff [not null]
+  sessionStart DateTime [not null]
+  sessionEnd DateTime [not null]
+  isActive Boolean [not null, default: true]
+  orders orders [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table table_sessions {
+  id String [pk]
+  tableId String [not null]
+  table tables [not null]
+  branchId String [not null]
+  branch branches [not null]
+  joinCode String
+  partySize Int
+  startedAt DateTime [default: `now()`, not null]
+  endedAt DateTime
+  status TableSessionStatus [not null, default: 'ACTIVE']
+  openedByStaffId String
+  closedByStaffId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  guestSessions guest_sessions [not null]
+  orders orders [not null]
+  payments payments [not null]
+  reservation reservations
+  tableAuthOtps table_auth_otps [not null]
+}
+
+Table guest_sessions {
+  id String [pk]
+  tableSessionId String [not null]
+  tableSession table_sessions [not null]
+  customerId String
+  customer customers
+  displayName String
+  contact String
+  seatLabel String
+  otpVerifiedAt DateTime
+  isHostGuest Boolean [not null, default: false]
+  joinedAt DateTime [default: `now()`, not null]
+  leftAt DateTime
+  status GuestSessionStatus [not null, default: 'ACTIVE']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  orders orders [not null]
+  payments payments [not null]
+}
+
+Table orders {
+  id String [pk]
+  orderNumber String [unique, not null]
+  branchId String [not null]
+  branch branches [not null]
+  tableId String
+  table tables
+  customerId String
+  customer customers
+  tableSessionId String
+  tableSession table_sessions
+  guestSessionId String
+  guestSession guest_sessions
+  channel OrderChannel [not null, default: 'DINE_IN']
+  status OrderStatus [not null, default: 'PENDING']
+  subtotal Float [not null]
+  discountAmount Float [not null, default: 0]
+  taxAmount Float [not null, default: 0]
+  serviceCharge Float [not null, default: 0]
+  tipAmount Float [not null, default: 0]
+  totalAmount Float [not null]
+  paymentStatus PaymentStatus [not null, default: 'UNPAID']
+  amountPaid Float [not null, default: 0]
+  discountId String
+  discount discounts
+  discountCodeSnapshot String
+  discountAppliedById String
+  waiterAssignmentId String
+  waiterAssignment waiter_table_assignments
+  acceptanceMode OrderAcceptanceMode [not null, default: 'WAITER_APPROVAL']
+  acceptedById String
+  acceptedAt DateTime
+  rejectedById String
+  rejectedAt DateTime
+  rejectionReasonCode OrderRejectionReason
+  rejectionReason String
+  placedByStaffId String
+  specialInstructions String
+  resubmittedFromId String
+  guestName String
+  guestPhone String
+  deliveryAddress Address
+  pickupAt DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  payments payments [not null]
+  orderItems order_items [not null]
+  review order_reviews
+  statusChangeLogs status_change_logs [not null]
+  allocations payment_allocations [not null]
+}
+
+Table order_items {
+  id String [pk]
+  orderId String [not null]
+  order orders [not null]
+  productId String [not null]
+  product menu_items [not null]
+  productNameSnapshot String [not null]
+  unitPrice Float [not null]
+  quantity Int [not null]
+  subtotal Float [not null]
+  stationType StationType [not null]
+  status OrderItemStatus [not null, default: 'PENDING']
+  preparingAt DateTime
+  readyAt DateTime
+  servedAt DateTime
+  unavailableReason String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  statusChangeLogs order_item_status_change_logs [not null]
+  paymentAllocations payment_allocations [not null]
+}
+
+Table payments {
+  id String [pk]
+  orderId String
+  order orders
+  tableSessionId String
+  tableSession table_sessions
+  payerGuestSessionId String
+  payerGuestSession guest_sessions
+  paidForGuestIds String[] [not null]
+  scope PaymentScope [not null, default: 'ORDER']
+  amount Float [not null]
+  tipAmount Float [not null, default: 0]
+  method PaymentMethod [not null]
+  status PaymentStatus [not null, default: 'UNPAID']
+  transactionRef String
+  paidAt DateTime
+  settledById String
+  collectedById String
+  refundedAt DateTime
+  refundRef String
+  refundAmount Float
+  createdAt DateTime [default: `now()`, not null]
+  allocations payment_allocations [not null]
+}
+
+Table payment_allocations {
+  id String [pk]
+  paymentId String [not null]
+  payment payments [not null]
+  orderId String
+  order orders
+  orderItemId String
+  orderItem order_items
+  amount Float [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table discounts {
+  id String [pk]
+  code String [unique, not null]
+  type DiscountType [not null]
+  value Float [not null]
+  isActive Boolean [not null, default: true]
+  validFrom DateTime
+  validUntil DateTime
+  usageLimit Int
+  timesUsed Int [not null, default: 0]
+  orders orders [not null]
+}
+
+Table audit_logs {
+  id String [pk]
+  branchId String
+  branch branches
+  actorId String [not null]
+  actor users [not null]
+  action String [not null]
+  entityType String [not null]
+  entityId String [not null]
+  metadata Json
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table work_shifts {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  staffAssignmentId String [not null]
+  staffAssignment staff_assignments [not null]
+  name String [not null]
+  startTime DateTime [not null]
+  endTime DateTime [not null]
+  durationMin Int [not null, default: 480]
+  date DateTime [not null]
+  status ShiftSlotStatus [not null, default: 'ACTIVE']
+  checkInAt DateTime
+  checkOutAt DateTime
+  note String
+  createdById String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (staffAssignmentId, date, startTime) [unique]
+  }
+}
+
+Table suppliers {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  name String [not null]
+  contactName String
+  email String
+  phone String
+  address Address
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  inventoryItems inventory_items [not null]
+}
+
+Table inventory_categories {
+  id String [pk]
+  name String [not null]
+  description String
+  branchId String [not null]
+  branch branches [not null]
+  inventoryItems inventory_items [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table inventory_items {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  supplierId String [not null]
+  supplier suppliers [not null]
+  categoryId String [not null]
+  category inventory_categories [not null]
+  name String [not null]
+  sku String
+  unit InventoryUnit [not null]
+  currentStock Float [not null, default: 0]
+  lowStockThreshold Float
+  costPerUnit Float
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table order_reviews {
+  id String [pk]
+  orderId String [unique, not null]
+  order orders [not null]
+  customerId String [not null]
+  customer customers [not null]
+  rating Int [not null]
+  comment String
+  isApproved Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table status_change_logs {
+  id String [pk]
+  orderId String [not null]
+  order orders [not null]
+  previousStatus OrderStatus [not null]
+  newStatus OrderStatus [not null]
+  changedById String [not null]
+  changedBy users [not null]
+  note String
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table order_item_status_change_logs {
+  id String [pk]
+  orderItemId String [not null]
+  orderItem order_items [not null]
+  previousStatus OrderItemStatus [not null]
+  newStatus OrderItemStatus [not null]
+  changedById String
+  changedBy users
+  note String
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table branch_operating_hours {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  dayOfWeek Int [not null]
+  openTime String [not null]
+  closeTime String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table branch_holidays {
+  id String [pk]
+  branchId String [not null]
+  branch branches [not null]
+  date DateTime [not null]
+  isClosed Boolean [not null, default: true]
+  label String
+  openTime String
+  closeTime String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table password_reset_otps {
+  id String [pk]
+  email String [unique, not null]
+  otp String [not null]
+  expiresAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table table_auth_otps {
+  id String [pk]
+  contact String [not null]
+  tableId String [not null]
+  table tables [not null]
+  tableSessionId String
+  tableSession table_sessions
+  purpose OtpPurpose [not null, default: 'TABLE_AUTH']
+  otp String [not null]
+  expiresAt DateTime [not null]
+  verified Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Enum GlobalRole {
+  SUPER_ADMIN
+  ADMIN
+  RESTAURANT_OWNER
+  STAFF
+  CUSTOMER
+}
+
+Enum StationType {
+  KITCHEN
+  BAR
+}
+
+Enum ShiftSlotStatus {
+  ACTIVE
+  INACTIVE
+}
+
+Enum InventoryUnit {
+  KG
+  GRAM
+  LITER
+  ML
+  PIECE
+  BOX
+  PACKET
+}
+
+Enum StaffRole {
+  BRANCH_MANAGER
+  HOST
+  WAITER
+  KITCHEN_STAFF
+  BARTENDER
+  CASHIER
+}
+
+Enum PermissionAction {
+  MANAGE_MENU
+  MANAGE_TABLES
+  MANAGE_STAFF
+  MANAGE_RESERVATIONS
+  VIEW_ORDERS
+  UPDATE_ORDER_STATUS
+  MANAGE_PAYMENTS
+  APPLY_DISCOUNTS
+  VIEW_REPORTS
+  MANAGE_BRANCH_SETTINGS
+}
+
+Enum OrderChannel {
+  DINE_IN
+  QR_SELF_ORDER
+  POS
+  SELF_SERVICE_KIOSK
+  TAKEAWAY
+  DELIVERY
+  MOBILE_APP
+  WEB
+}
+
+Enum OrderAcceptanceMode {
+  AUTO_ACCEPT
+  WAITER_APPROVAL
+  MANAGER_APPROVAL
+}
+
+Enum OrderRejectionReason {
+  ITEM_UNAVAILABLE
+  KITCHEN_CAPACITY
+  MODIFICATION_IMPOSSIBLE
+  ALLERGY_CONCERN
+  RESTAURANT_CLOSING
+  OTHER
+}
+
+Enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  SERVED
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+Enum PaymentStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+  REFUNDED
+  FAILED
+}
+
+Enum PaymentMethod {
+  CASH
+  CARD
+  MOBILE_WALLET
+  ONLINE_GATEWAY
+}
+
+Enum TableServiceStatus {
+  AVAILABLE
+  OCCUPIED
+  ORDERING
+  PREPARING
+  SERVING
+  PAYMENT_PENDING
+  CLOSING
+}
+
+Enum TableOperationalFlag {
+  NORMAL
+  RESERVED
+  CLEANING
+  OUT_OF_SERVICE
+}
+
+Enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  SEATED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+Enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+Enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+  DELETED
+}
+
+Enum OrderItemStatus {
+  PENDING
+  PREPARING
+  READY
+  SERVED
+  UNAVAILABLE
+  CANCELLED
+}
+
+Enum Shape {
+  CIRCLE
+  SQUARE
+  RECTANGLE
+  TRIANGLE
+  HEXAGON
+}
+
+Enum TableSessionStatus {
+  ACTIVE
+  BILL_REQUESTED
+  CLOSING
+  COMPLETED
+  ABANDONED
+}
+
+Enum GuestSessionStatus {
+  ACTIVE
+  LEFT
+  CLOSED
+}
+
+Enum PaymentScope {
+  ORDER
+  ORDER_ITEMS
+  GUEST_SESSION
+  TABLE_SESSION
+}
+
+Enum OtpPurpose {
+  TABLE_AUTH
+  PASSWORD_RESET
+}
+
+Ref: organizations.ownerId > users.id
+
+Ref: restaurants.organizationId > organizations.id
+
+Ref: branches.restaurantId > restaurants.id
+
+Ref: branch_settings.branchId - branches.id
+
+Ref: admins.userId - users.id
+
+Ref: staff.userId - users.id
+
+Ref: owners.userId - users.id
+
+Ref: staff_assignments.staffId > staff.id
+
+Ref: staff_assignments.branchId > branches.id
+
+Ref: customers.userId - users.id
+
+Ref: menu_categories.restaurantId > restaurants.id
+
+Ref: menu_items.restaurantId > restaurants.id
+
+Ref: menu_items.categoryId > menu_categories.id
+
+Ref: modifier_groups.menuItemId > menu_items.id
+
+Ref: modifiers.modifierGroupId > modifier_groups.id
+
+Ref: tables.branchId > branches.id
+
+Ref: reservations.branchId > branches.id
+
+Ref: reservations.tableId > tables.id
+
+Ref: reservations.customerId > customers.id
+
+Ref: reservations.tableSessionId - table_sessions.id
+
+Ref: waiter_table_assignments.branchId > branches.id [delete: Restrict]
+
+Ref: waiter_table_assignments.tableId > tables.id [delete: Restrict]
+
+Ref: waiter_table_assignments.waiterId > staff.id [delete: Restrict]
+
+Ref: waiter_table_assignments.assignedById > staff.id [delete: Restrict]
+
+Ref: table_sessions.tableId > tables.id
+
+Ref: table_sessions.branchId > branches.id
+
+Ref: guest_sessions.tableSessionId > table_sessions.id
+
+Ref: guest_sessions.customerId > customers.id
+
+Ref: orders.branchId > branches.id
+
+Ref: orders.tableId > tables.id
+
+Ref: orders.customerId > customers.id
+
+Ref: orders.tableSessionId > table_sessions.id
+
+Ref: orders.guestSessionId > guest_sessions.id
+
+Ref: orders.discountId > discounts.id
+
+Ref: orders.waiterAssignmentId > waiter_table_assignments.id
+
+Ref: order_items.orderId > orders.id [delete: Cascade]
+
+Ref: order_items.productId > menu_items.id [delete: Restrict]
+
+Ref: payments.orderId > orders.id
+
+Ref: payments.tableSessionId > table_sessions.id
+
+Ref: payments.payerGuestSessionId > guest_sessions.id
+
+Ref: payment_allocations.paymentId > payments.id [delete: Cascade]
+
+Ref: payment_allocations.orderId > orders.id
+
+Ref: payment_allocations.orderItemId > order_items.id
+
+Ref: audit_logs.branchId > branches.id
+
+Ref: audit_logs.actorId > users.id
+
+Ref: work_shifts.branchId > branches.id
+
+Ref: work_shifts.staffAssignmentId > staff_assignments.id
+
+Ref: suppliers.branchId > branches.id
+
+Ref: inventory_categories.branchId > branches.id
+
+Ref: inventory_items.branchId > branches.id
+
+Ref: inventory_items.supplierId > suppliers.id
+
+Ref: inventory_items.categoryId > inventory_categories.id
+
+Ref: order_reviews.orderId - orders.id
+
+Ref: order_reviews.customerId > customers.id
+
+Ref: status_change_logs.orderId > orders.id
+
+Ref: status_change_logs.changedById > users.id
+
+Ref: order_item_status_change_logs.orderItemId > order_items.id
+
+Ref: order_item_status_change_logs.changedById > users.id
+
+Ref: branch_operating_hours.branchId > branches.id
+
+Ref: branch_holidays.branchId > branches.id
+
+Ref: table_auth_otps.tableId > tables.id
+
+Ref: table_auth_otps.tableSessionId > table_sessions.id

@@ -1,0 +1,714 @@
+// =====================================================================================
+// RESTAURANT ORDERING & TABLE MANAGEMENT PLATFORM — DATABASE SCHEMA
+// Designed against: "Restaurant Platform — Requirement Confirmation Document"
+// =====================================================================================
+//
+// READ THIS BEFORE EXTENDING THE SCHEMA.
+//
+// 1. POSTGRESQL IS A DELIBERATE CHOICE, NOT A DEFAULT.
+//    Two rules in this domain are temporal/conditional-uniqueness constraints that only
+//    Postgres can enforce at the database layer (EXCLUDE constraints, partial unique
+//    indexes) — see notes 7 below and the companion file `post_migration_constraints.sql`.
+//    MySQL/SQLite would push both checks entirely into application code with weaker
+//    guarantees under concurrent writes.
+//
+// 2. ONE `User` TABLE FOR ALL SIX STAFF ROLES, A SEPARATE `Customer` MODEL.
+//    Admin/Manager/Cashier/Waiter/Kitchen/Bartender share one auth mechanism
+//    (email + password) and are referenced from dozens of "who did this" foreign keys
+//    across the schema (accepted the order, processed the payment, approved the
+//    refund...). Splitting them into six tables means six parallel FK columns on every
+//    model that needs to reference "a staff member". `Customer` is intentionally
+//    separate: different auth (OTP, not password), different lifecycle, different
+//    data-privacy profile.
+//
+// 3. TWO DISTINCT "SESSION" CONCEPTS, TWO DISTINCT TABLES.
+//    Conflating these is the most common modeling mistake in systems like this one:
+//      - WaiterTableAssignment = STAFF SCHEDULING. "Which waiter is responsible for
+//        which tables, during which time window" — created by a manager.
+//      - DiningSession = CUSTOMER PRESENCE. "Which customer is currently seated at
+//        which table" — created at OTP verification. Every Order links to a
+//        DiningSession, not to a WaiterTableAssignment directly — that's what stops a
+//        customer at Table 2 from acting on Table 10, independent of staff scheduling.
+//
+// 4. MONEY IS ALWAYS `Decimal @db.Decimal(10, 2)`, NEVER Float/Int.
+//    Non-negotiable for financial data — Float causes silent rounding drift.
+//
+// 5. SNAPSHOTTING IS APPLIED CONSISTENTLY, NOT JUST ON OrderItem.
+//    The requirement explicitly asks for OrderItem price/name snapshots. The same
+//    principle — never let "current state" quietly rewrite history — is applied
+//    wherever it would otherwise corrupt an audit trail: e.g. Order.acceptedByRole
+//    snapshots the acting user's role at the moment of action, independent of any
+//    role change on their User row later.
+//
+// 6. DELIBERATE DENORMALIZATION ON HOT PATHS.
+//    branchId / tableId / customerId are duplicated onto Order (and a couple of other
+//    models) even though they're reachable via relations, so the highest-traffic
+//    dashboard queries (branch order feed, kitchen station feed, table status board)
+//    are a single indexed lookup instead of a multi-table join. Standard practice for
+//    high-read multi-tenant systems. The tradeoff: application code, not the database,
+//    is responsible for keeping the denormalized copy consistent with its source of
+//    truth at write time (documented at each occurrence below).
+//
+// 7. TWO CONSTRAINTS CANNOT BE EXPRESSED IN THE PRISMA SCHEMA DSL.
+//    They must be added by hand in a follow-up SQL migration after `prisma migrate dev`.
+//    Both are provided, ready to run, in `post_migration_constraints.sql`:
+//      a) WaiterTableAssignment — "a table cannot be double-booked to two waiters for
+//         overlapping time windows" is a temporal exclusion constraint
+//         (`EXCLUDE USING gist`), not expressible as a Prisma @@unique.
+//      b) DiningSession — "only one ACTIVE session per table at a time" is a partial
+//         unique index (`CREATE UNIQUE INDEX ... WHERE status = 'ACTIVE'`), which the
+//         Prisma schema language does not support directly.
+//    Until those migrations are applied, enforce both rules in application code inside
+//    a transaction — the DB constraint is the backstop, not the only line of defense.
+//
+// 8. DELETION POLICY: SOFT-DELETE BY DEFAULT.
+//    Branch, User, Table, and Product carry `isActive`/`deletedAt`/`isArchived` fields
+//    and are never meant to be hard-deleted once they have any order/payment history.
+//    Foreign keys therefore default to `Restrict` rather than `Cascade` — a stray
+//    `DELETE` should fail loudly and force the soft-delete path, not silently wipe
+//    financial history. `Cascade` is used only for genuinely dependent rows with no
+//    independent meaning (OrderItem under Order, ProductIngredient join rows).
+//
+// 9. OPEN CLIENT QUESTIONS ARE MODELED, NOT PRE-DECIDED.
+//    Two items are still open with the client (can Admin/Manager accept orders? manage
+//    the menu?). Rather than guess, the schema captures acceptedById/acceptedByRole as
+//    freeform "any staff member, whichever role" — so either answer from the client
+//    slots in without a schema change.
+//
+// =====================================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------------------------------
+// ENUMS
+// -------------------------------------------------------------------------------------
+
+enum StaffRole {
+  ADMIN
+  BRANCH_MANAGER
+  CASHIER
+  WAITER
+  KITCHEN
+  BARTENDER
+}
+
+enum StationType {
+  KITCHEN
+  BAR
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+  ORDERING
+  PREPARING
+  SERVING
+  PAYMENT_PENDING
+  CLOSING
+}
+
+enum DiningSessionStatus {
+  ACTIVE
+  CLOSED
+  EXPIRED
+}
+
+enum OtpChannel {
+  EMAIL
+  PHONE
+}
+
+enum OrderStatus {
+  PENDING_ACCEPTANCE
+  ACCEPTED
+  REJECTED
+  PREPARING
+  READY
+  SERVED
+  PAYMENT_PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderItemStatus {
+  PENDING
+  PREPARING
+  READY
+  SERVED
+  UNAVAILABLE
+  CANCELLED
+}
+
+enum CancellationStage {
+  BEFORE_ACCEPTANCE  // customer-initiated
+  BEFORE_PREPARATION // waiter-initiated
+  MANAGER_OVERRIDE   // manager override, any stage
+  ADMIN_OVERRIDE     // admin full override, any stage
+}
+
+enum PaymentMethod {
+  ONLINE
+  CASH
+  CARD_OFFLINE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum RefundStatus {
+  REQUESTED
+  APPROVED
+  PROCESSED
+  REJECTED
+}
+
+enum NotificationType {
+  ORDER_ACCEPTED
+  ORDER_REJECTED
+  ITEM_READY
+  ORDER_FULLY_READY
+  PAYMENT_RECEIVED
+  TABLE_ASSIGNED
+}
+
+// -------------------------------------------------------------------------------------
+// IDENTITY — STAFF
+// -------------------------------------------------------------------------------------
+
+/// All internal staff accounts: Admin, Branch Manager, Cashier, Waiter, Kitchen,
+/// Bartender — one table, distinguished by `role`. `branchId` is required for every
+/// role except ADMIN; that conditional requirement is enforced at the service layer,
+/// since Prisma cannot express "required unless role = X" in the schema itself.
+model User {
+  id           String    @id @default(cuid())
+  role         StaffRole
+  branchId     String? // null only for ADMIN
+  branch       Branch?   @relation("BranchStaff", fields: [branchId], references: [id], onDelete: Restrict)
+
+  name         String
+  email        String    @unique
+  phone        String?
+  passwordHash String
+
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime? @db.Timestamptz(6)
+
+  createdById  String?
+  createdBy    User?     @relation("StaffCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdStaff User[]    @relation("StaffCreatedBy")
+
+  // ---- reverse relations: everywhere a User is "who did this" ----
+  managedBranch      Branch?                 @relation("BranchManager")
+  createdBranches    Branch[]                @relation("BranchCreatedBy")
+  createdTables      Table[]                 @relation("TableCreatedBy")
+  waiterAssignments  WaiterTableAssignment[] @relation("AssignmentWaiter")
+  createdAssignments WaiterTableAssignment[] @relation("AssignmentCreatedBy")
+  acceptedOrders     Order[]                 @relation("OrderAcceptedBy")
+  rejectedOrders     Order[]                 @relation("OrderRejectedBy")
+  cancelledOrders    Order[]                 @relation("OrderCancelledBy")
+  processedPayments  Payment[]               @relation("PaymentProcessedBy")
+  initiatedRefunds   Refund[]                @relation("RefundInitiatedBy")
+  approvedRefunds    Refund[]                @relation("RefundApprovedBy")
+  notifications      Notification[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([branchId, role])
+  @@map("users")
+}
+
+// -------------------------------------------------------------------------------------
+// IDENTITY — CUSTOMER & OTP
+// -------------------------------------------------------------------------------------
+
+/// A persistent customer identity, matched across visits by email or phone. Kept
+/// persistent (rather than a throwaway per-visit row) on purpose — order history and
+/// loyalty features are effectively free later if the identity already survives visits.
+model Customer {
+  id    String  @id @default(cuid())
+
+  // At least one of email/phone must be present — enforced at the application layer.
+  // Postgres allows multiple NULLs through a UNIQUE constraint, so both can stay
+  // optional-and-unique without a raw migration.
+  email String? @unique
+  phone String? @unique
+  name  String?
+
+  diningSessions   DiningSession[]
+  orders           Order[]
+  otpVerifications OtpVerification[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@map("customers")
+}
+
+/// A single OTP challenge. Deliberately NOT nested under Customer — on first contact
+/// the identifier (email/phone) may not match an existing Customer yet; the Customer
+/// row is created or matched only after verification succeeds.
+model OtpVerification {
+  id         String     @id @default(cuid())
+
+  identifier String // raw email or phone value being verified
+  channel    OtpChannel
+
+  codeHash     String // never store the raw OTP
+  expiresAt    DateTime  @db.Timestamptz(6)
+  consumedAt   DateTime? @db.Timestamptz(6)
+  attemptCount Int       @default(0)
+  maxAttempts  Int       @default(5)
+
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([identifier, channel, expiresAt])
+  @@map("otp_verifications")
+}
+
+// -------------------------------------------------------------------------------------
+// ORGANIZATION — BRANCH
+// -------------------------------------------------------------------------------------
+
+model Branch {
+  id           String  @id @default(cuid())
+  name         String
+  address      String
+  contactPhone String?
+
+  // 1:1 — @unique on managerId is what enforces "a manager runs at most one branch" at
+  // the DB level; "a branch has at most one manager" is trivially true of a scalar FK.
+  managerId String? @unique
+  manager   User?   @relation("BranchManager", fields: [managerId], references: [id], onDelete: SetNull)
+
+  createdById String
+  createdBy   User   @relation("BranchCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  staff             User[]                  @relation("BranchStaff")
+  tables            Table[]
+  waiterAssignments WaiterTableAssignment[]
+  diningSessions    DiningSession[]
+  categories        Category[]
+  ingredients       Ingredient[]
+  products          Product[]
+  orders            Order[]
+  orderCounter      BranchCounter?
+
+  isActive  Boolean   @default(true)
+  deletedAt DateTime? @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@map("branches")
+}
+
+/// Per-branch sequential order numbering (Branch "Downtown" order #1, #2, #3...).
+/// Generate the next number inside the SAME transaction as Order creation with an
+/// atomic UPDATE ... RETURNING:
+///   UPDATE branch_counters SET "lastOrderNumber" = "lastOrderNumber" + 1
+///   WHERE "branchId" = $1 RETURNING "lastOrderNumber";
+/// Never read-then-write in two separate steps — that race-conditions under concurrent
+/// orders on a busy night.
+model BranchCounter {
+  branchId        String   @id
+  branch          Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  lastOrderNumber Int      @default(0)
+  updatedAt       DateTime @updatedAt @db.Timestamptz(6)
+
+  @@map("branch_counters")
+}
+
+// -------------------------------------------------------------------------------------
+// TABLES, STAFF SCHEDULING, CUSTOMER SESSIONS
+// -------------------------------------------------------------------------------------
+
+model Table {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  tableNumber String // string, not int — supports labels like "P1" (patio 1)
+  capacity    Int?
+  status      TableStatus @default(AVAILABLE)
+
+  qrToken         String    @unique @default(cuid()) // opaque token embedded in the printed QR code
+  qrRegeneratedAt DateTime? @db.Timestamptz(6)
+
+  createdById String
+  createdBy   User   @relation("TableCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  waiterAssignments WaiterTableAssignment[]
+  diningSessions    DiningSession[]
+  orders            Order[]
+
+  isActive  Boolean   @default(true)
+  deletedAt DateTime? @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@unique([branchId, tableNumber])
+  @@index([branchId, status])
+  @@map("restaurant_tables") // avoid the bare name "tables" colliding with tooling/SQL-keyword expectations
+}
+
+/// STAFF SCHEDULING — "Waiter A serves Tables 1, 2, 3 from 10pm to 10am." See file
+/// header note 3 for why this is deliberately separate from DiningSession.
+///
+/// >>> REQUIRES A MANUAL MIGRATION — see post_migration_constraints.sql (part A) <<<
+/// "A table cannot be double-booked to two waiters for overlapping time windows" is a
+/// temporal exclusion constraint. Prisma's @@unique cannot express range overlap.
+model WaiterTableAssignment {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  tableId String
+  table   Table  @relation(fields: [tableId], references: [id], onDelete: Restrict)
+
+  waiterId String
+  waiter   User   @relation("AssignmentWaiter", fields: [waiterId], references: [id], onDelete: Restrict)
+
+  assignedById String
+  assignedBy   User   @relation("AssignmentCreatedBy", fields: [assignedById], references: [id], onDelete: Restrict)
+
+  sessionStart DateTime @db.Timestamptz(6)
+  sessionEnd   DateTime @db.Timestamptz(6)
+  isActive     Boolean  @default(true) // manager can revoke early without deleting the audit row
+
+  orders Order[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([tableId, sessionStart, sessionEnd])
+  @@index([waiterId, sessionStart])
+  @@map("waiter_table_assignments")
+}
+
+/// CUSTOMER PRESENCE — created at OTP verification; binds (customer + table + time
+/// window). Every Order is validated against this, not against WaiterTableAssignment
+/// directly. See file header note 3.
+///
+/// >>> REQUIRES A MANUAL MIGRATION — see post_migration_constraints.sql (part B) <<<
+/// "Only one ACTIVE session per table at a time" is a partial unique index — Prisma's
+/// schema language has no WHERE clause on @@unique. Until it's applied, enforce this in
+/// application code: when authenticating a customer against a table, check for an
+/// existing ACTIVE row on that table inside the same transaction and reject with
+/// "table already occupied" if found. That check is exactly the "Customer B tries to
+/// scan an already-booked table" requirement.
+model DiningSession {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  tableId String
+  table   Table  @relation(fields: [tableId], references: [id], onDelete: Restrict)
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  status DiningSessionStatus @default(ACTIVE)
+
+  orders Order[]
+
+  startedAt DateTime  @default(now()) @db.Timestamptz(6)
+  endedAt   DateTime? @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([tableId, status])
+  @@index([customerId])
+  @@map("dining_sessions")
+}
+
+// -------------------------------------------------------------------------------------
+// MENU — CATEGORIES, INGREDIENTS, PRODUCTS
+// -------------------------------------------------------------------------------------
+
+model Category {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  name      String
+  sortOrder Int    @default(0)
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@unique([branchId, name])
+  @@map("categories")
+}
+
+model Ingredient {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  name              String
+  unit              String // e.g. "kg", "L", "pcs" — free text by design, units vary too much for a fixed enum
+  currentStock      Decimal  @default(0) @db.Decimal(10, 3)
+  lowStockThreshold Decimal? @db.Decimal(10, 3)
+
+  productLinks ProductIngredient[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@unique([branchId, name])
+  @@map("ingredients")
+}
+
+model Product {
+  id         String   @id @default(cuid())
+  branchId   String
+  branch     Branch   @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  name        String
+  description String?
+  imageUrl    String?
+  price       Decimal     @db.Decimal(10, 2)
+  stationType StationType // routes OrderItems to Kitchen or Bar
+
+  // Manual "86 it" toggle. Real-time orderability = isAvailable AND every linked
+  // ingredient has sufficient currentStock — computed at query/order time, not stored,
+  // so it can never silently go stale the way a cached flag could. A materialized
+  // `computedAvailable` column is a reasonable future optimization if the ingredient
+  // join proves too slow on the customer-facing menu endpoint — not needed at launch.
+  isAvailable Boolean @default(true)
+
+  ingredientLinks ProductIngredient[]
+  orderItems      OrderItem[]
+
+  isArchived Boolean @default(false) // soft-delete: archived products stay for OrderItem history, drop off the live menu
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([branchId, categoryId, isAvailable])
+  @@map("products")
+}
+
+/// Recipe join: how much of each Ingredient one unit of Product consumes.
+model ProductIngredient {
+  id String @id @default(cuid())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  quantityRequired Decimal @db.Decimal(10, 3)
+
+  @@unique([productId, ingredientId])
+  @@map("product_ingredients")
+}
+
+// -------------------------------------------------------------------------------------
+// ORDERS
+// -------------------------------------------------------------------------------------
+
+model Order {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  orderNumber Int // sequential per branch — see BranchCounter
+
+  diningSessionId String
+  diningSession   DiningSession @relation(fields: [diningSessionId], references: [id], onDelete: Restrict)
+
+  // Denormalized for hot-path queries — see file header note 6. Must always equal
+  // diningSession.tableId / diningSession.customerId at write time (app-enforced,
+  // e.g. in a single service function that creates both together).
+  tableId    String
+  table      Table    @relation(fields: [tableId], references: [id], onDelete: Restrict)
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  // Which staff-scheduling assignment was covering this table when the order was
+  // placed — used for routing and historical audit, independent of who actually
+  // pressed "accept" (see acceptedBy/acceptedByRole below).
+  waiterAssignmentId String?
+  waiterAssignment   WaiterTableAssignment? @relation(fields: [waiterAssignmentId], references: [id], onDelete: SetNull)
+
+  sequenceInSession Int // 1 = the main/first order in this dining session, 2+ = additional orders
+
+  status OrderStatus @default(PENDING_ACCEPTANCE)
+
+  acceptedById   String?
+  acceptedBy     User?      @relation("OrderAcceptedBy", fields: [acceptedById], references: [id], onDelete: SetNull)
+  acceptedByRole StaffRole? // snapshot; leaves open-question Q1 (can Admin/Manager accept?) answerable without a schema change
+  acceptedAt     DateTime?  @db.Timestamptz(6)
+
+  rejectedById    String?
+  rejectedBy      User?     @relation("OrderRejectedBy", fields: [rejectedById], references: [id], onDelete: SetNull)
+  rejectedAt      DateTime? @db.Timestamptz(6)
+  rejectionReason String?
+
+  cancelledById      String?
+  cancelledBy        User?               @relation("OrderCancelledBy", fields: [cancelledById], references: [id], onDelete: SetNull)
+  cancelledByRole    StaffRole? // snapshot
+  cancellationStage  CancellationStage?
+  cancellationReason String?
+  cancelledAt        DateTime?           @db.Timestamptz(6)
+
+  // Financial totals computed from OrderItem rows at write time and stored — not
+  // recalculated on read — consistent with the price-snapshot principle (note 5).
+  subtotal       Decimal @db.Decimal(10, 2)
+  taxAmount      Decimal @default(0) @db.Decimal(10, 2)
+  serviceCharge  Decimal @default(0) @db.Decimal(10, 2)
+  discountAmount Decimal @default(0) @db.Decimal(10, 2)
+  totalAmount    Decimal @db.Decimal(10, 2)
+
+  // Denormalized so "is this order settled" doesn't require aggregating the Payment
+  // table on every table-clear check — see note 6.
+  paymentStatus PaymentStatus @default(PENDING)
+
+  items    OrderItem[]
+  payments Payment[]
+
+  placedAt  DateTime @default(now()) @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@unique([branchId, orderNumber])
+  @@unique([diningSessionId, sequenceInSession])
+  @@index([branchId, status])
+  @@index([tableId, status])
+  @@index([diningSessionId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  // --- price/name snapshot, exactly as specified in the requirement ---
+  productNameSnapshot String
+  unitPrice           Decimal @db.Decimal(10, 2)
+  quantity             Int
+  subtotal            Decimal @db.Decimal(10, 2)
+
+  // Denormalized at order time so the kitchen/bar dashboard can filter
+  // `WHERE stationType = X AND status = PENDING` without joining Product.
+  stationType StationType
+
+  status            OrderItemStatus @default(PENDING)
+  preparingAt       DateTime?       @db.Timestamptz(6)
+  readyAt           DateTime?       @db.Timestamptz(6)
+  servedAt          DateTime?       @db.Timestamptz(6)
+  unavailableReason String? // populated when status = UNAVAILABLE (Kitchen/Bartender "mark unavailable")
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([orderId, status])
+  @@index([orderId, stationType, status])
+  @@map("order_items")
+}
+
+// -------------------------------------------------------------------------------------
+// PAYMENTS & REFUNDS
+// -------------------------------------------------------------------------------------
+
+model Payment {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  method PaymentMethod
+  status PaymentStatus @default(PENDING)
+  amount Decimal       @db.Decimal(10, 2)
+
+  gatewayReference     String? // e.g. Stripe/bKash/Nagad transaction id, for ONLINE payments
+  processedByCashierId String? // set for CASH / CARD_OFFLINE, settled by a Cashier
+  processedByCashier   User?   @relation("PaymentProcessedBy", fields: [processedByCashierId], references: [id], onDelete: SetNull)
+
+  processedAt    DateTime? @db.Timestamptz(6)
+  failureReason  String?
+
+  refunds Refund[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([orderId])
+  @@map("payments")
+}
+
+model Refund {
+  id        String @id @default(cuid())
+  paymentId String
+  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+
+  amount Decimal      @db.Decimal(10, 2)
+  reason String
+  status RefundStatus @default(REQUESTED)
+
+  initiatedById   String
+  initiatedBy     User      @relation("RefundInitiatedBy", fields: [initiatedById], references: [id], onDelete: Restrict)
+  initiatedByRole StaffRole // snapshot
+
+  approvedById String?
+  approvedBy   User?     @relation("RefundApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  approvedAt   DateTime? @db.Timestamptz(6)
+
+  processedAt DateTime? @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  @@index([paymentId])
+  @@map("refunds")
+}
+
+// -------------------------------------------------------------------------------------
+// NOTIFICATIONS
+// -------------------------------------------------------------------------------------
+
+model Notification {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type     NotificationType
+  title    String
+  body     String?
+  metadata Json? // e.g. { orderId, tableId } for client-side deep-linking
+
+  isRead Boolean   @default(false)
+  readAt DateTime? @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}

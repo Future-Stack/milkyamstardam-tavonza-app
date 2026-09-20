@@ -1,0 +1,739 @@
+npm notice run milky-server@0.0.1 build
+npm notice run nest build
+[96msrc/app/app.module.ts[0m:[93m24[0m:[93m43[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/personal-information/personal-information.module' or its corresponding type declarations.
+
+[7m24[0m import { PersonalInformationModule } from '@/modules/personal-information/personal-information.module';
+[7m  [0m [91m                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m25[0m:[93m39[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/will-information/will-information.module' or its corresponding type declarations.
+
+[7m25[0m import { WillInformationModule } from '@/modules/will-information/will-information.module';
+[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m26[0m:[93m45[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/living-will-information/living-will-information.module' or its corresponding type declarations.
+
+[7m26[0m import { LivingWillInformationModule } from '@/modules/living-will-information/living-will-information.module';
+[7m  [0m [91m                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m27[0m:[93m50[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/power-of-attorney-information/power-of-attorney-information.module' or its corresponding type declarations.
+
+[7m27[0m import { PowerOfAttorneyInformationModule } from '@/modules/power-of-attorney-information/power-of-attorney-information.module';
+[7m  [0m [91m                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m28[0m:[93m42[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/funeral-preferences/funeral-preferences.module' or its corresponding type declarations.
+
+[7m28[0m import { FuneralPreferencesModule } from '@/modules/funeral-preferences/funeral-preferences.module';
+[7m  [0m [91m                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m29[0m:[93m43[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/cemetery-information/cemetery-information.module' or its corresponding type declarations.
+
+[7m29[0m import { CemeteryInformationModule } from '@/modules/cemetery-information/cemetery-information.module';
+[7m  [0m [91m                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m30[0m:[93m49[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/social-security-information/social-security-information.module' or its corresponding type declarations.
+
+[7m30[0m import { SocialSecurityInformationModule } from '@/modules/social-security-information/social-security-information.module';
+[7m  [0m [91m                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m31[0m:[93m39[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/veteran-benefits/veteran-benefits.module' or its corresponding type declarations.
+
+[7m31[0m import { VeteranBenefitsModule } from '@/modules/veteran-benefits/veteran-benefits.module';
+[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m32[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/dependent/dependent.module' or its corresponding type declarations.
+
+[7m32[0m import { DependentModule } from '@/modules/dependent/dependent.module';
+[7m  [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m33[0m:[93m27[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/pet/pet.module' or its corresponding type declarations.
+
+[7m33[0m import { PetModule } from '@/modules/pet/pet.module';
+[7m  [0m [91m                          ~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m34[0m:[93m36[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/personal-wish/personal-wish.module' or its corresponding type declarations.
+
+[7m34[0m import { PersonalWishModule } from '@/modules/personal-wish/personal-wish.module';
+[7m  [0m [91m                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m35[0m:[93m39[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/contact-to-inform/contact-to-inform.module' or its corresponding type declarations.
+
+[7m35[0m import { ContactToInformModule } from '@/modules/contact-to-inform/contact-to-inform.module';
+[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m36[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/doctor/doctor.module' or its corresponding type declarations.
+
+[7m36[0m import { DoctorModule } from '@/modules/doctor/doctor.module';
+[7m  [0m [91m                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m38[0m:[93m38[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/personal-effect/personal-effect.module' or its corresponding type declarations.
+
+[7m38[0m import { PersonalEffectModule } from '@/modules/personal-effect/personal-effect.module';
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m39[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/liquid-asset/liquid-asset.module' or its corresponding type declarations.
+
+[7m39[0m import { LiquidAssetModule } from '@/modules/liquid-asset/liquid-asset.module';
+[7m  [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m40[0m:[93m38[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/non-liquid-asset/non-liquid-asset.module' or its corresponding type declarations.
+
+[7m40[0m import { NonLiquidAssetModule } from '@/modules/non-liquid-asset/non-liquid-asset.module';
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m41[0m:[93m37[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/personal-paper/personal-paper.module' or its corresponding type declarations.
+
+[7m41[0m import { PersonalPaperModule } from '@/modules/personal-paper/personal-paper.module';
+[7m  [0m [91m                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m42[0m:[93m50[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/executor-beneficiary-trustee/executor-beneficiary-trustee.module' or its corresponding type declarations.
+
+[7m42[0m import { ExecutorBeneficiaryTrusteeModule } from '@/modules/executor-beneficiary-trustee/executor-beneficiary-trustee.module';
+[7m  [0m [91m                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m43[0m:[93m32[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/attorney/attorney.module' or its corresponding type declarations.
+
+[7m43[0m import { AttorneyModule } from '@/modules/attorney/attorney.module';
+[7m  [0m [91m                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m44[0m:[93m37[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/life-insurance/life-insurance.module' or its corresponding type declarations.
+
+[7m44[0m import { LifeInsuranceModule } from '@/modules/life-insurance/life-insurance.module';
+[7m  [0m [91m                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m45[0m:[93m41[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/retirement-account/retirement-account.module' or its corresponding type declarations.
+
+[7m45[0m import { RetirementAccountModule } from '@/modules/retirement-account/retirement-account.module';
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m46[0m:[93m39[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/checking-account/checking-account.module' or its corresponding type declarations.
+
+[7m46[0m import { CheckingAccountModule } from '@/modules/checking-account/checking-account.module';
+[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m47[0m:[93m38[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/savings-account/savings-account.module' or its corresponding type declarations.
+
+[7m47[0m import { SavingsAccountModule } from '@/modules/savings-account/savings-account.module';
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m48[0m:[93m38[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/safe-deposit-box/safe-deposit-box.module' or its corresponding type declarations.
+
+[7m48[0m import { SafeDepositBoxModule } from '@/modules/safe-deposit-box/safe-deposit-box.module';
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m49[0m:[93m41[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/investment-account/investment-account.module' or its corresponding type declarations.
+
+[7m49[0m import { InvestmentAccountModule } from '@/modules/investment-account/investment-account.module';
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m50[0m:[93m32[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/property/property.module' or its corresponding type declarations.
+
+[7m50[0m import { PropertyModule } from '@/modules/property/property.module';
+[7m  [0m [91m                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m51[0m:[93m39[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/health-insurance/health-insurance.module' or its corresponding type declarations.
+
+[7m51[0m import { HealthInsuranceModule } from '@/modules/health-insurance/health-insurance.module';
+[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m52[0m:[93m38[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/other-insurance/other-insurance.module' or its corresponding type declarations.
+
+[7m52[0m import { OtherInsuranceModule } from '@/modules/other-insurance/other-insurance.module';
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m53[0m:[93m28[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/bill/bill.module' or its corresponding type declarations.
+
+[7m53[0m import { BillModule } from '@/modules/bill/bill.module';
+[7m  [0m [91m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m54[0m:[93m37[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/auto-deduction/auto-deduction.module' or its corresponding type declarations.
+
+[7m54[0m import { AutoDeductionModule } from '@/modules/auto-deduction/auto-deduction.module';
+[7m  [0m [91m                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m55[0m:[93m28[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/card/card.module' or its corresponding type declarations.
+
+[7m55[0m import { CardModule } from '@/modules/card/card.module';
+[7m  [0m [91m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m56[0m:[93m28[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/loan/loan.module' or its corresponding type declarations.
+
+[7m56[0m import { LoanModule } from '@/modules/loan/loan.module';
+[7m  [0m [91m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m57[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/storage-unit/storage-unit.module' or its corresponding type declarations.
+
+[7m57[0m import { StorageUnitModule } from '@/modules/storage-unit/storage-unit.module';
+[7m  [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m58[0m:[93m33[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/tax-return/tax-return.module' or its corresponding type declarations.
+
+[7m58[0m import { TaxReturnModule } from '@/modules/tax-return/tax-return.module';
+[7m  [0m [91m                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m59[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/lease/lease.module' or its corresponding type declarations.
+
+[7m59[0m import { LeaseModule } from '@/modules/lease/lease.module';
+[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m60[0m:[93m32[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/warranty/warranty.module' or its corresponding type declarations.
+
+[7m60[0m import { WarrantyModule } from '@/modules/warranty/warranty.module';
+[7m  [0m [91m                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m62[0m:[93m40[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/customer-progress/customer-progress.module' or its corresponding type declarations.
+
+[7m62[0m import { CustomerProgressModule } from '@/modules/customer-progress/customer-progress.module';
+[7m  [0m [91m                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m64[0m:[93m39[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/granted-executor/granted-executor.module' or its corresponding type declarations.
+
+[7m64[0m import { GrantedExecutorModule } from '@/modules/granted-executor/granted-executor.module';
+[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/app/app.module.ts[0m:[93m67[0m:[93m37[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/password-entry/password-entry.module' or its corresponding type declarations.
+
+[7m67[0m import { PasswordEntryModule } from '@/modules/password-entry/password-entry.module';
+[7m  [0m [91m                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.constant.ts[0m:[93m3[0m:[93m53[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'ActivityLogFieldRefs'. Did you mean 'AuditLogFieldRefs'?
+
+[7m3[0m export const activityLogFilterFields: (keyof Prisma.ActivityLogFieldRefs)[] = [
+[7m [0m [91m                                                    ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.constant.ts[0m:[93m11[0m:[93m53[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'ActivityLogFieldRefs'. Did you mean 'AuditLogFieldRefs'?
+
+[7m11[0m export const activityLogSearchFields: (keyof Prisma.ActivityLogFieldRefs)[] = [
+[7m  [0m [91m                                                    ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.constant.ts[0m:[93m19[0m:[93m41[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'ActivityLogInclude'. Did you mean 'AuditLogInclude'?
+
+[7m19[0m export const activityLogInclude: Prisma.ActivityLogInclude = {};
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.controller.ts[0m:[93m4[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m4[0m import { Role } from '@prisma/client';
+[7m [0m [91m         ~~~~[0m
+[96msrc/modules/activity-log/activity-log.controller.ts[0m:[93m26[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type 'PrismaService'.
+
+[7m26[0m       const executor = await this.prisma.executor.findUnique({ where: { userId: user.id } });
+[7m  [0m [91m                                         ~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.controller.ts[0m:[93m36[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'grantedExecutor' does not exist on type 'PrismaService'.
+
+[7m36[0m       const granted = await this.prisma.grantedExecutor.findUnique({
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m3[0m:[93m10[0m - [91merror[0m[90m TS2724: [0m'"@prisma/client"' has no exported member named 'ActionType'. Did you mean 'StationType'?
+
+[7m3[0m import { ActionType, NotificationType } from '@prisma/client';
+[7m [0m [91m         ~~~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m281[0m:[93m14[0m
+    [7m281[0m export const StationType: typeof $Enums.StationType
+    [7m   [0m [96m             ~~~~~~~~~~~[0m
+    'StationType' is declared here.
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m3[0m:[93m22[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'NotificationType'.
+
+[7m3[0m import { ActionType, NotificationType } from '@prisma/client';
+[7m [0m [91m                     ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m33[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'activityLog' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, LogLevel, DefaultArgs>, "$on" | "$connect" | "$disconnect" | "$transaction" | "$extends">'.
+
+[7m33[0m         await tx.activityLog.create({
+[7m  [0m [91m                 ~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m52[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'notification' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, LogLevel, DefaultArgs>, "$on" | "$connect" | "$disconnect" | "$transaction" | "$extends">'.
+
+[7m52[0m         await tx.notification.create({
+[7m  [0m [91m                 ~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m72[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty 'activityLog' does not exist on type 'PrismaService'.
+
+[7m72[0m     const queryBuilder = new QueryBuilder(query, this.prisma.activityLog);
+[7m  [0m [91m                                                             ~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m74[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m74[0m       .filter(activityLogFilterFields)
+[7m  [0m [91m              ~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m75[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m75[0m       .search(activityLogSearchFields)
+[7m  [0m [91m              ~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/activity-log/activity-log.service.ts[0m:[93m92[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty 'activityLog' does not exist on type 'PrismaService'.
+
+[7m92[0m     return await this.prisma.activityLog.findUnique({
+[7m  [0m [91m                             ~~~~~~~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m5[0m:[93m3[0m - [91merror[0m[90m TS2322: [0mType '"contactNo"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m5[0m   `contactNo`,
+[7m [0m [91m  ~~~~~~~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m6[0m:[93m3[0m - [91merror[0m[90m TS2322: [0mType '"contactNo"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m6[0m   `contactNo`,
+[7m [0m [91m  ~~~~~~~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m8[0m:[93m3[0m - [91merror[0m[90m TS2322: [0mType '"lang"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m8[0m   `lang`,
+[7m [0m [91m  ~~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m9[0m:[93m3[0m - [91merror[0m[90m TS2322: [0mType '"role"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m9[0m   `role`,
+[7m [0m [91m  ~~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m11[0m:[93m3[0m - [91merror[0m[90m TS2322: [0mType '"dob"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m11[0m   `dob`,
+[7m  [0m [91m  ~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m15[0m:[93m67[0m - [91merror[0m[90m TS2322: [0mType '"contactNo"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m15[0m export const adminSearchFields: (keyof Prisma.UserFieldRefs)[] = [`contactNo`, `email`];
+[7m  [0m [91m                                                                  ~~~~~~~~~~~[0m
+[96msrc/modules/admin/admin.constant.ts[0m:[93m38[0m:[93m3[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'admin' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m38[0m   admin: true,
+[7m  [0m [91m  ~~~~~[0m
+[96msrc/modules/admin/admin.controller.ts[0m:[93m19[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m19[0m import { Role } from '@prisma/client';
+[7m  [0m [91m         ~~~~[0m
+[96msrc/modules/admin/admin.service.ts[0m:[93m5[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m5[0m import { Role, User } from '@prisma/client';
+[7m [0m [91m         ~~~~[0m
+[96msrc/modules/admin/admin.service.ts[0m:[93m42[0m:[93m43[0m - [91merror[0m[90m TS2339: [0mProperty 'admin' does not exist on type 'PrismaService'.
+
+[7m42[0m     let isAdminExists = await this.prisma.admin.findUnique({
+[7m  [0m [91m                                          ~~~~~[0m
+[96msrc/modules/admin/admin.service.ts[0m:[93m47[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'admin' does not exist on type 'PrismaService'.
+
+[7m47[0m       isAdminExists = await this.prisma.admin.findUnique({
+[7m  [0m [91m                                        ~~~~~[0m
+[96msrc/modules/admin/admin.service.ts[0m:[93m58[0m:[93m15[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'password' does not exist in type 'UserOmit<DefaultArgs>'.
+
+[7m58[0m       omit: { password: true },
+[7m  [0m [91m              ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7363[0m:[93m5[0m
+    [7m7363[0m     omit?: UserOmit<ExtArgs> | null
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'omit' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/admin/admin.service.ts[0m:[93m59[0m:[93m18[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'admin' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m59[0m       include: { admin: true },
+[7m  [0m [91m                 ~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7367[0m:[93m5[0m
+    [7m7367[0m     include?: UserInclude<ExtArgs> | null
+    [7m    [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/admin/admin.service.ts[0m:[93m83[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'admin' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, LogLevel, DefaultArgs>, "$on" | "$connect" | "$disconnect" | "$transaction" | "$extends">'.
+
+[7m83[0m           const adminUpdation = await tx.admin.update({
+[7m  [0m [91m                                         ~~~~~[0m
+[96msrc/modules/admin/admin.service.ts[0m:[93m118[0m:[93m18[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'admin' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m118[0m       include: { admin: true },
+[7m   [0m [91m                 ~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7367[0m:[93m5[0m
+    [7m7367[0m     include?: UserInclude<ExtArgs> | null
+    [7m    [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/admin/admin.service.ts[0m:[93m132[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'admin' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, LogLevel, DefaultArgs>, "$on" | "$connect" | "$disconnect" | "$transaction" | "$extends">'.
+
+[7m132[0m           await tx.admin.delete({
+[7m   [0m [91m                   ~~~~~[0m
+[96msrc/modules/analytics/analytics.controller.ts[0m:[93m6[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m6[0m import { Role } from '@prisma/client';
+[7m [0m [91m         ~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m4[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Status'.
+
+[7m4[0m import { Status } from '@prisma/client';
+[7m [0m [91m         ~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m11[0m:[93m37[0m - [91merror[0m[90m TS2339: [0mProperty 'admin' does not exist on type 'PrismaService'.
+
+[7m11[0m     const admin = await this.prisma.admin.findUnique({
+[7m  [0m [91m                                    ~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m33[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type 'PrismaService'.
+
+[7m33[0m       this.prisma.executor.count(),
+[7m  [0m [91m                  ~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m34[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'admin' does not exist on type 'PrismaService'.
+
+[7m34[0m       this.prisma.admin.count(),
+[7m  [0m [91m                  ~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m38[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'customerProgress' does not exist on type 'PrismaService'.
+
+[7m38[0m       this.prisma.customerProgress.aggregate({
+[7m  [0m [91m                  ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m43[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'customerProgress' does not exist on type 'PrismaService'.
+
+[7m43[0m       this.prisma.customerProgress.aggregate({
+[7m  [0m [91m                  ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m81[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'customerProgress' does not exist on type 'PrismaService'.
+
+[7m81[0m     let totalProgresses = await this.prisma.customerProgress.count({
+[7m  [0m [91m                                            ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m89[0m:[93m43[0m - [91merror[0m[90m TS2339: [0mProperty 'customerProgress' does not exist on type 'PrismaService'.
+
+[7m89[0m       totalProgresses = await this.prisma.customerProgress.count();
+[7m  [0m [91m                                          ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m92[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'customerProgress' does not exist on type 'PrismaService'.
+
+[7m92[0m     const progresses = await this.prisma.customerProgress.findMany({
+[7m  [0m [91m                                         ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m224[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'customerProgress' does not exist on type 'PrismaService'.
+
+[7m224[0m       this.prisma.customerProgress.findUnique({
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m227[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'grantedExecutor' does not exist on type 'PrismaService'.
+
+[7m227[0m       this.prisma.grantedExecutor.count({
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m230[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m230[0m       this.prisma.document.count({
+[7m   [0m [91m                  ~~~~~~~~[0m
+[96msrc/modules/analytics/analytics.service.ts[0m:[93m233[0m:[93m19[0m - [91merror[0m[90m TS2339: [0mProperty 'activityLog' does not exist on type 'PrismaService'.
+
+[7m233[0m       this.prisma.activityLog.findMany({
+[7m   [0m [91m                  ~~~~~~~~~~~[0m
+[96msrc/modules/auth/auth.controller.ts[0m:[93m9[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m9[0m import { Role } from '@prisma/client';
+[7m [0m [91m         ~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m34[0m:[93m18[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'admin' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m34[0m       include: { admin: true, executor: true, customer: true },
+[7m  [0m [91m                 ~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7367[0m:[93m5[0m
+    [7m7367[0m     include?: UserInclude<ExtArgs> | null
+    [7m    [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/auth/auth.service.ts[0m:[93m41[0m:[93m79[0m - [91merror[0m[90m TS2339: [0mProperty 'password' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m41[0m     const isPasswordMatched = await this.bcryptService.compare(password, user.password!);
+[7m  [0m [91m                                                                              ~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m50[0m:[93m17[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'fcmToken' does not exist in type '(Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput)'.
+
+[7m50[0m         data: { fcmToken: deviceToken },
+[7m  [0m [91m                ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7598[0m:[93m5[0m
+    [7m7598[0m     data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'data' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; data: (Without<...> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput); where: UserWhereUniqueInput; }'
+[96msrc/modules/auth/auth.service.ts[0m:[93m57[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'role' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m57[0m       role: user.role,
+[7m  [0m [91m                 ~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m58[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'username' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m58[0m       name: user.username,
+[7m  [0m [91m                 ~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m59[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'avatar' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m59[0m       avatar: user.avatar,
+[7m  [0m [91m                   ~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m97[0m:[93m17[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'fcmToken' does not exist in type '(Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput)'.
+
+[7m97[0m         data: { fcmToken: deviceToken },
+[7m  [0m [91m                ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7598[0m:[93m5[0m
+    [7m7598[0m     data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'data' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; data: (Without<...> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput); where: UserWhereUniqueInput; }'
+[96msrc/modules/auth/auth.service.ts[0m:[93m115[0m:[93m15[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'password' does not exist in type 'UserOmit<DefaultArgs>'.
+
+[7m115[0m       omit: { password: true },
+[7m   [0m [91m              ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7363[0m:[93m5[0m
+    [7m7363[0m     omit?: UserOmit<ExtArgs> | null
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'omit' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/auth/auth.service.ts[0m:[93m140[0m:[93m87[0m - [91merror[0m[90m TS2339: [0mProperty 'password' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m140[0m     const isPasswordMatched = await this.bcryptService.compare(prevPass, isUserExists.password!);
+[7m   [0m [91m                                                                                      ~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m151[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'password' does not exist in type '(Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput)'.
+
+[7m151[0m         password: hashPassword,
+[7m   [0m [91m        ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7598[0m:[93m5[0m
+    [7m7598[0m     data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'data' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; data: (Without<...> & UserUncheckedUpdateInput) | (Without<...> & UserUpdateInput); where: UserWhereUniqueInput; }'
+[96msrc/modules/auth/auth.service.ts[0m:[93m178[0m:[93m23[0m - [91merror[0m[90m TS2339: [0mProperty 'passwordResetOtp' does not exist on type 'PrismaService'.
+
+[7m178[0m     await this.prisma.passwordResetOtp.upsert({
+[7m   [0m [91m                      ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m194[0m:[93m12[0m - [91merror[0m[90m TS2339: [0mProperty 'username' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m194[0m       user.username || 'User',
+[7m   [0m [91m           ~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m208[0m:[93m43[0m - [91merror[0m[90m TS2339: [0mProperty 'passwordResetOtp' does not exist on type 'PrismaService'.
+
+[7m208[0m     const existingOtp = await this.prisma.passwordResetOtp.findFirst({
+[7m   [0m [91m                                          ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m217[0m:[93m25[0m - [91merror[0m[90m TS2339: [0mProperty 'passwordResetOtp' does not exist on type 'PrismaService'.
+
+[7m217[0m       await this.prisma.passwordResetOtp
+[7m   [0m [91m                        ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m238[0m:[93m23[0m - [91merror[0m[90m TS2339: [0mProperty 'passwordResetOtp' does not exist on type 'PrismaService'.
+
+[7m238[0m     await this.prisma.passwordResetOtp.delete({ where: { id: existingOtp.id } }).catch(() => null);
+[7m   [0m [91m                      ~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m273[0m:[93m12[0m - [91merror[0m[90m TS2339: [0mProperty 'username' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m273[0m       user.username || 'User',
+[7m   [0m [91m           ~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m299[0m:[93m18[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'executor' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m299[0m       include: { executor: true },
+[7m   [0m [91m                 ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7367[0m:[93m5[0m
+    [7m7367[0m     include?: UserInclude<ExtArgs> | null
+    [7m    [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/auth/auth.service.ts[0m:[93m318[0m:[93m16[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m318[0m       if (user.executor) {
+[7m   [0m [91m               ~~~~~~~~[0m
+[96msrc/modules/auth/auth.service.ts[0m:[93m319[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, LogLevel, DefaultArgs>, "$on" | "$connect" | "$disconnect" | "$transaction" | "$extends">'.
+
+[7m319[0m         await tx.executor.update({
+[7m   [0m [91m                 ~~~~~~~~[0m
+[96msrc/modules/customer/customer.constant.ts[0m:[93m4[0m:[93m89[0m - [91merror[0m[90m TS2322: [0mType '"role"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m4[0m export const customerFilterFields: (keyof Prisma.UserFieldRefs)[] = [`email`, `status`, `role`];
+[7m [0m [91m                                                                                        ~~~~~~[0m
+[96msrc/modules/customer/customer.constant.ts[0m:[93m7[0m:[93m79[0m - [91merror[0m[90m TS2322: [0mType '"username"' is not assignable to type 'keyof UserFieldRefs'.
+
+[7m7[0m export const customerSearchFields: (keyof Prisma.UserFieldRefs)[] = [`email`, `username`];
+[7m [0m [91m                                                                              ~~~~~~~~~~[0m
+[96msrc/modules/customer/customer.constant.ts[0m:[93m30[0m:[93m3[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'customer' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m30[0m   customer: {
+[7m  [0m [91m  ~~~~~~~~[0m
+[96msrc/modules/customer/customer.controller.ts[0m:[93m20[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m20[0m import { Role } from '@prisma/client';
+[7m  [0m [91m         ~~~~[0m
+[96msrc/modules/customer/customer.service.ts[0m:[93m5[0m:[93m20[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m5[0m import { Customer, Role } from '@prisma/client';
+[7m [0m [91m                   ~~~~[0m
+[96msrc/modules/customer/customer.service.ts[0m:[93m72[0m:[93m15[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'password' does not exist in type 'UserOmit<DefaultArgs>'.
+
+[7m72[0m       omit: { password: true },
+[7m  [0m [91m              ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7363[0m:[93m5[0m
+    [7m7363[0m     omit?: UserOmit<ExtArgs> | null
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'omit' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/customer/customer.service.ts[0m:[93m74[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'customer' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m74[0m         customer: {
+[7m  [0m [91m        ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7367[0m:[93m5[0m
+    [7m7367[0m     include?: UserInclude<ExtArgs> | null
+    [7m    [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/customer/customer.service.ts[0m:[93m82[0m:[93m26[0m - [91merror[0m[90m TS2339: [0mProperty 'customer' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m82[0m     if (result && result.customer) {
+[7m  [0m [91m                         ~~~~~~~~[0m
+[96msrc/modules/customer/customer.service.ts[0m:[93m83[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'customer' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m83[0m       const progress = (result.customer as any).customerProgress;
+[7m  [0m [91m                               ~~~~~~~~[0m
+[96msrc/modules/customer/customer.service.ts[0m:[93m86[0m:[93m15[0m - [91merror[0m[90m TS2339: [0mProperty 'customer' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m86[0m       (result.customer as any).completionPercentage =
+[7m  [0m [91m              ~~~~~~~~[0m
+[96msrc/modules/customer/customer.service.ts[0m:[93m101[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'customer' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m101[0m           where: { id: isUserExists?.customer?.id },
+[7m   [0m [91m                                     ~~~~~~~~[0m
+[96msrc/modules/customer/customer.service.ts[0m:[93m126[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'customer' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m126[0m         customer: {
+[7m   [0m [91m        ~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m7367[0m:[93m5[0m
+    [7m7367[0m     include?: UserInclude<ExtArgs> | null
+    [7m    [0m [96m    ~~~~~~~[0m
+    The expected type comes from property 'include' which is declared here on type '{ select?: UserSelect<DefaultArgs>; omit?: UserOmit<DefaultArgs>; include?: UserInclude<DefaultArgs>; where: UserWhereUniqueInput; }'
+[96msrc/modules/customer/customer.service.ts[0m:[93m145[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'customer' does not exist on type '{ fullName: string; email: string; id: string; phone: string; passwordHash: string; globalRole: GlobalRole; avatarUrl: string; status: UserStatus; createdAt: Date; updatedAt: Date; }'.
+
+[7m145[0m           where: { id: isUserExists?.customer.id },
+[7m   [0m [91m                                     ~~~~~~~~[0m
+[96msrc/modules/customer/dto/create-customer.dto.ts[0m:[93m2[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'BloodGroup'.
+
+[7m2[0m import { BloodGroup, Gender } from '@prisma/client';
+[7m [0m [91m         ~~~~~~~~~~[0m
+[96msrc/modules/customer/dto/create-customer.dto.ts[0m:[93m2[0m:[93m22[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Gender'.
+
+[7m2[0m import { BloodGroup, Gender } from '@prisma/client';
+[7m [0m [91m                     ~~~~~~[0m
+[96msrc/modules/document/document.constant.ts[0m:[93m3[0m:[93m50[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'DocumentFieldRefs'. Did you mean 'DiscountFieldRefs'?
+
+[7m3[0m export const documentFilterFields: (keyof Prisma.DocumentFieldRefs)[] = [
+[7m [0m [91m                                                 ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/document/document.constant.ts[0m:[93m12[0m:[93m50[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'DocumentFieldRefs'. Did you mean 'DiscountFieldRefs'?
+
+[7m12[0m export const documentSearchFields: (keyof Prisma.DocumentFieldRefs)[] = [
+[7m  [0m [91m                                                 ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/document/document.constant.ts[0m:[93m18[0m:[93m38[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'DocumentInclude'. Did you mean 'DiscountInclude'?
+
+[7m18[0m export const documentInclude: Prisma.DocumentInclude = {};
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~[0m
+[96msrc/modules/document/document.controller.ts[0m:[93m18[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m18[0m import { Role } from '@prisma/client';
+[7m  [0m [91m         ~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m9[0m:[93m10[0m - [91merror[0m[90m TS2724: [0m'"@prisma/client"' has no exported member named 'ActionType'. Did you mean 'StationType'?
+
+[7m9[0m import { ActionType } from '@prisma/client';
+[7m [0m [91m         ~~~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m281[0m:[93m14[0m
+    [7m281[0m export const StationType: typeof $Enums.StationType
+    [7m   [0m [96m             ~~~~~~~~~~~[0m
+    'StationType' is declared here.
+[96msrc/modules/document/document.service.ts[0m:[93m32[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type 'PrismaService'.
+
+[7m32[0m       const executor = await this.prisma.executor.findUnique({ where: { userId: user.id } });
+[7m  [0m [91m                                         ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m42[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'grantedExecutor' does not exist on type 'PrismaService'.
+
+[7m42[0m       const granted = await this.prisma.grantedExecutor.findUnique({
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m58[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m58[0m     const result = await this.prisma.document.create({
+[7m  [0m [91m                                     ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m77[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m77[0m     const result = await this.prisma.document.findFirst({ where });
+[7m  [0m [91m                                     ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m88[0m:[93m39[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m88[0m     const isExist = await this.prisma.document.findFirst({ where });
+[7m  [0m [91m                                      ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m91[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m91[0m     const result = await this.prisma.document.update({
+[7m  [0m [91m                                     ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m110[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m110[0m     const queryBuilder = new QueryBuilder(query, this.prisma.document);
+[7m   [0m [91m                                                             ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m112[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m112[0m       .filter(documentFilterFields)
+[7m   [0m [91m              ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m113[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m113[0m       .search(documentSearchFields)
+[7m   [0m [91m              ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m131[0m:[93m39[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m131[0m     const isExist = await this.prisma.document.findFirst({ where });
+[7m   [0m [91m                                      ~~~~~~~~[0m
+[96msrc/modules/document/document.service.ts[0m:[93m134[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'document' does not exist on type 'PrismaService'.
+
+[7m134[0m     const result = await this.prisma.document.delete({ where: { id } });
+[7m   [0m [91m                                     ~~~~~~~~[0m
+[96msrc/modules/document/dto/create-document.dto.ts[0m:[93m2[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'DocumentType'.
+
+[7m2[0m import { DocumentType } from '@prisma/client';
+[7m [0m [91m         ~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.constant.ts[0m:[93m5[0m:[93m50[0m - [91merror[0m[90m TS2694: [0mNamespace '"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member 'EmployerFieldRefs'.
+
+[7m5[0m export const employerFilterFields: (keyof Prisma.EmployerFieldRefs)[] = [
+[7m [0m [91m                                                 ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.constant.ts[0m:[93m19[0m:[93m50[0m - [91merror[0m[90m TS2694: [0mNamespace '"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member 'EmployerFieldRefs'.
+
+[7m19[0m export const employerSearchFields: (keyof Prisma.EmployerFieldRefs)[] = [
+[7m  [0m [91m                                                 ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.constant.ts[0m:[93m44[0m:[93m38[0m - [91merror[0m[90m TS2694: [0mNamespace '"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member 'EmployerInclude'.
+
+[7m44[0m export const employerInclude: Prisma.EmployerInclude = {};
+[7m  [0m [91m                                     ~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.controller.ts[0m:[93m6[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m6[0m import { Role } from '@prisma/client';
+[7m [0m [91m         ~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m14[0m:[93m41[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/modules/customer-progress/customer-progress.service' or its corresponding type declarations.
+
+[7m14[0m import { CustomerProgressService } from '@/modules/customer-progress/customer-progress.service';
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m16[0m:[93m10[0m - [91merror[0m[90m TS2724: [0m'"@prisma/client"' has no exported member named 'ActionType'. Did you mean 'StationType'?
+
+[7m16[0m import { ActionType } from '@prisma/client';
+[7m  [0m [91m         ~~~~~~~~~~[0m
+
+  [96mnode_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index.d.ts[0m:[93m281[0m:[93m14[0m
+    [7m281[0m export const StationType: typeof $Enums.StationType
+    [7m   [0m [96m             ~~~~~~~~~~~[0m
+    'StationType' is declared here.
+[96msrc/modules/employer/employer.service.ts[0m:[93m37[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type 'PrismaService'.
+
+[7m37[0m       const executor = await this.prisma.executor.findUnique({ where: { userId: user.id } });
+[7m  [0m [91m                                         ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m48[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'grantedExecutor' does not exist on type 'PrismaService'.
+
+[7m48[0m       const granted = await this.prisma.grantedExecutor.findUnique({
+[7m  [0m [91m                                        ~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m65[0m:[93m39[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m65[0m     const result = await (this.prisma.employer as any).create({
+[7m  [0m [91m                                      ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m85[0m:[93m39[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m85[0m     const result = await (this.prisma.employer as any).findFirst({ where });
+[7m  [0m [91m                                      ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m96[0m:[93m40[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m96[0m     const isExist = await (this.prisma.employer as any).findFirst({ where });
+[7m  [0m [91m                                       ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m99[0m:[93m39[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m99[0m     const result = await (this.prisma.employer as any).update({
+[7m  [0m [91m                                      ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m119[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m119[0m     const queryBuilder = new QueryBuilder(query, this.prisma.employer);
+[7m   [0m [91m                                                             ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m121[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m121[0m       .filter(employerFilterFields)
+[7m   [0m [91m              ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m122[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m122[0m       .search(employerSearchFields)
+[7m   [0m [91m              ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m141[0m:[93m40[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m141[0m     const isExist = await (this.prisma.employer as any).findFirst({ where });
+[7m   [0m [91m                                       ~~~~~~~~[0m
+[96msrc/modules/employer/employer.service.ts[0m:[93m144[0m:[93m39[0m - [91merror[0m[90m TS2339: [0mProperty 'employer' does not exist on type 'PrismaService'.
+
+[7m144[0m     const result = await (this.prisma.employer as any).delete({ where: { id } });
+[7m   [0m [91m                                      ~~~~~~~~[0m
+[96msrc/modules/executor/executor.constant.ts[0m:[93m4[0m:[93m50[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'ExecutorFieldRefs'. Did you mean 'CustomerFieldRefs'?
+
+[7m4[0m export const ExecutorFilterFields: (keyof Prisma.ExecutorFieldRefs)[] = [
+[7m [0m [91m                                                 ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/executor/executor.constant.ts[0m:[93m19[0m:[93m50[0m - [91merror[0m[90m TS2724: [0m'"/home/euhan/projects/milky.server/node_modules/.pnpm/@prisma+client@6.17.1_prisma@6.17.1_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client/index".Prisma' has no exported member named 'ExecutorFieldRefs'. Did you mean 'CustomerFieldRefs'?
+
+[7m19[0m export const ExecutorSearchFields: (keyof Prisma.ExecutorFieldRefs)[] = [
+[7m  [0m [91m                                                 ~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/executor/executor.constant.ts[0m:[93m47[0m:[93m3[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'executor' does not exist in type 'UserInclude<DefaultArgs>'.
+
+[7m47[0m   executor: true,
+[7m  [0m [91m  ~~~~~~~~[0m
+[96msrc/modules/executor/executor.controller.ts[0m:[93m17[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m17[0m import { Role } from '@prisma/client';
+[7m  [0m [91m         ~~~~[0m
+[96msrc/modules/executor/executor.service.ts[0m:[93m14[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Executor'.
+
+[7m14[0m import { Executor, Role } from '@prisma/client';
+[7m  [0m [91m         ~~~~~~~~[0m
+[96msrc/modules/executor/executor.service.ts[0m:[93m14[0m:[93m20[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'Role'.
+
+[7m14[0m import { Executor, Role } from '@prisma/client';
+[7m  [0m [91m                   ~~~~[0m
+[96msrc/modules/executor/executor.service.ts[0m:[93m24[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m24[0m       .filter(ExecutorFilterFields)
+[7m  [0m [91m              ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/executor/executor.service.ts[0m:[93m25[0m:[93m15[0m - [91merror[0m[90m TS2345: [0mArgument of type '(string | number | symbol)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | number | symbol' is not assignable to type 'string'.
+    Type 'number' is not assignable to type 'string'.
+
+[7m25[0m       .search(ExecutorSearchFields)
+[7m  [0m [91m              ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/executor/executor.service.ts[0m:[93m42[0m:[93m46[0m - [91merror[0m[90m TS2339: [0mProperty 'executor' does not exist on type 'PrismaService'.
+
+[7m42[0m     let isExecutorExists = await this.prisma.executor
+[7m  [0m [91m                                             ~~~~~~~~[0m
+[96msrc/modules/executor/executor.service.ts[0mFound 205 error(s).
+
