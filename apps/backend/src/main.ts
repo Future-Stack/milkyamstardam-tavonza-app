@@ -44,8 +44,10 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
+      'http://51.21.19.92:3000',
+      'http://51.21.19.92:3001',
+      'http://51.21.19.92:3002',
       'https://lifekeys-shepherd.vercel.app',
-      '*',
       'https://lifekeysshepherd.com',
       'https://lifekeys-shepherd.com',
       'https://www.lifekeys-shepherd.com',

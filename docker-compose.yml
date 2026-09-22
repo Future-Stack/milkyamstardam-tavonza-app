@@ -1,0 +1,130 @@
+services:
+  # ============================================================================
+  # Backend API Server (NestJS + Prisma)
+  # ============================================================================
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    image: softvence/milky-backend:latest
+    container_name: milky-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+    networks:
+      - milky-net
+
+  # ============================================================================
+  # Main Web Frontend (Next.js)
+  # ============================================================================
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    image: softvence/milky-web:latest
+    container_name: milky-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+    depends_on:
+      - backend
+    networks:
+      - milky-net
+
+  # ============================================================================
+  # Customer Portal (Next.js)
+  # ============================================================================
+  customer:
+    build:
+      context: ./apps/customer
+      dockerfile: Dockerfile
+    image: softvence/milky-customer:latest
+    container_name: milky-customer
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+    depends_on:
+      - backend
+    networks:
+      - milky-net
+
+  # ============================================================================
+  # System Admin Portal (Next.js)
+  # ============================================================================
+  system-admin:
+    build:
+      context: ./apps/system-admin
+      dockerfile: Dockerfile
+    image: softvence/milky-system-admin:latest
+    container_name: milky-system-admin
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+    depends_on:
+      - backend
+    networks:
+      - milky-net
+
+  # ============================================================================
+  # Local MongoDB Database (Optional - active if not using MongoDB Atlas)
+  # ============================================================================
+  mongo:
+    image: mongo:7.0
+    container_name: milky-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - milky-net
+
+  # ============================================================================
+  # Mongo Express (Database GUI - access via http://localhost:8081)
+  # ============================================================================
+  mongo-express:
+    image: mongo-express:latest
+    container_name: milky-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - milky-net
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  milky-net:
+    driver: bridge
