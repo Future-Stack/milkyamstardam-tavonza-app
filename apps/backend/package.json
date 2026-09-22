@@ -24,6 +24,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "postinstall": "npx prisma generate",
     "generate": "npx prisma generate",
+    "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts",
     "generate:swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts",
     "generate:postman": "pnpm dlx openapi-to-postmanv2 -s swagger-spec.json -o postman-collection.json -p",
     "update:postman": "node scripts/upload-to-postman.js",

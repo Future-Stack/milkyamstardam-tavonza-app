@@ -1,0 +1,13 @@
+Super admin   euhan.dev@gmail.com     123456
+Org owner     owner@tavonza.demo      Demo1234!
+Org owner     owner@tavonza.demo      Demo1234!
+Regional mgr  regional@tavonza.demo   Demo1234!
+Branch mgr    manager@tavonza.demo    Demo1234!
+Waiter        waiter@tavonza.demo     Demo1234!
+Waiter 2      waiter2@tavonza.demo    Demo1234!
+Bartender     bartender@tavonza.demo  Demo1234!
+Kitchen       kitchen@tavonza.demo    Demo1234!
+Cashier       cashier@tavonza.demo    Demo1234!
+Host          host@tavonza.demo       Demo1234!
+Customer      customer@tavonza.demo   Demo1234!
+Customer 2    customer2@tavonza.demo  Demo1234!
