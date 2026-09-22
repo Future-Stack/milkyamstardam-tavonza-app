@@ -20,24 +20,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-interface RoleOption {
-  id: string;
-  name: string;
-  route: string;
-}
-
-const ROLES: RoleOption[] = [
-  { id: "owner", name: "Owner / Executive", route: "/owner-dashboard" },
-  { id: "manager", name: "General Manager", route: "/manager-dashboard" },
-  { id: "kitchen", name: "Kitchen Display (KDS)", route: "/kitchen-dashboard/dashboard" },
-  { id: "waiter", name: "Waiter POS & Service", route: "/waiter-dashboard" },
-  { id: "cashier", name: "Cashier & Billing", route: "/cashier-dashboard" },
-  { id: "bartender", name: "Bartender & Drinks", route: "/bartender-dashboard" },
-];
-
 export default function SignIn() {
   const router = useRouter();
-  const [roleId, setRoleId] = useState<string>("owner");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -51,14 +35,13 @@ export default function SignIn() {
       return;
     }
 
-    const selected = ROLES.find((r) => r.id === roleId) || ROLES[0];
     setIsLoading(true);
-    toast.info(`Authenticating ${selected.name}...`);
+    toast.info("Authenticating credentials...");
 
     setTimeout(() => {
       setIsLoading(false);
-      toast.success(`Access granted! Redirecting to ${selected.name}`);
-      router.push(selected.route);
+      toast.success("Access granted! Welcome to Tavonza AI");
+      router.push("/owner-dashboard");
     }, 600);
   };
 
@@ -168,32 +151,12 @@ export default function SignIn() {
               Staff & Operations Login
             </h2>
             <p className="text-xs text-neutral-400 leading-relaxed">
-              Enter your credentials and select your terminal station to access your shift workspace.
+              Enter your credentials to access your restaurant operations workspace.
             </p>
           </div>
 
           {/* Sign In Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            {/* Operational Station Selector */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-neutral-300">Terminal Station / Role</label>
-              <div className="relative">
-                <select
-                  value={roleId}
-                  onChange={(e) => setRoleId(e.target.value)}
-                  className="w-full h-11 px-3.5 bg-neutral-900 border border-neutral-800 focus:border-amber-400 rounded-xl text-xs text-white focus:outline-none transition cursor-pointer appearance-none"
-                >
-                  {ROLES.map((r) => (
-                    <option key={r.id} value={r.id} className="bg-neutral-900 text-white py-1">
-                      {r.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-400 text-xs">
-                  ▼
-                </div>
-              </div>
-            </div>
 
             {/* Email Field */}
             <div className="flex flex-col gap-1.5">
