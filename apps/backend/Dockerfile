@@ -42,7 +42,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
 
 # Expose the application port
-EXPOSE 5000
+EXPOSE 7777
 
 # Start the application
 CMD ["npm", "run", "start:prod"]

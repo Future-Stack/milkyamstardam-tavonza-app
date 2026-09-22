@@ -10,11 +10,11 @@ services:
     container_name: milky-backend
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "7777:7777"
     env_file:
       - .env
     environment:
-      - PORT=5000
+      - PORT=7777
       - NODE_ENV=production
     networks:
       - milky-net
@@ -34,7 +34,7 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+      - NEXT_PUBLIC_API_URL=http://localhost:7777/api/v1
     depends_on:
       - backend
     networks:
@@ -55,7 +55,7 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+      - NEXT_PUBLIC_API_URL=http://localhost:7777/api/v1
     depends_on:
       - backend
     networks:
@@ -76,7 +76,7 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+      - NEXT_PUBLIC_API_URL=http://localhost:7777/api/v1
     depends_on:
       - backend
     networks:
