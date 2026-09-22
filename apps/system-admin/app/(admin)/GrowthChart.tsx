@@ -6,13 +6,15 @@ import { BarChart3, Table2 } from "lucide-react";
 import type { GrowthPoint } from "../../lib/types";
 
 const HEIGHT = 240;
-const PADDING = { top: 16, right: 16, bottom: 28, left: 34 };
+const PADDING = { top: 26, right: 16, bottom: 28, left: 34 };
 
 /** The single onboarding hue — the app's primary accent. */
 const SERIES = "#D4AF37";
 const GRID = "rgba(255,255,255,0.06)";
 const AXIS_TEXT = "rgba(156,163,175,1)";
-const SURFACE = "#0b0e14";
+/** Card background composited over the page — the ring/dot colour must match it. */
+const SURFACE = "#0e0f15";
+const LABEL_TEXT = "rgba(229,231,235,1)";
 
 function shortDate(iso: string): string {
   const [year, month, day] = iso.split("-").map(Number);
@@ -214,6 +216,21 @@ export function GrowthChart({ series }: { series: GrowthPoint[] }) {
                       strokeLinejoin="round"
                       strokeLinecap="round"
                     />
+                    {/* Direct label on the endpoint only — the axis and tooltip
+                        carry every other value. */}
+                    {lastPoint && (
+                      <text
+                        x={geometry.x(series.length - 1)}
+                        y={geometry.y(lastPoint.organizations) - 12}
+                        textAnchor="end"
+                        fill={LABEL_TEXT}
+                        fontSize={12}
+                        fontWeight={600}
+                        style={{ fontVariantNumeric: "tabular-nums" }}
+                      >
+                        {lastPoint.organizations}
+                      </text>
+                    )}
                   </>
                 )}
 
