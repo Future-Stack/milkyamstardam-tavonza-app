@@ -30,7 +30,7 @@ export const getCurrentUser = cache(async (): Promise<SessionUser | null> => {
       createdAt: data.createdAt,
     };
   } catch (error) {
-    if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
+    if (error instanceof ApiError && (error.status === 401 || error.status === 403 || error.status === 404)) {
       return null;
     }
     throw error;
