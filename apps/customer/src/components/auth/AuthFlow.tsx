@@ -37,7 +37,7 @@ export default function AuthFlow({
       <div className="w-full flex-1 flex items-center justify-center">
         {currentScreen === 'login' && (
           <LoginView
-            onLoginSuccess={() => setCurrentScreen('success')}
+            onLoginSuccess={onAuthComplete}
             onForgotPassword={() => setCurrentScreen('forgot-password')}
             onCreateAccount={() => setCurrentScreen('create-account')}
           />
@@ -62,39 +62,16 @@ export default function AuthFlow({
 
         {currentScreen === 'reset-password' && (
           <ResetPasswordView
-            onComplete={() => setCurrentScreen('success')}
+            onComplete={onAuthComplete}
             onBack={() => setCurrentScreen('verify-otp')}
           />
         )}
 
         {currentScreen === 'create-account' && (
           <CreateAccountView
-            onAccountCreated={() => setCurrentScreen('success')}
+            onAccountCreated={onAuthComplete}
             onGoBackToLogin={() => setCurrentScreen('login')}
           />
-        )}
-
-        {currentScreen === 'success' && (
-          <div className="w-full max-w-sm mx-auto flex flex-col items-center justify-center min-h-[760px] p-6 text-center text-white gap-6 animate-in fade-in zoom-in-95">
-            <div className="w-20 h-20 rounded-full bg-yellow-400/20 border border-yellow-400/40 flex items-center justify-center text-yellow-400 shadow-xl shadow-yellow-500/20">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <h2 className="text-2xl font-bold font-['Outfit'] text-white">Authenticated!</h2>
-              <p className="text-xs text-neutral-400 max-w-xs leading-relaxed">
-                Welcome to <span className="text-yellow-400 font-semibold">Tavonza AI</span>. Your dining preferences and table sessions are ready.
-              </p>
-            </div>
-
-            <button
-              onClick={onAuthComplete}
-              className="w-full h-12 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold text-sm rounded-full flex items-center justify-center gap-2 shadow-lg shadow-yellow-500/20 transition active:scale-[0.99]"
-            >
-              <span>Explore Menu & Restaurants</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
         )}
       </div>
     </div>
