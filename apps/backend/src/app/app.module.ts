@@ -3,6 +3,7 @@ import { CronJobService } from '@/helper/cron_jobs';
 import { FileService } from '@/helper/file.service';
 import { PrismaModule } from '@/helper/prisma.module';
 import { AdminModule } from '@/modules/admin/admin.module';
+import { AnalyticsModule } from '@/modules/analytics/analytics.module';
 import { AuthGuard } from '@/modules/auth/auth.guard';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CustomerModule } from '@/modules/customer/customer.module';
@@ -51,6 +52,7 @@ import { ConfigModule } from '@/config/config.module';
     AuthModule,
     UserModule,
     AdminModule,
+    AnalyticsModule,
     CustomerModule,
     ConfigModule,
     AuditLogModule,
