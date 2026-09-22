@@ -13,7 +13,7 @@ import type { Meta } from "./types";
  * client component that pulls it in fails to build rather than leaking the token.
  */
 
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:7777/api/v1";
+const API_BASE_URL =  "http://0000:7777/api/v1";
 
 export interface BackendFieldError {
   path: string;
