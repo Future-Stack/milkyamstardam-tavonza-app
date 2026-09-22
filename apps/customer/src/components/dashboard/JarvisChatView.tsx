@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
@@ -17,14 +17,32 @@ import {
 interface JarvisChatViewProps {
   onReserveClick?: () => void;
   isNavVisible?: boolean;
+  onInputFocus?: () => void;
+  onInputBlur?: () => void;
 }
 
-export default function JarvisChatView({ onReserveClick, isNavVisible = true }: JarvisChatViewProps) {
+export default function JarvisChatView({
+  onReserveClick,
+  isNavVisible = true,
+  onInputFocus,
+  onInputBlur,
+}: JarvisChatViewProps) {
   const router = useRouter();
   const [jarvisQuery, setJarvisQuery] = useState('');
   const [activePreset, setActivePreset] = useState<string | null>(null);
   const [chatLog, setChatLog] = useState<{ sender: 'user' | 'jarvis'; text: string }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatLog.length > 0) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatLog]);
+
+  const showNav = isNavVisible && !isFocused;
 
   const handleReserve = () => {
     if (onReserveClick) {
@@ -169,26 +187,6 @@ export default function JarvisChatView({ onReserveClick, isNavVisible = true }: 
               </button>
             ))}
           </div>
-
-          {chatLog.length > 0 && (
-            <div className="mt-2 p-3 bg-neutral-900 rounded-2xl border border-yellow-400/30 flex flex-col gap-2">
-              {chatLog.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`p-2.5 rounded-xl text-xs ${
-                    msg.sender === 'user'
-                      ? 'bg-yellow-400/20 text-yellow-300 font-medium self-end border border-yellow-400/20'
-                      : 'bg-black/60 text-neutral-200 self-start border border-white/5'
-                  }`}
-                >
-                  <span className="font-semibold block mb-0.5 text-[10px] text-neutral-400 uppercase">
-                    {msg.sender === 'user' ? 'You' : 'JARVIS AI'}
-                  </span>
-                  {msg.text}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* 3. Categories */}
@@ -301,33 +299,69 @@ export default function JarvisChatView({ onReserveClick, isNavVisible = true }: 
             ))}
           </div>
         </div>
+
+        {/* 6. Active Live AI Chat Conversation Stream (Positioned above Chat Input Box) */}
+        {chatLog.length > 0 && (
+          <div className="px-5 my-2 flex flex-col gap-2.5 animate-in fade-in duration-300">
+            <div className="p-4 bg-neutral-900/90 rounded-2xl border border-yellow-400/30 shadow-xl flex flex-col gap-3">
+              {chatLog.map((msg, i) => (
+                <div
+                  key={i}
+                  className={`p-3 rounded-xl text-xs max-w-[85%] ${
+                    msg.sender === 'user'
+                      ? 'bg-yellow-400/20 text-yellow-300 font-medium self-end border border-yellow-400/20'
+                      : 'bg-black/60 text-neutral-200 self-start border border-white/10'
+                  }`}
+                >
+                  <span className="font-semibold block mb-1 text-[10px] text-neutral-400 uppercase tracking-wider">
+                    {msg.sender === 'user' ? 'You' : 'JARVIS AI'}
+                  </span>
+                  <p className="leading-relaxed font-['Inter']">{msg.text}</p>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 6. Sticky Chat Input Bar (positioning above bottom nav without overlap) */}
+      {/* 6. Chat Input Bar (Floating above BottomNav, drops to screen bottom when focused/typing or scrolling down) */}
       <div
-        className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto sticky bottom-40 left-0 right-0 px-4 pb-3 pt-2 bg-black/90 z-40 transition-transform duration-300 ease-in-out ${
-          isNavVisible ? 'translate-y-0' : 'translate-y-36'
+        className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto fixed left-0 right-0 px-4 pb-2 z-40 transition-all duration-300 ease-in-out ${
+          showNav ? 'bottom-[84px]' : 'bottom-3'
         }`}
       >
-        <div className="w-full bg-neutral-900/95 border border-white/10 rounded-2xl p-3.5 flex items-center justify-between shadow-2xl backdrop-blur-xl">
+        <div className="w-full bg-neutral-900/95 border border-white/10 rounded-2xl p-3 flex items-center justify-between shadow-2xl backdrop-blur-xl">
           <input
             type="text"
             value={jarvisQuery}
             onChange={(e) => setJarvisQuery(e.target.value)}
+            onFocus={() => {
+              setIsFocused(true);
+              if (onInputFocus) onInputFocus();
+            }}
+            onBlur={() => {
+              setIsFocused(false);
+              if (onInputBlur) onInputBlur();
+            }}
             onKeyDown={(e) => e.key === 'Enter' && handleSendPrompt(jarvisQuery)}
             placeholder="Ask Jarvis anything..."
-            className="w-full bg-transparent text-sm font-normal text-white placeholder:text-neutral-400 focus:outline-none pr-3 font-['Inter']"
+            className="w-full bg-transparent text-xs sm:text-sm font-normal text-white placeholder:text-neutral-400 focus:outline-none pr-3 font-['Inter']"
           />
 
           <div className="flex items-center gap-2 shrink-0">
-            <button className="w-10 h-10 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-white hover:bg-neutral-700 transition">
-              <Mic className="w-4.5 h-4.5 text-white" />
+            <button
+              type="button"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center text-white hover:bg-neutral-700 transition"
+            >
+              <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
             </button>
             <button
+              type="button"
               onClick={() => handleSendPrompt(jarvisQuery || "What's your best-selling dish?")}
-              className="w-10 h-10 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center text-black font-bold shadow-lg shadow-amber-500/20 transition active:scale-95"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center text-black font-bold shadow-md shadow-amber-500/20 transition active:scale-95"
             >
-              <Send className="w-4.5 h-4.5 text-black" />
+              <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black fill-black stroke-none" />
             </button>
           </div>
         </div>

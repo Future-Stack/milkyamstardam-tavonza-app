@@ -130,7 +130,13 @@ export default function CustomerDashboardView({
       case 'search':
         return <SearchView onReserveClick={() => setShowReserveModal(true)} />;
       case 'jarvis':
-        return <JarvisChatView isNavVisible={isNavVisible} />;
+        return (
+          <JarvisChatView
+            isNavVisible={isNavVisible}
+            onInputFocus={() => setIsNavVisible(false)}
+            onInputBlur={() => setIsNavVisible(true)}
+          />
+        );
       case 'orders':
         return <OrdersView onReserveClick={() => setShowReserveModal(true)} onOpenFeedback={() => setShowFeedbackModal(true)} />;
       case 'profile':
