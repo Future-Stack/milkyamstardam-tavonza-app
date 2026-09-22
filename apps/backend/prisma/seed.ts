@@ -1,6 +1,6 @@
 /**
  * Tavonza AI — demo seed.
- *
+ *os
  * Builds one complete tenant so the branch + customer flow can be demonstrated
  * end to end: a fully set-up branch with every table AVAILABLE and no open
  * session (so the live QR → OTP → order → accept → prepare → serve → pay →
