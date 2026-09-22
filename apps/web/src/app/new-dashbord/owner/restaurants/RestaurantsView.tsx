@@ -8,6 +8,7 @@ import RestaurantCard from './components/RestaurantCard';
 import RestaurantDetailView from './components/RestaurantDetailView';
 import CreateRestaurantModal from './components/CreateRestaurantModal';
 import EditRestaurantModal from './components/EditRestaurantModal';
+import RestaurantSettingsView from './components/RestaurantSettingsView';
 import BranchesView from './components/BranchesView';
 
 interface RestaurantsViewProps {
@@ -25,9 +26,11 @@ export default function RestaurantsView({
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'All' | 'Open' | 'Closed'>('All');
 
-  // Modals state
+  // Modals & Active Views state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedForEdit, setSelectedForEdit] = useState<RestaurantBranch | null>(null);
+  const [activeSettingsRestaurant, setActiveSettingsRestaurant] = useState<RestaurantBranch | null>(null);
+  const [activeBranchesRestaurant, setActiveBranchesRestaurant] = useState<RestaurantBranch | null>(null);
 
   // Active restaurant for Detail View (Figma Images 2, 3, 4, 5)
   const [activeDetailRestaurant, setActiveDetailRestaurant] = useState<RestaurantBranch | null>(() => {
@@ -79,7 +82,44 @@ export default function RestaurantsView({
     if (activeDetailRestaurant && activeDetailRestaurant.id === updated.id) {
       setActiveDetailRestaurant(updated);
     }
+    if (activeSettingsRestaurant && activeSettingsRestaurant.id === updated.id) {
+      setActiveSettingsRestaurant(updated);
+    }
+    if (activeBranchesRestaurant && activeBranchesRestaurant.id === updated.id) {
+      setActiveBranchesRestaurant(updated);
+    }
   };
+
+  // If viewing Branches Management view (Figma Image 2 & 3: Manage Branches)
+  if (activeBranchesRestaurant) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-6">
+        <BranchesView
+          restaurant={activeBranchesRestaurant}
+          onBack={() => setActiveBranchesRestaurant(null)}
+          setSelectedBranch={setSelectedBranch}
+          selectedBranch={selectedBranch}
+        />
+      </div>
+    );
+  }
+
+  // If viewing Restaurant Settings view (Figma 5 Tabs: General, Notifications, Integrations, Permissions, Danger Zone)
+  if (activeSettingsRestaurant) {
+    return (
+      <div className="max-w-5xl mx-auto space-y-6">
+        <RestaurantSettingsView
+          restaurant={activeSettingsRestaurant}
+          onBack={() => setActiveSettingsRestaurant(null)}
+          onSave={handleRestaurantUpdated}
+          onDeleteRestaurant={(id) => {
+            setRestaurants((prev) => prev.filter((r) => r.id !== id));
+            setActiveSettingsRestaurant(null);
+          }}
+        />
+      </div>
+    );
+  }
 
   // If viewing a single restaurant's complete detail page (Figma Images 2-5)
   if (activeDetailRestaurant) {
@@ -92,8 +132,9 @@ export default function RestaurantsView({
             setActiveDetailRestaurant(null);
             setSelectedBranch?.('All Restaurants');
           }}
-          onEdit={(r) => setSelectedForEdit(r)}
-          onManageBranches={() => setDetailTab('branches')}
+          onEdit={(r: RestaurantBranch) => setSelectedForEdit(r)}
+          onSettings={(r: RestaurantBranch) => setActiveSettingsRestaurant(r)}
+          onManageBranches={() => setActiveBranchesRestaurant(activeDetailRestaurant)}
         />
 
         {/* Edit Modal if triggered from detail view */}
@@ -210,10 +251,9 @@ export default function RestaurantsView({
               setSelectedBranch?.(r.name);
             }}
             onEdit={(r) => setSelectedForEdit(r)}
-            onSettings={(r) => setSelectedForEdit(r)}
+            onSettings={(r) => setActiveSettingsRestaurant(r)}
             onBranches={(r) => {
-              setActiveDetailRestaurant(r);
-              setDetailTab('branches');
+              setActiveBranchesRestaurant(r);
               setSelectedBranch?.(r.name);
             }}
           />

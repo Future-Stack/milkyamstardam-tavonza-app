@@ -3,17 +3,22 @@
 import React, { useState } from 'react';
 import {
   ArrowLeft,
+  ChevronLeft,
   Plus,
   Building2,
   MapPin,
   Users,
   Store,
-  CheckCircle2,
-  XCircle,
+  Eye,
+  Edit2,
+  Settings,
 } from 'lucide-react';
 import { RestaurantBranch, BranchItem } from '../types';
 import { INITIAL_BRANCHES } from '../restaurantsData';
 import CreateBranchModal from './CreateBranchModal';
+import BranchDetailView from './BranchDetailView';
+import EditBranchModal from './EditBranchModal';
+import BranchSettingsView from './BranchSettingsView';
 
 interface BranchesViewProps {
   restaurant: RestaurantBranch;
@@ -37,8 +42,8 @@ export default function BranchesView({
           id: `b-${restaurant.id}-1`,
           restaurantId: restaurant.id,
           restaurantName: restaurant.name,
-          name: `${restaurant.name} Uttara`,
-          address: 'Sector 3, Jashimuddin Avenue',
+          name: `Tavonza Uttara`,
+          address: 'Uttara, Dhaka',
           city: 'Uttara',
           country: 'Dhaka',
           postalCode: '1230',
@@ -54,62 +59,49 @@ export default function BranchesView({
           },
           staffCount: 7,
           assignedStaff: [],
-          revenue: '$22,400/mo',
+          revenue: '৳24,500/day',
         },
         {
           id: `b-${restaurant.id}-2`,
           restaurantId: restaurant.id,
           restaurantName: restaurant.name,
-          name: `${restaurant.name} Banani`,
-          address: 'Block E, Road 11',
-          city: 'Banani',
-          country: 'Dhaka',
-          postalCode: '1213',
-          phone: '+880 2-9844556',
-          email: 'banani@tavonza.com',
-          status: 'Closed',
-          manager: {
-            id: 'bmgr-2',
-            name: 'Arif Hossain',
-            role: 'Branch Manager',
-            email: 'arif@tavonza.com',
-            avatar: 'AH',
-          },
-          staffCount: 7,
-          assignedStaff: [],
-          revenue: '$18,900/mo',
-        },
-        {
-          id: `b-${restaurant.id}-3`,
-          restaurantId: restaurant.id,
-          restaurantName: restaurant.name,
-          name: `${restaurant.name} Mirpur`,
-          address: 'Mirpur 10 Circle',
+          name: `Tavonza Mirpur`,
+          address: 'Mirpur, Dhaka',
           city: 'Mirpur',
           country: 'Dhaka',
           postalCode: '1216',
           phone: '+880 2-9011223',
           email: 'mirpur@tavonza.com',
-          status: 'Open',
+          status: 'Closed',
           manager: {
-            id: 'bmgr-3',
-            name: 'Arif Hossain',
+            id: 'bmgr-2',
+            name: 'Priya Sen',
             role: 'Branch Manager',
-            email: 'arif@tavonza.com',
-            avatar: 'AH',
+            email: 'priya@tavonza.com',
+            avatar: 'PS',
           },
-          staffCount: 7,
+          staffCount: 5,
           assignedStaff: [],
-          revenue: '$24,100/mo',
+          revenue: '৳0/day',
         },
       ]
     );
   });
 
   const [isCreateBranchOpen, setIsCreateBranchOpen] = useState(false);
+  const [selectedBranchForDetail, setSelectedBranchForDetail] = useState<BranchItem | null>(null);
+  const [selectedBranchForEdit, setSelectedBranchForEdit] = useState<BranchItem | null>(null);
+  const [selectedBranchForSettings, setSelectedBranchForSettings] = useState<BranchItem | null>(null);
 
   const handleBranchCreated = (newBranch: BranchItem) => {
     setBranches((prev) => [newBranch, ...prev]);
+  };
+
+  const handleBranchUpdated = (updated: BranchItem) => {
+    setBranches((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+    if (selectedBranchForDetail && selectedBranchForDetail.id === updated.id) {
+      setSelectedBranchForDetail(updated);
+    }
   };
 
   const handleSelectBranch = (branch: BranchItem) => {
@@ -121,6 +113,37 @@ export default function BranchesView({
     }
   };
 
+  // If viewing Branch Settings view (Figma 4 Tabs: General, Notifications, Permissions, Danger Zone)
+  if (selectedBranchForSettings) {
+    return (
+      <BranchSettingsView
+        branch={selectedBranchForSettings}
+        parentRestaurant={restaurant}
+        onBack={() => setSelectedBranchForSettings(null)}
+        onSave={handleBranchUpdated}
+        onDeleteBranch={(id) => {
+          setBranches((prev) => prev.filter((b) => b.id !== id));
+          setSelectedBranchForSettings(null);
+          if (selectedBranchForDetail && selectedBranchForDetail.id === id) {
+            setSelectedBranchForDetail(null);
+          }
+        }}
+      />
+    );
+  }
+
+  // If viewing a single branch detail page (Figma Image 4)
+  if (selectedBranchForDetail) {
+    return (
+      <BranchDetailView
+        branch={selectedBranchForDetail}
+        parentRestaurant={restaurant}
+        onBack={() => setSelectedBranchForDetail(null)}
+        onSettings={(b) => setSelectedBranchForSettings(b)}
+      />
+    );
+  }
+
   return (
     <>
       <div
@@ -128,157 +151,191 @@ export default function BranchesView({
           isCreateBranchOpen ? 'filter blur-[3px] pointer-events-none select-none opacity-80' : ''
         }`}
       >
-      {/* ========================================================================= */}
-      {/* 1. TOP HEADER WITH BACK BUTTON */}
-      {/* ========================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          {/* Back Button matching Figma size-10 bg-white rounded-[10px] */}
-          <button
-            type="button"
-            onClick={onBack}
-            className="w-10 h-10 bg-white hover:bg-stone-200 rounded-[10px] flex items-center justify-center text-black flex-shrink-0 transition-all cursor-pointer shadow-md"
-            title="Back to Restaurants"
-          >
-            <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-          </button>
-
-          <div>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <h1 className="text-white text-2xl sm:text-3xl font-semibold font-sans leading-9">
-                Branches .
-              </h1>
-              <span className="text-white text-base sm:text-lg font-normal">
-                {restaurant.name}
-              </span>
-            </div>
-            <p className="text-zinc-500 text-sm sm:text-base font-normal mt-0.5 leading-6">
-              Manage branch locations for this restaurant.
-            </p>
-          </div>
-        </div>
-
-        {/* Create Branch Button */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <button
-            type="button"
-            onClick={() => setIsCreateBranchOpen(true)}
-            className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-white rounded-[10px] shadow-[0px_1px_3px_0px_rgba(255,214,168,0.60)] flex items-center gap-1.5 transition-all cursor-pointer font-sans"
-          >
-            <Plus className="w-4 h-4 stroke-[2.5]" />
-            <span className="text-xs font-semibold leading-5">Create Branch</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 2. PARENT RESTAURANT SUMMARY BAR (Matches Figma Snippet) */}
-      {/* ========================================================================= */}
-      <div className="w-full bg-neutral-900 border border-zinc-800 rounded-[10px] p-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-white rounded-[10px] flex items-center justify-center text-black flex-shrink-0">
-            <Building2 className="w-5 h-5 text-neutral-800" />
-          </div>
-          <div>
-            <div className="text-white text-base font-semibold leading-5">
-              {restaurant.name}
-            </div>
-            <div className="text-zinc-500 text-base font-normal mt-0.5 leading-6">
-              {restaurant.city}, {restaurant.country} · {restaurant.type}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 self-end sm:self-center">
-          <span className="text-white text-base font-normal leading-6">
-            {branches.length} Branches .
-          </span>
-          <div className="px-3 py-1.5 bg-green-400/30 text-green-500 rounded-[49px] text-base font-medium leading-5 border border-green-500/20">
-            {restaurant.status}
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 3. BRANCH CARDS GRID (Matches Figma Snippet) */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-        {branches.map((branch) => {
-          const isSelectedInHeader = selectedBranch === branch.name;
-          return (
-            <div
-              key={branch.id}
-              onClick={() => handleSelectBranch(branch)}
-              className={`w-full bg-neutral-900 rounded-[10px] p-4 flex flex-col justify-between gap-5 transition-all shadow-sm group cursor-pointer border ${
-                isSelectedInHeader
-                  ? 'border-amber-400/90 ring-1 ring-amber-400/40'
-                  : 'border-zinc-800/80 hover:border-zinc-700'
-              }`}
-              title={`Click to set ${branch.name} in top header`}
+        {/* ========================================================================= */}
+        {/* 1. TOP HEADER WITH BACK BUTTON */}
+        {/* ========================================================================= */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <button
+              type="button"
+              onClick={onBack}
+              className="w-9 h-9 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 shadow-sm"
+              title="Back to Restaurants"
             >
-              <div className="flex flex-col gap-3.5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 bg-white rounded-[10px] flex items-center justify-center text-neutral-800 flex-shrink-0">
-                      <Store className="w-5 h-5 text-neutral-700" />
-                    </div>
-                    <div>
-                      <h3 className="text-white text-base font-semibold leading-5 group-hover:text-amber-300 transition-colors">
-                        {branch.name}
-                      </h3>
-                      <div className="flex items-center gap-1 mt-0.5 text-zinc-500 text-sm font-normal">
-                        <MapPin className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
-                        <span>{branch.city}, {branch.country}</span>
-                      </div>
-                    </div>
-                  </div>
+              <ChevronLeft className="w-5 h-5" />
+            </button>
 
-                  <div
-                    className={`px-3 py-1.5 rounded-[49px] text-base font-medium leading-5 border flex-shrink-0 ${
-                      branch.status === 'Open'
-                        ? 'bg-green-400/30 text-green-500 border-green-500/30'
-                        : 'bg-red-500/20 text-red-500 border-red-500/30'
-                    }`}
-                  >
-                    {branch.status}
-                  </div>
-                </div>
+            <div>
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <h1 className="text-white text-xl sm:text-2xl font-serif font-bold tracking-tight leading-tight">
+                  Branches
+                </h1>
+                <span className="text-zinc-400 text-sm font-medium">
+                  • {restaurant.name}
+                </span>
+              </div>
+              <p className="text-zinc-400 text-xs sm:text-sm mt-0.5">
+                Manage branch locations for this restaurant.
+              </p>
+            </div>
+          </div>
 
-                {/* Manager & Staff Row (Matches Figma "SArif Hossain . 7 Staff") */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-1.5 text-zinc-500 text-sm font-normal leading-6">
-                    <Users className="w-4 h-4 text-zinc-400" />
-                    <span>{branch.manager?.name || 'Arif Hossain'} . {branch.staffCount} Staff</span>
-                  </div>
-                  {isSelectedInHeader && (
-                    <span className="text-[10px] px-2 py-0.5 bg-amber-400/15 text-amber-400 rounded-full border border-amber-400/30 font-medium">
-                      In Header
-                    </span>
-                  )}
-                </div>
+          {/* Create Branch Button */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsCreateBranchOpen(true)}
+              className="h-10 px-4 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-black font-bold text-xs rounded-xl flex items-center gap-2 transition-all cursor-pointer shadow-md shadow-amber-500/15"
+            >
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <span>Create Branch</span>
+            </button>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* 2. PARENT RESTAURANT SUMMARY BAR (Matches Figma Snippet Image 2 & 3) */}
+        {/* ========================================================================= */}
+        <div className="w-full bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 bg-zinc-800 border border-zinc-700/80 rounded-xl flex items-center justify-center text-amber-400 shrink-0">
+              <Building2 className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-white text-base font-bold font-serif leading-tight">
+                {restaurant.name}
+              </div>
+              <div className="text-zinc-400 text-xs mt-0.5">
+                {restaurant.address || `${restaurant.city}, ${restaurant.country}`} • {restaurant.type}
               </div>
             </div>
-          );
-        })}
+          </div>
 
-        {/* Add Branch Card (Matches Figma Snippet) */}
-        <button
-          type="button"
-          onClick={() => setIsCreateBranchOpen(true)}
-          className="w-full min-h-[112px] bg-white/5 hover:bg-white/10 rounded-2xl border border-stone-300/40 hover:border-amber-400/70 flex flex-col items-center justify-center p-4 gap-2 transition-all cursor-pointer group shadow-sm"
-        >
-          <div className="w-10 h-10 bg-stone-200 group-hover:bg-amber-400 rounded-full flex items-center justify-center text-stone-700 group-hover:text-white transition-colors shadow-sm">
-            <Plus className="w-5 h-5 stroke-[2.5]" />
+          <div className="flex items-center gap-3 self-end sm:self-center">
+            <span className="text-zinc-300 text-xs font-medium">
+              {branches.length} Branches
+            </span>
+            <span className="text-zinc-600">•</span>
+            <div className="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-semibold border border-emerald-500/20">
+              {restaurant.status}
+            </div>
           </div>
-          <div className="text-stone-400 group-hover:text-white text-sm font-medium leading-5 transition-colors">
-            Add Branch
+        </div>
+
+        {/* ========================================================================= */}
+        {/* 3. BRANCH CARDS GRID (Matches Figma Image 2 & 3) */}
+        {/* ========================================================================= */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {branches.map((branch) => {
+            const isSelectedInHeader = selectedBranch === branch.name;
+            return (
+              <div
+                key={branch.id}
+                className={`w-full bg-zinc-900/90 rounded-2xl p-5 flex flex-col justify-between gap-5 transition-all shadow-md group border ${
+                  isSelectedInHeader
+                    ? 'border-amber-400/90 ring-1 ring-amber-400/40'
+                    : 'border-zinc-800/90 hover:border-zinc-700'
+                }`}
+              >
+                <div className="flex flex-col gap-3.5">
+                  {/* Top line: Icon + Name + Location + Status Badge */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 bg-zinc-800 border border-zinc-700/80 rounded-xl flex items-center justify-center text-zinc-300 group-hover:text-amber-400 transition-colors shrink-0">
+                        <Store className="w-5 h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-white text-base font-bold group-hover:text-amber-300 transition-colors truncate">
+                          {branch.name}
+                        </h3>
+                        <div className="flex items-center gap-1 mt-0.5 text-zinc-400 text-xs truncate">
+                          <MapPin className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                          <span className="truncate">{branch.address || `${branch.city}, ${branch.country}`}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border shrink-0 ${
+                        branch.status === 'Open'
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                          : 'bg-rose-500/10 text-rose-400 border-rose-500/25'
+                      }`}
+                    >
+                      {branch.status}
+                    </div>
+                  </div>
+
+                  {/* Manager & Staff Row */}
+                  <div className="flex items-center justify-between pt-1 border-t border-zinc-800/80 text-xs text-zinc-400">
+                    <div className="flex items-center gap-1.5 text-zinc-300">
+                      <Users className="w-3.5 h-3.5 text-zinc-500" />
+                      <span>{branch.manager?.name || 'Arif Hossain'} • {branch.staffCount || 7} Staff</span>
+                    </div>
+                    {isSelectedInHeader && (
+                      <span className="text-[10px] px-2 py-0.5 bg-amber-400/15 text-amber-400 rounded-full border border-amber-400/30 font-medium">
+                        Active Header
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons Row (Image 2 & 3: View, Edit, Settings) */}
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-zinc-800/80">
+                  {/* View Button (Circled in Red in Image 3) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSelectBranch(branch);
+                      setSelectedBranchForDetail(branch);
+                    }}
+                    className="h-9 px-2 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700/60 text-zinc-200 text-xs font-medium rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-zinc-400" />
+                    <span>View</span>
+                  </button>
+
+                  {/* Edit Button */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedBranchForEdit(branch)}
+                    className="h-9 px-2 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700/60 text-zinc-200 text-xs font-medium rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <Edit2 className="w-3.5 h-3.5 text-zinc-400" />
+                    <span>Edit</span>
+                  </button>
+
+                  {/* Settings Button */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedBranchForSettings(branch)}
+                    className="h-9 px-2 bg-black hover:bg-zinc-950 border border-zinc-700 text-white font-semibold text-xs rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm"
+                  >
+                    <Settings className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Settings</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Add Branch Dashed Card (Matches Figma Image 2 & 3) */}
+          <div
+            onClick={() => setIsCreateBranchOpen(true)}
+            className="border-2 border-dashed border-zinc-800 hover:border-amber-500/60 rounded-2xl p-6 min-h-[160px] flex flex-col items-center justify-center gap-2.5 transition-all duration-300 hover:bg-zinc-900/40 cursor-pointer group shadow-sm"
+          >
+            <div className="w-10 h-10 rounded-full bg-zinc-900 group-hover:bg-amber-500/20 border border-zinc-800 group-hover:border-amber-500/40 text-zinc-400 group-hover:text-amber-400 flex items-center justify-center transition-all">
+              <Plus className="w-5 h-5" />
+            </div>
+            <span className="text-xs sm:text-sm font-semibold text-zinc-400 group-hover:text-white transition-colors">
+              Add Branch
+            </span>
           </div>
-        </button>
-      </div>
+        </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. CREATE BRANCH MODAL (Rendered outside blurred page content) */}
+      {/* 4. CREATE BRANCH MODAL */}
       {/* ========================================================================= */}
       <CreateBranchModal
         isOpen={isCreateBranchOpen}
@@ -286,6 +343,13 @@ export default function BranchesView({
         restaurant={restaurant}
         onSuccess={handleBranchCreated}
         onGoToRestaurants={onGoToRestaurants || onBack}
+      />
+
+      <EditBranchModal
+        isOpen={!!selectedBranchForEdit}
+        onClose={() => setSelectedBranchForEdit(null)}
+        branch={selectedBranchForEdit}
+        onSave={handleBranchUpdated}
       />
     </>
   );

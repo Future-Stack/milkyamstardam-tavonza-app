@@ -23,13 +23,16 @@ import {
   Layers,
   ArrowRight,
 } from 'lucide-react';
-import { RestaurantBranch, StaffMember, MenuItem, SubBranch } from '../types';
+import { RestaurantBranch, StaffMember, MenuItem, SubBranch, StaffShift } from '../types';
+import ManageShiftsModal from './ManageShiftsModal';
+import AddStaffModal from './AddStaffModal';
 
 interface RestaurantDetailViewProps {
   restaurant: RestaurantBranch;
   initialTab?: 'overview' | 'branches' | 'staff' | 'menu' | 'analytics';
   onBack: () => void;
   onEdit: (restaurant: RestaurantBranch) => void;
+  onSettings?: (restaurant: RestaurantBranch) => void;
   onManageBranches?: () => void;
 }
 
@@ -38,10 +41,12 @@ export default function RestaurantDetailView({
   initialTab = 'overview',
   onBack,
   onEdit,
+  onSettings,
   onManageBranches,
 }: RestaurantDetailViewProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'branches' | 'staff' | 'menu' | 'analytics'>(initialTab);
   const [selectedStaffForShift, setSelectedStaffForShift] = useState<StaffMember | null>(null);
+  const [isAddStaffOpen, setIsAddStaffOpen] = useState(false);
   const [staffList, setStaffList] = useState<StaffMember[]>(restaurant.assignedStaff || []);
 
   const getTypeIcon = () => {
@@ -100,7 +105,7 @@ export default function RestaurantDetailView({
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            onClick={() => onEdit(restaurant)}
+            onClick={() => (onSettings ? onSettings(restaurant) : onEdit(restaurant))}
             className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer shadow-sm"
             title="Restaurant Settings"
           >
@@ -421,10 +426,21 @@ export default function RestaurantDetailView({
       {activeTab === 'staff' && (
         <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl overflow-hidden shadow-md">
           <div className="p-4 sm:p-5 border-b border-zinc-800 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white">Staff Members</h3>
-            <span className="text-xs text-zinc-400">
-              {staffList.length} members · click Shifts to manage
-            </span>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-white">Staff Members</h3>
+              <span className="text-xs text-zinc-400 font-mono">
+                {staffList.length} total
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsAddStaffOpen(true)}
+              className="h-9 px-4 rounded-xl bg-black hover:bg-zinc-950 border border-zinc-700/80 hover:border-amber-400/50 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+            >
+              <Plus className="w-3.5 h-3.5 text-amber-400" />
+              <span>Add Staff</span>
+            </button>
           </div>
 
           <div className="divide-y divide-zinc-800/60">
@@ -637,73 +653,35 @@ export default function RestaurantDetailView({
         </div>
       )}
 
-      {/* SHIFT SCHEDULER MODAL (When clicking Shifts button in Staff tab) */}
-      {selectedStaffForShift && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in"
-          onClick={() => setSelectedStaffForShift(null)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-6 space-y-5"
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-              <div className="flex items-center gap-2.5">
-                <Clock className="w-5 h-5 text-amber-400" />
-                <div>
-                  <h3 className="text-base font-bold text-white">
-                    Manage Shifts: {selectedStaffForShift.name}
-                  </h3>
-                  <p className="text-xs text-zinc-400">{selectedStaffForShift.role}</p>
-                </div>
-              </div>
+      {/* SHIFT SCHEDULER MODAL (Figma Images 2 & 3) */}
+      <ManageShiftsModal
+        isOpen={!!selectedStaffForShift}
+        onClose={() => setSelectedStaffForShift(null)}
+        staff={selectedStaffForShift}
+        onSave={(staffId, updatedShifts) => {
+          setStaffList((prev) =>
+            prev.map((s) =>
+              s.id === staffId
+                ? {
+                    ...s,
+                    shifts: updatedShifts,
+                    days: updatedShifts.map((sh) => sh.shortDay),
+                  }
+                : s
+            )
+          );
+        }}
+      />
 
-              <button
-                type="button"
-                onClick={() => setSelectedStaffForShift(null)}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div>
-              <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider block mb-2">
-                Assigned Shift Days
-              </label>
-              <div className="grid grid-cols-4 gap-2">
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
-                  const isSelected = selectedStaffForShift.days?.includes(day);
-                  return (
-                    <button
-                      key={day}
-                      type="button"
-                      onClick={() => handleToggleDay(day)}
-                      className={`h-9 rounded-lg text-xs font-semibold transition-all border ${
-                        isSelected
-                          ? 'bg-amber-500 text-black border-amber-400 shadow-md shadow-amber-500/20'
-                          : 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-white hover:border-zinc-600'
-                      }`}
-                    >
-                      {day}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-zinc-800 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setSelectedStaffForShift(null)}
-                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-black text-xs font-bold transition-all"
-              >
-                Save Schedule
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ADD STAFF MODAL (Figma Images 2 & 3) */}
+      <AddStaffModal
+        isOpen={isAddStaffOpen}
+        onClose={() => setIsAddStaffOpen(false)}
+        restaurantName={restaurant.name}
+        onAddStaff={(newStaff) => {
+          setStaffList((prev) => [newStaff, ...prev]);
+        }}
+      />
     </div>
   );
 }

@@ -1,6 +1,28 @@
 export type RestaurantType = 'Restaurant' | 'Café' | 'Bar' | 'Fast Food' | 'Bakery';
 
-export type RestaurantStatus = 'Open' | 'Closed' | 'Opening Soon';
+export type RestaurantStatus = 'Open' | 'Closed' | 'Temporarily Closed' | 'Opening Soon';
+
+export interface RestaurantSettingsData {
+  restaurantCode?: string;
+  timezone?: string;
+  currency?: string;
+  language?: string;
+  autoAcceptOrders?: boolean;
+  qrOrderingEnabled?: boolean;
+  notifications?: {
+    newOrders?: boolean;
+    staffActivity?: boolean;
+    dailyReports?: boolean;
+    customerReviews?: boolean;
+  };
+  integrations?: {
+    paymentGateway?: boolean;
+    smsService?: boolean;
+    whatsAppBusiness?: boolean;
+    googleAnalytics?: boolean;
+    deliveryPartner?: boolean;
+  };
+}
 
 export interface DaySchedule {
   day: string;
@@ -27,15 +49,26 @@ export type StaffRole =
   | 'Waiter'
   | 'Cashier';
 
+export interface StaffShift {
+  id: string;
+  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+  shortDay: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
+  startTime: string;
+  endTime: string;
+  hours: number;
+}
+
 export interface StaffMember {
   id: string;
   name: string;
   role: StaffRole | string;
   avatar: string;
   email?: string;
+  phone?: string;
   shift?: string;
   days?: string[];
-  status?: 'Active' | 'On Leave';
+  shifts?: StaffShift[];
+  status?: 'Active' | 'On Leave' | 'Inactive';
   restaurantName?: string;
 }
 
@@ -91,6 +124,7 @@ export interface RestaurantBranch {
   detailStats?: RestaurantDetailStats;
   branchesList?: SubBranch[];
   menuItems?: MenuItem[];
+  settings?: RestaurantSettingsData;
 }
 
 export interface BranchItem {

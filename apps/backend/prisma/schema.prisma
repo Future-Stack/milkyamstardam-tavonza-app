@@ -61,6 +61,7 @@ enum InventoryUnit {
 }
 
 enum StaffRole {
+  REGIONAL_MANAGER
   BRANCH_MANAGER
   HOST
   WAITER

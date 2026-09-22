@@ -1,34 +1,56 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FlowStep, MenuItem, CartItem, AddOnOption } from "@/src/types/customer";
 
-import ScanStep from "@/src/components/customer/ScanStep";
-import WelcomeStep from "@/src/components/customer/WelcomeStep";
-import MenuStep from "@/src/components/customer/MenuStep";
-import ItemDetailStep from "@/src/components/customer/ItemDetailStep";
-import CartStep from "@/src/components/customer/CartStep";
-import OrderPlacedStep from "@/src/components/customer/OrderPlacedStep";
-import TrackOrderStep from "@/src/components/customer/TrackOrderStep";
-import PaymentStep from "@/src/components/customer/PaymentStep";
-import PaymentConfirmationStep from "@/src/components/customer/PaymentConfirmationStep";
-import FeedbackStep from "@/src/components/customer/FeedbackStep";
-import FeedbackSuccessStep from "@/src/components/customer/FeedbackSuccessStep";
-import SofiaAiChatStep from "@/src/components/customer/SofiaAiChatStep";
+import ScanStep from "@/src/components/customer-copy/ScanStep";
+import WelcomeStep from "@/src/components/customer-copy/WelcomeStep";
+import MenuStep from "@/src/components/customer-copy/MenuStep";
+import ItemDetailStep from "@/src/components/customer-copy/ItemDetailStep";
+import CartStep from "@/src/components/customer-copy/CartStep";
+import OrderPlacedStep from "@/src/components/customer-copy/OrderPlacedStep";
+import TrackOrderStep from "@/src/components/customer-copy/TrackOrderStep";
+import PaymentStep from "@/src/components/customer-copy/PaymentStep";
+import PaymentConfirmationStep from "@/src/components/customer-copy/PaymentConfirmationStep";
+import FeedbackStep from "@/src/components/customer-copy/FeedbackStep";
+import FeedbackSuccessStep from "@/src/components/customer-copy/FeedbackSuccessStep";
+import SofiaAiChatStep from "@/src/components/customer-copy/SofiaAiChatStep";
 
 export default function CustomerScannerMenu() {
-  const [currentStep, setCurrentStep] = useState<FlowStep>("scan");
+  const [currentStep, setCurrentStep] = useState<FlowStep>("welcome");
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [branchName, setBranchName] = useState<string>("Tavonza Downtown");
+  const [tableNumber, setTableNumber] = useState<string>("Table 08");
+  const [branchId, setBranchId] = useState<string>("BRN-0101");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [previousStep, setPreviousStep] = useState<FlowStep>("menu");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  // Parse pre-loaded QR code context (branchId & tableNumber) from URL parameters
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const b = params.get("branch");
+      const t = params.get("table");
+      const bId = params.get("branchId");
+      if (b) setBranchName(b);
+      if (t) setTableNumber(t.startsWith("Table") ? t : `Table ${t}`);
+      if (bId) setBranchId(bId);
+    }
+  }, []);
 
   // Step 1 -> Step 2 transition after scanning QR
   const handleScanComplete = () => {
     setCurrentStep("welcome");
   };
 
-  // Step 2 -> Step 3 transition after clicking View Menu
-  const handleWelcomeContinue = () => {
+  // Step 2 -> Step 3 transition after submitting Gmail / Phone / OTP Verification
+  const handleWelcomeContinue = (email?: string, phone?: string) => {
+    if (email || phone) {
+      setUserEmail(email || phone || "");
+      setIsAuthenticated(true);
+    }
     setCurrentStep("menu");
   };
 
@@ -111,11 +133,11 @@ export default function CustomerScannerMenu() {
     setCurrentStep("feedbackSuccess");
   };
 
-  // Reset entire flow back to Step 1 (Scan)
+  // Reset entire flow back to Welcome/Gmail entry
   const handleResetFlow = () => {
     setCartItems([]);
     setSelectedItem(null);
-    setCurrentStep("scan");
+    setCurrentStep("welcome");
   };
 
   const totalCartCount = cartItems.reduce((acc, c) => acc + c.quantity, 0);
@@ -125,19 +147,24 @@ export default function CustomerScannerMenu() {
   }, 0);
 
   return (
-    <div className="relative min-h-screen bg-black text-white flex justify-center items-center font-sans overflow-x-hidden selection:bg-amber-500 selection:text-black">
-      {/* Mobile Container Frame */}
-      <div className="relative w-full max-w-[430px] min-h-screen sm:min-h-[880px] sm:my-6 bg-zinc-950 sm:rounded-[40px] shadow-2xl overflow-hidden border border-zinc-800/80 flex flex-col">
-        {/* Step 1: Scan QR Screen */}
+    <div className="relative w-full h-full flex-1 flex justify-center items-center font-sans overflow-hidden selection:bg-amber-500 selection:text-black">
+      {/* Mobile & Tablet Container Frame */}
+      <div className="relative w-full max-w-full sm:max-w-[500px] md:max-w-2xl lg:max-w-3xl xl:max-w-4xl h-full sm:h-[92vh] sm:my-auto bg-zinc-950 sm:rounded-[32px] shadow-2xl overflow-hidden border border-zinc-800/80 flex flex-col transition-all duration-300">
+        {/* Step 1: Bypassed Scan QR Screen -> Direct to Welcome & Gmail Entry */}
         {currentStep === "scan" && (
-          <ScanStep onScanComplete={handleScanComplete} />
+          <WelcomeStep
+            onContinue={handleWelcomeContinue}
+            tableNumber={tableNumber}
+            branchName={branchName}
+          />
         )}
 
         {/* Step 2: Welcome Table Scanned Screen */}
         {currentStep === "welcome" && (
           <WelcomeStep
             onContinue={handleWelcomeContinue}
-            tableNumber="Table 08"
+            tableNumber={tableNumber}
+            branchName={branchName}
           />
         )}
 
@@ -177,7 +204,7 @@ export default function CustomerScannerMenu() {
           <OrderPlacedStep
             onTrackOrder={handleTrackOrder}
             orderId="LT-2847"
-            tableNumber="Table 08"
+            tableNumber={tableNumber}
           />
         )}
 
