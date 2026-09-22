@@ -1,6 +1,9 @@
 # --- Stage 1: Build ---
 FROM node:22-alpine AS builder
 
+# Install required packages for Prisma on Alpine
+RUN apk add --no-cache openssl libc6-compat
+
 # Set working directory
 WORKDIR /app
 
@@ -25,6 +28,9 @@ RUN npm prune --omit=dev --ignore-scripts
 
 # --- Stage 2: Production ---
 FROM node:22-alpine AS runner
+
+# Install runtime libraries for Prisma
+RUN apk add --no-cache openssl libc6-compat
 
 # Set working directory
 WORKDIR /app
