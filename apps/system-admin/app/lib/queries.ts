@@ -1,5 +1,5 @@
 import { apiGet } from "./api";
-import type { Admin, AnalyticsOverview, AuditLog, GrowthResponse, Meta, Organization } from "./types";
+import type { Admin, AnalyticsOverview, AuditLog, GrowthResponse, Meta } from "./types";
 
 export interface ListParams {
   page?: number;
@@ -32,12 +32,6 @@ export async function listClients(
 export async function getClient(adminId: string): Promise<Admin | null> {
   const { data } = await apiGet<Admin>(`/admins/${adminId}`);
   return data ?? null;
-}
-
-/** Total organizations on the platform — `limit: 1` because only `meta.total` is used. */
-export async function countOrganizations(): Promise<number> {
-  const { meta } = await apiGet<Organization[]>("/organizations", { page: 1, limit: 1 });
-  return meta?.total ?? 0;
 }
 
 export async function listAuditLogs(
