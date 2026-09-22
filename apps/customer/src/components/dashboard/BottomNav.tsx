@@ -15,7 +15,7 @@ interface BottomNavProps {
 export default function BottomNav({ activeTab, onTabChange, isVisible = true }: BottomNavProps) {
   return (
     <div
-      className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto fixed bottom-0 left-0 right-0 bg-black/85 backdrop-blur-xl border-t border-white/10 rounded-t-[14px] shadow-[0px_-10px_25px_rgba(0,0,0,0.8)] z-50 overflow-hidden font-sans transition-transform duration-300 ease-in-out ${
+      className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto fixed -bottom-1 left-0 right-0 bg-black/85 backdrop-blur-xl border-t border-white/10 rounded-t-[14px] shadow-[0px_-10px_25px_rgba(0,0,0,0.8)] z-50 overflow-hidden font-sans transition-transform duration-300 ease-in-out ${
         isVisible ? 'translate-y-0' : 'translate-y-full'
       }`}
     >

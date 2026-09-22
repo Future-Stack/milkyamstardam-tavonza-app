@@ -110,8 +110,8 @@ export default function JarvisChatView({ onReserveClick, isNavVisible = true }: 
     <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto min-h-screen bg-black text-white flex flex-col justify-between relative overflow-x-hidden font-sans">
       <div className="w-full flex-1 flex flex-col gap-6 pb-36 pt-2">
 
-        {/* 1. Header Banner: 3D Robot Avatar on Left + Multimodal AI Engine */}
-        <div className="  bg-gradient-to-r from-amber-950/40 via-neutral-900 to-neutral-900    p-2  flex items-center gap-4 shadow-xl">
+        {/* 1. Header Banner: 3D Robot Avatar on Left + Multimodal AI Engine (#382F07 to #070705) */}
+        <div className="  p-5 bg-gradient-to-r from-[#382F07] to-[#070705]   flex items-center gap-4 shadow-xl relative overflow-hidden">
           {/* Robot Avatar Image on Left */}
           <div className="w-24 h-24 md:w-28 md:h-28 relative shrink-0">
             <Image
@@ -125,19 +125,19 @@ export default function JarvisChatView({ onReserveClick, isNavVisible = true }: 
 
           {/* Right Text Details */}
           <div className="flex flex-col gap-2 flex-1">
-            <div className="px-2.5 py-1 bg-emerald-950/90 border border-emerald-800/80 rounded-lg text-emerald-400 text-[10px] font-medium w-fit">
+            <div className="px-2.5 py-0.5 bg-emerald-950/40 border border-emerald-600/60 rounded-md text-emerald-400 text-[10px] font-semibold font-['Inter'] w-fit">
               Multimodal AI Engine
             </div>
 
-            <h2 className="text-lg md:text-xl font-bold text-white font-['Inter'] tracking-tight">
+            <h2 className="text-base md:text-lg font-bold text-white font-['Inter'] tracking-tight">
               JARVIS AI Concierge
             </h2>
 
-            <p className="text-xs text-neutral-400 leading-relaxed font-['Poppins']">
+            <p className="text-xs text-stone-300 leading-relaxed font-['Poppins']">
               Ask naturally for restaurants, dietary checks, instant table locks, or meal recommendations.
             </p>
 
-            <div className="px-2.5 py-1 bg-yellow-950/80 border border-yellow-700/50 rounded-lg text-yellow-400 text-[10px] font-semibold font-['Inter'] w-fit">
+            <div className="px-2.5 py-0.5 bg-amber-950/50 border border-amber-600/60 rounded-md text-yellow-400 text-[10px] font-semibold font-['Inter'] w-fit">
               VIP Status: Tavonza Black
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function JarvisChatView({ onReserveClick, isNavVisible = true }: 
 
       {/* 6. Sticky Chat Input Bar (positioning above bottom nav without overlap) */}
       <div
-        className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto sticky bottom-20 left-0 right-0 px-4 pb-3 pt-2 bg-black/90 z-40 transition-transform duration-300 ease-in-out ${
+        className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto sticky bottom-40 left-0 right-0 px-4 pb-3 pt-2 bg-black/90 z-40 transition-transform duration-300 ease-in-out ${
           isNavVisible ? 'translate-y-0' : 'translate-y-36'
         }`}
       >
