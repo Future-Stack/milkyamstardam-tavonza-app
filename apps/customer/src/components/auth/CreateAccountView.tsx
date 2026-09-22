@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { registerCustomer, loginUser } from '@/redux/features/authApi';
+import { clearAuthError } from '@/redux/slices/authSlice';
 
 interface CreateAccountViewProps {
   onAccountCreated: () => void;
@@ -12,20 +15,46 @@ export default function CreateAccountView({
   onAccountCreated,
   onGoBackToLogin,
 }: CreateAccountViewProps) {
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('info@gmail.com');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [countryCode, setCountryCode] = useState('+855');
-  const [phone, setPhone] = useState('123 456 789');
-  const [acceptedTerms, setAcceptedTerms] = useState(true);
+  const [phone, setPhone] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!acceptedTerms) {
       alert('Please accept the Terms and Conditions to proceed.');
       return;
     }
-    onAccountCreated();
+    dispatch(clearAuthError());
+    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    const contactNo = `${countryCode}${phone.trim()}`;
+
+    const regResult = await dispatch(
+      registerCustomer({
+        name: fullName   ,
+        email,
+        password,
+        contactNo,
+      })
+    );
+
+    if (registerCustomer.fulfilled.match(regResult)) {
+      // Auto-login after successful registration
+      const loginResult = await dispatch(loginUser({ email, password }));
+      if (loginUser.fulfilled.match(loginResult)) {
+        onAccountCreated();
+      } else {
+        onAccountCreated();
+      }
+    }
   };
 
   return (
@@ -46,12 +75,18 @@ export default function CreateAccountView({
       <div className="w-full flex flex-col gap-1.5 mb-4">
         <h2 className="text-xl font-semibold text-white font-['Inter']">Create Account</h2>
         <p className="text-xs text-white/50 font-['Poppins'] leading-relaxed">
-          Get the best out of derleng by creating an account
+          Get the best out of Tavonza AI by creating an account
         </p>
       </div>
 
       {/* Form Fields */}
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4 my-auto">
+        {error && (
+          <div className="p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-300 font-['Inter']">
+            {error}
+          </div>
+        )}
+
         {/* First Name */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">First Name</label>
@@ -97,6 +132,29 @@ export default function CreateAccountView({
           </div>
         </div>
 
+        {/* Password */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm text-white font-['Inter']">Password</label>
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Min 6 characters"
+              className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-white/60 hover:text-white p-1"
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
         {/* Phone Number */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Phone</label>
@@ -127,7 +185,6 @@ export default function CreateAccountView({
             <div className="flex-1 h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
               <input
                 type="tel"
-                required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="123 456 789"
@@ -153,16 +210,22 @@ export default function CreateAccountView({
             onClick={() => setAcceptedTerms(!acceptedTerms)}
             className="text-yellow-400 text-xs font-['Poppins'] underline hover:text-yellow-300 transition"
           >
-            I accept term and condition
+            I accept terms and conditions
           </button>
         </div>
 
         {/* Create Account Button */}
         <button
           type="submit"
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-3"
+          disabled={!acceptedTerms || loading}
+          className={`w-full h-11 text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg mt-3 ${
+            !acceptedTerms || loading
+              ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed border border-white/5 opacity-60'
+              : 'bg-yellow-400 hover:bg-yellow-300 text-black shadow-yellow-500/10 cursor-pointer active:scale-[0.99]'
+          }`}
         >
-          Create Account
+          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+          <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
         </button>
       </form>
 

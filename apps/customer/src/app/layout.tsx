@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Discover restaurants around you, order for delivery, pickup, or dine-in, and get personalized Tavonza AI recommendations.",
 };
 
+import ReduxProvider from "@/redux/ReduxProvider";
+
 export default function RootLayout({
   children,
 }: {
@@ -28,7 +30,7 @@ export default function RootLayout({
       className={`${inter.variable} ${outfit.variable} dark h-full antialiased`}
     >
       <body className="min-h-full bg-neutral-950 text-white font-sans flex flex-col selection:bg-yellow-400 selection:text-black">
-        {children}
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   );

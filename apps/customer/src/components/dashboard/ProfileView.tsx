@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
   User,
   Bell,
@@ -14,15 +15,26 @@ import {
   MapPin,
   Shield,
   SlidersHorizontal,
+  LogOut,
+  Loader2,
 } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { logoutUser, changePassword } from '@/redux/features/authApi';
+import { clearAuthError } from '@/redux/slices/authSlice';
 
 export default function ProfileView() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { user, isAuthenticated, loading, error, successMessage } = useAppSelector(
+    (state) => state.auth
+  );
+
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'password' | 'delivery'>('profile');
   
   // Form State
-  const [fullName, setFullName] = useState('Avery Morgan');
-  const [email, setEmail] = useState('alex.mercer@vip.tavonza.com');
-  const [phone, setPhone] = useState('+01 2345 56789');
+  const [fullName, setFullName] = useState(user?.name || 'Avery Morgan');
+  const [email, setEmail] = useState(user?.email || 'alex.mercer@vip.tavonza.com');
+  const [phone, setPhone] = useState(user?.contactNo || '+01 2345 56789');
   const [city, setCity] = useState('London');
 
   // Toggle Switches
@@ -30,9 +42,9 @@ export default function ProfileView() {
   const [promosNotif, setPromosNotif] = useState(true);
 
   // Passwords
-  const [currentPassword, setCurrentPassword] = useState('**************');
-  const [newPassword, setNewPassword] = useState('**************');
-  const [confirmPassword, setConfirmPassword] = useState('**************');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,6 +59,39 @@ export default function ProfileView() {
 
   const [savedSuccessMsg, setSavedSuccessMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (user) {
+      if (user.name) setFullName(user.name);
+      if (user.email) setEmail(user.email);
+      if (user.contactNo) setPhone(user.contactNo);
+    }
+  }, [user]);
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    router.push('/login');
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword) return;
+    if (newPassword !== confirmPassword) {
+      alert('New passwords do not match');
+      return;
+    }
+    dispatch(clearAuthError());
+    const res = await dispatch(
+      changePassword({ oldPassword: currentPassword, newPassword })
+    );
+    if (changePassword.fulfilled.match(res)) {
+      setSavedSuccessMsg('Password updated successfully!');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => setSavedSuccessMsg(null), 3000);
+    }
+  };
+
   const handleSaveChanges = (sectionName: string) => {
     setSavedSuccessMsg(`${sectionName} updated successfully!`);
     setTimeout(() => setSavedSuccessMsg(null), 3000);
@@ -57,12 +102,28 @@ export default function ProfileView() {
 
       <div className="flex flex-col gap-5 px-5 pt-3">
         {/* 1. Account Settings Header Banner */}
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-semibold text-white font-['Inter']">Account Settings</h2>
-          <p className="text-xs text-zinc-400 leading-relaxed font-['Inter']">
-            Manage your personal details, notification alerts, password, and delivery/card information.
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-semibold text-white font-['Inter']">Account Settings</h2>
+            <p className="text-xs text-zinc-400 leading-relaxed font-['Inter']">
+              Manage your personal details, notification alerts, password, and delivery/card information.
+            </p>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="px-3.5 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 rounded-xl text-xs font-medium text-red-300 flex items-center gap-1.5 transition shrink-0 cursor-pointer active:scale-95"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Log Out</span>
+          </button>
         </div>
+
+        {error && (
+          <div className="p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-300 font-['Inter']">
+            {error}
+          </div>
+        )}
 
         {savedSuccessMsg && (
           <div className="p-3 bg-yellow-400/20 border border-yellow-400/40 rounded-xl text-xs text-yellow-300 flex items-center gap-2 animate-in fade-in duration-300">
@@ -208,7 +269,7 @@ export default function ProfileView() {
         </div>
 
         {/* 5. Change Password Card */}
-        <div className="w-full bg-slate-900 border border-blue-950 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
+        <form onSubmit={handleChangePassword} className="w-full bg-slate-900 border border-blue-950 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">
           <div className="flex flex-col gap-0.5">
             <h3 className="text-base font-semibold text-white font-['Inter']">Change Password</h3>
             <p className="text-xs text-zinc-400 font-['Inter']">
@@ -223,6 +284,7 @@ export default function ProfileView() {
               <div className="w-full h-11 px-3 bg-neutral-800 border border-neutral-700 rounded-xl flex items-center justify-between">
                 <input
                   type={showCurrentPassword ? 'text' : 'password'}
+                  required
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className="bg-transparent text-sm text-white font-['Hanken_Grotesk'] focus:outline-none w-full pr-2"
@@ -243,6 +305,8 @@ export default function ProfileView() {
               <div className="w-full h-11 px-3 bg-neutral-800 border border-neutral-700 rounded-xl flex items-center justify-between">
                 <input
                   type={showNewPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="bg-transparent text-sm text-white font-['Hanken_Grotesk'] focus:outline-none w-full pr-2"
@@ -263,6 +327,8 @@ export default function ProfileView() {
               <div className="w-full h-11 px-3 bg-neutral-800 border border-neutral-700 rounded-xl flex items-center justify-between">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="bg-transparent text-sm text-white font-['Hanken_Grotesk'] focus:outline-none w-full pr-2"
@@ -277,7 +343,16 @@ export default function ProfileView() {
               </div>
             </div>
           </div>
-        </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-zinc-900 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-md shadow-yellow-500/10 cursor-pointer"
+          >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+            <span>{loading ? 'Updating...' : 'Update Password'}</span>
+          </button>
+        </form>
 
         {/* 6. Delivery Address & Payment Card Information Card */}
         <div className="w-full bg-slate-900 border border-blue-950 rounded-2xl p-4 flex flex-col gap-4 shadow-xl">

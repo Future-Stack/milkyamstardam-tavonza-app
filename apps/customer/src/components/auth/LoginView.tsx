@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { loginUser } from '@/redux/features/authApi';
+import { clearAuthError } from '@/redux/slices/authSlice';
 
 interface LoginViewProps {
   onLoginSuccess: () => void;
@@ -15,13 +18,20 @@ export default function LoginView({
   onForgotPassword,
   onCreateAccount,
 }: LoginViewProps) {
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLoginSuccess();
+    dispatch(clearAuthError());
+    const resultAction = await dispatch(loginUser({ email, password }));
+    if (loginUser.fulfilled.match(resultAction)) {
+      onLoginSuccess();
+    }
   };
 
   return (
@@ -41,6 +51,12 @@ export default function LoginView({
         </div>
 
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
+          {error && (
+            <div className="p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-300 font-['Inter']">
+              {error}
+            </div>
+          )}
+
           {/* Email Input */}
           <div className="flex flex-col gap-2">
             <label className="text-sm text-white font-['Inter']">Email</label>
@@ -93,9 +109,11 @@ export default function LoginView({
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-2"
+            disabled={loading}
+            className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-2 cursor-pointer"
           >
-            Login
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+            <span>{loading ? 'Signing in...' : 'Login'}</span>
           </button>
         </form>
 

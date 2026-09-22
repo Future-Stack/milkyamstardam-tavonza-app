@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { forgotPassword } from '@/redux/features/authApi';
+import { clearAuthError } from '@/redux/slices/authSlice';
 
 interface ForgotPasswordViewProps {
   onRequestCode: (email: string) => void;
@@ -13,11 +16,18 @@ export default function ForgotPasswordView({
   onRequestCode,
   onBackToLogin,
 }: ForgotPasswordViewProps) {
-  const [emailOrPhone, setEmailOrPhone] = useState('info@gmail.com');
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onRequestCode(emailOrPhone);
+    dispatch(clearAuthError());
+    const resultAction = await dispatch(forgotPassword({ email: emailOrPhone }));
+    if (forgotPassword.fulfilled.match(resultAction)) {
+      onRequestCode(emailOrPhone);
+    }
   };
 
   return (
@@ -41,16 +51,22 @@ export default function ForgotPasswordView({
 
       {/* Form Content */}
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 my-auto">
+        {error && (
+          <div className="p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-300 font-['Inter']">
+            {error}
+          </div>
+        )}
+
         <div className="flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-white font-['Inter']">Forget password</h2>
+          <h2 className="text-sm font-semibold text-white font-['Inter']">Forgot password</h2>
           <p className="text-xs text-white/60 font-['Inter'] leading-relaxed">
-            Enter your email or phone we will send the verification code to reset your password
+            Enter your email address and we will send a verification OTP code to reset your password.
           </p>
         </div>
 
         <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
           <input
-            type="text"
+            type="email"
             required
             value={emailOrPhone}
             onChange={(e) => setEmailOrPhone(e.target.value)}
@@ -61,9 +77,11 @@ export default function ForgotPasswordView({
 
         <button
           type="submit"
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4"
+          disabled={loading}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 cursor-pointer"
         >
-          Request code
+          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+          <span>{loading ? 'Sending Code...' : 'Request code'}</span>
         </button>
       </form>
 
