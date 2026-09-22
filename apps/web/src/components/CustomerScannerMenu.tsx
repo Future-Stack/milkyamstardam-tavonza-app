@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { FlowStep, MenuItem, CartItem, AddOnOption } from "@/src/types/customer";
-
-import ScanStep from "@/src/components/customer-copy/ScanStep";
 import WelcomeStep from "@/src/components/customer-copy/WelcomeStep";
 import MenuStep from "@/src/components/customer-copy/MenuStep";
 import ItemDetailStep from "@/src/components/customer-copy/ItemDetailStep";
