@@ -7,7 +7,9 @@ import { BcryptService } from '@/utils/bcrypt.service';
 import { Request } from 'express';
 import { ConfigService } from '@/config/config.service';
 import { GlobalRole } from '@prisma/client';
-import { SesService } from '@/email/ses';
+// SES is parked in favour of Gmail for now — see `sendEmail` below.
+// import { SesService } from '@/email/ses';
+import { GMailService } from '@/email/gmail';
 import { EmailTemplate } from '@/email-templates/forgot-password';
 
 @Injectable()
@@ -19,9 +21,29 @@ export class AuthService {
     private readonly bcryptService: BcryptService,
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
-    private readonly sesService: SesService,
+    private readonly gmailService: GMailService,
+    // private readonly sesService: SesService,
     private readonly emailTemplate: EmailTemplate,
   ) {}
+
+  /**
+   * Delivers a template's output through Gmail.
+   *
+   * Templates return the SES-shaped `{ to, subject, html }`; GMailService takes
+   * a `sender` + recipient list, so the two are bridged here rather than
+   * changing every template's contract.
+   */
+  private async sendEmail(params: { to: string; subject: string; html: string }) {
+    await this.gmailService.sendEmail({
+      sender: {
+        email:
+          this.configService.get('MAIL_FROM') || this.configService.get('MAIL_USER') || '',
+      },
+      to: [{ email: params.to }],
+      subject: params.subject,
+      htmlContent: params.html,
+    });
+  }
 
   async login(data: {
     email: string;
@@ -149,7 +171,8 @@ export class AuthService {
       throw new ApiError(HttpStatus.NOT_FOUND, 'User not found');
     }
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    // 6 digits — ResetPasswordDto validates @Length(6, 6).
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 10);
 
@@ -166,7 +189,7 @@ export class AuthService {
 
     const params = await this.emailTemplate.resetPasswordEmail(email, isUserExists.name, otp);
 
-    await this.sesService.sendEmail(params);
+    await this.sendEmail(params);
 
     return 'OTP sent to your email';
   }
@@ -222,7 +245,7 @@ export class AuthService {
     const link = `${this.configService.get('CLIENT_URL')}/confirm-email?token=${token}`;
     const params = await this.emailTemplate.changeEmailConfirmation(newEmail, user.name, link);
 
-    await this.sesService.sendEmail(params);
+    await this.sendEmail(params);
 
     return 'Confirmation email sent to the new email address';
   }

@@ -1,12 +1,34 @@
 import { Public } from '@/modules/auth/auth.decorator';
+import { FileService } from '@/helper/file.service';
+import { ParseFormDataInterceptor } from '@/helper/form_data_interceptor';
 import { ResponseService } from '@/utils/response';
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateMeDto } from './dto/update-me.dto';
 import { UserService } from './user.service';
 import { Request } from 'express';
 import { Roles } from '../roles/roles.decorator';
 import { GlobalRole } from '@prisma/client';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiStandardResponse } from '@/utils/swagger.decorator';
 import { UserResponseDto } from './dto/user-responses.dto';
 import { AdminService } from '../admin/admin.service';
@@ -20,7 +42,62 @@ export class UsersController {
   constructor(
     private readonly usersService: UserService,
     private readonly adminService: AdminService,
+    private readonly fileService: FileService,
   ) {}
+
+  @Patch('me')
+  @ApiOperation({
+    summary: 'Update the current user profile',
+    description:
+      'Updates the caller’s own name, contact number and avatar. The user id comes from ' +
+      'the JWT, so this can only ever modify your own account. Email changes go through ' +
+      '`/auth/change-email-request` instead.',
+  })
+  @ApiConsumes('multipart/form-data', 'application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        avatar: { type: 'string', format: 'binary', nullable: true },
+        data: {
+          type: 'object',
+          description:
+            'JSON-encoded profile fields (parsed from the multipart `data` part by ParseFormDataInterceptor)',
+          properties: {
+            name: { type: 'string', nullable: true, example: 'Super Admin' },
+            contactNo: { type: 'string', nullable: true, example: '+8801700000001' },
+          },
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: 'avatar', maxCount: 1 }]),
+    ParseFormDataInterceptor,
+  )
+  @ApiStandardResponse({ type: UserResponseDto, description: 'Profile updated successfully' })
+  async updateMe(
+    @Req() req: Request,
+    @Body() updateMeDto: UpdateMeDto,
+    @UploadedFiles() files: Record<string, Express.Multer.File[]>,
+  ) {
+    const user: any = req.user;
+
+    let avatar: string | undefined;
+    const uploadableFiles = files?.avatar;
+    if (Array.isArray(uploadableFiles) && uploadableFiles.length > 0) {
+      const uploaded = await this.fileService.uploadMultipleToS3(uploadableFiles);
+      avatar = uploaded[0];
+    }
+
+    const result = await this.usersService.updateMe(user.id, updateMeDto, avatar);
+
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Profile updated successfully',
+      data: result,
+    });
+  }
 
   @Post('create-admin')
   @Roles(GlobalRole.SUPER_ADMIN)

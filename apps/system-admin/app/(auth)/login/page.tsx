@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
+import { Mail, Lock, Loader2, ArrowRight, AlertCircle } from "lucide-react";
 import logo from "../../../public/logo.png";
 import { loginAction } from "../../actions/auth";
 
@@ -13,16 +13,25 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API verification
-    setTimeout(async () => {
-      await loginAction();
-      router.push("/");
-    }, 1500);
+    setError(null);
+
+    const result = await loginAction(email, password);
+
+    if (!result.success) {
+      setError(result.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // The session cookie is set; re-render from the server so the proxy and the
+    // admin layout both see it.
+    router.replace("/");
+    router.refresh();
   };
 
   return (
@@ -80,7 +89,14 @@ export default function LoginPage() {
           <label htmlFor="remember" className="text-sm text-gray-400 select-none">Remember me for 30 days</label>
         </div>
 
-        <button 
+        {error && (
+          <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3.5">
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-300 leading-snug">{error}</p>
+          </div>
+        )}
+
+        <button
           type="submit"
           disabled={isSubmitting}
           className="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#C4A45D] text-[#090B10] px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed group mt-2"

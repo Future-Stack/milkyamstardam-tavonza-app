@@ -1,35 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Building, User, Mail, Save, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Building, User, Mail, Save, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { onboardClientAction } from "../../../actions/admins";
 
 export default function NewOrganization() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  
+  const [error, setError] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     orgName: "",
     adminName: "",
     adminEmail: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    setError(null);
+
+    // POST /admins creates the ADMIN and their one organization together.
+    const result = await onboardClientAction({
+      adminName: formData.adminName.trim(),
+      adminEmail: formData.adminEmail.trim(),
+      organizationName: formData.orgName.trim(),
+    });
+
+    if (!result.success) {
+      setError(result.message);
       setIsSubmitting(false);
-      setIsSuccess(true);
-      
-      // Redirect after success
-      setTimeout(() => {
-        router.push("/organizations");
-      }, 1500);
-    }, 1500);
+      return;
+    }
+
+    setIsSuccess(true);
+    router.push("/organizations");
+    router.refresh();
   };
 
   return (
@@ -123,11 +132,21 @@ export default function NewOrganization() {
           </div>
         </div>
 
-        <div className="pt-6 mt-6 border-t border-white/5 flex justify-end">
-          <button 
+        <div className="pt-6 mt-6 border-t border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          {error ? (
+            <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+              <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-300 leading-snug">{error}</p>
+            </div>
+          ) : (
+            <p className="text-xs text-gray-500 leading-relaxed">
+              The admin will be created with the default password and must change it after their first sign-in.
+            </p>
+          )}
+          <button
             type="submit"
             disabled={isSubmitting || isSuccess}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#C4A45D] text-[#090B10] px-8 py-3.5 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#C4A45D] text-[#090B10] px-8 py-3.5 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <Loader2 className="w-5 h-5 animate-spin" />

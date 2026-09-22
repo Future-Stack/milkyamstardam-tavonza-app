@@ -7,11 +7,25 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../../public/logo.png";
 import { logoutAction } from "../actions/auth";
+import type { ShellUser } from "./AdminLayout";
 
-export function Header() {
+/** Initials avatar for accounts that have not uploaded one. */
+function Avatar({ user }: { user: ShellUser }) {
+  if (user.avatar) {
+    return <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />;
+  }
+  return (
+    <div className="w-full h-full bg-[#D4AF37]/15 text-[#D4AF37] font-bold flex items-center justify-center text-xs uppercase">
+      {user.name.slice(0, 2)}
+    </div>
+  );
+}
+
+export function Header({ user }: { user: ShellUser }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   // Close dropdown when clicking outside
@@ -27,7 +41,15 @@ export function Header() {
 
   const handleLogout = async () => {
     await logoutAction();
-    router.push("/login");
+    router.replace("/login");
+    router.refresh();
+  };
+
+  /** The search box drives the same server-side query as the client list. */
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    const term = query.trim();
+    router.push(term ? `/organizations?q=${encodeURIComponent(term)}` : "/organizations");
   };
 
   // Create simple breadcrumb from pathname
@@ -50,18 +72,26 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-4 md:gap-6">
-        <div className="relative hidden md:block">
+        <form onSubmit={handleSearch} className="relative hidden md:block" role="search">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
-            type="text"
-            placeholder="Search platform..."
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search clients"
+            placeholder="Search clients..."
             className="bg-white/[0.03] text-sm text-gray-200 rounded-full pl-9 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#D4AF37]/50 w-48 lg:w-64 border border-white/5 placeholder:text-gray-600 transition-shadow hover:bg-white/[0.05]"
           />
-        </div>
-        <button className="relative text-gray-400 hover:text-white transition-colors p-2 md:p-0">
+        </form>
+
+        <Link
+          href="/audit-logs"
+          title="Audit logs"
+          aria-label="Audit logs"
+          className="text-gray-400 hover:text-white transition-colors p-2 md:p-0"
+        >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 md:top-0 right-1.5 md:right-0 w-2 h-2 bg-[#00F2FE] rounded-full shadow-[0_0_8px_#00F2FE]"></span>
-        </button>
+        </Link>
         
         <div className="relative" ref={dropdownRef}>
           <div 
@@ -69,14 +99,10 @@ export function Header() {
             className="flex items-center gap-3 md:border-l border-white/10 md:pl-6 cursor-pointer group"
           >
             <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full overflow-hidden border border-white/10 group-hover:border-white/30 transition-colors">
-              <img
-                src="https://i.pravatar.cc/150?img=11"
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+              <Avatar user={user} />
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-medium text-gray-200 leading-tight">Support Team</p>
+              <p className="text-sm font-medium text-gray-200 leading-tight">{user.name}</p>
               <p className="text-[10px] text-[#D4AF37] uppercase tracking-wider font-semibold">Super Admin</p>
             </div>
             <ChevronDown className={`hidden sm:block w-4 h-4 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180 text-white' : 'group-hover:text-gray-300'}`} />
@@ -86,7 +112,7 @@ export function Header() {
           {isDropdownOpen && (
             <div className="absolute right-0 mt-3 w-56 bg-[#11141D] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-50">
               <div className="p-4 border-b border-white/5 sm:hidden">
-                <p className="text-sm font-medium text-gray-200 leading-tight">Support Team</p>
+                <p className="text-sm font-medium text-gray-200 leading-tight">{user.name}</p>
                 <p className="text-[10px] text-[#D4AF37] uppercase tracking-wider font-semibold">Super Admin</p>
               </div>
               <div className="p-2 space-y-1">

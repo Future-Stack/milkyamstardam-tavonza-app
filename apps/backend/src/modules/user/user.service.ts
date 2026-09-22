@@ -1,13 +1,27 @@
 import { PrismaService } from '@/helper/prisma.service';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { GlobalRole, UserStatus, User } from '@prisma/client';
+import { GlobalRole, Prisma, UserStatus, User } from '@prisma/client';
 import { ApiError } from '@/utils/api_error';
 import { BcryptService } from '@/utils/bcrypt.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateMeDto } from './dto/update-me.dto';
 import { ConfigService } from '@/config/config.service';
 import QueryBuilder from '@/utils/query_builder';
 import { userFilterFields, userInclude, userSearchFields } from './user.constant';
 import { IGenericResponse } from '@/interface/common';
+
+/** Never leak the password hash on a self-read. */
+const publicUserSelect = {
+  id: true,
+  email: true,
+  name: true,
+  contactNo: true,
+  role: true,
+  status: true,
+  avatar: true,
+  createdAt: true,
+  updatedAt: true,
+} satisfies Prisma.UserSelect;
 
 @Injectable()
 export class UserService {
@@ -108,6 +122,39 @@ export class UserService {
       meta,
       data: result,
     };
+  }
+
+  /**
+   * Self-service profile update. Only ever touches the caller's own row — the
+   * `userId` comes from the verified JWT, never from the request body.
+   */
+  async updateMe(userId: string, data: UpdateMeDto, avatar?: string) {
+    const existing = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      throw new ApiError(HttpStatus.NOT_FOUND, 'User not found');
+    }
+
+    const payload: Prisma.UserUpdateInput = {};
+    if (data.name !== undefined) payload.name = data.name.trim();
+    if (data.contactNo !== undefined) payload.contactNo = data.contactNo.trim() || null;
+    if (avatar) payload.avatar = avatar;
+
+    if (Object.keys(payload).length === 0) {
+      return this.prisma.user.findUnique({
+        where: { id: userId },
+        select: publicUserSelect,
+      });
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: payload,
+      select: publicUserSelect,
+    });
   }
 
   async updatePassword({ id, password }: { id: string; password: string }) {

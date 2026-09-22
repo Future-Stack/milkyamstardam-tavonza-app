@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Building, ShieldCheck, Settings, Menu, X } from "lucide-react";
+import { Home, Building, ShieldCheck, UserCircle, Menu, X } from "lucide-react";
 import logo from "../../public/logo.png";
 import Image from "next/image";
 
@@ -79,10 +79,10 @@ export function Sidebar({ isMobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
                Operational
              </p>
            </div>
-           <Link href="#" className="flex lg:hidden items-center justify-center p-3 text-gray-400 hover:text-white transition-colors rounded-xl hover:bg-white/5 group relative">
-             <Settings className="w-5 h-5 shrink-0" />
+           <Link href="/profile" className="flex lg:hidden items-center justify-center p-3 text-gray-400 hover:text-white transition-colors rounded-xl hover:bg-white/5 group relative">
+             <UserCircle className="w-5 h-5 shrink-0" />
              <div className="absolute left-14 bg-[#1a1a1f] text-white text-xs px-2 py-1 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible lg:hidden whitespace-nowrap z-50 border border-white/10 shadow-xl transition-all">
-               Settings
+               Profile
              </div>
            </Link>
         </div>
@@ -123,9 +123,13 @@ export function Sidebar({ isMobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
           </button>
         </div>
         <div className="p-4 space-y-2">
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/5 transition-colors">
-            <Settings className="w-5 h-5" />
-            <span>Platform Settings</span>
+          <Link href="/profile" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/5 transition-colors">
+            <UserCircle className="w-5 h-5" />
+            <span>Profile &amp; Security</span>
+          </Link>
+          <Link href="/audit-logs" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/5 transition-colors">
+            <ShieldCheck className="w-5 h-5" />
+            <span>Global Audit Logs</span>
           </Link>
         </div>
         <div className="absolute bottom-6 left-4 right-4">

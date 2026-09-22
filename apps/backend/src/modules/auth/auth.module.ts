@@ -1,4 +1,5 @@
 import { BrevoService } from '@/email/brevo';
+import { GMailService } from '@/email/gmail';
 import { UserModule } from '@/modules/user/user.module';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
@@ -9,7 +10,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@/config/config.service';
 import { EmailTemplate } from '@/email-templates/forgot-password';
-import { SesService } from '@/email/ses';
+// SES is parked in favour of Gmail for now.
+// import { SesService } from '@/email/ses';
 export const OIDC_CONFIG = 'OIDC_CONFIG';
 @Module({
   imports: [
@@ -29,7 +31,8 @@ export const OIDC_CONFIG = 'OIDC_CONFIG';
     UserService,
     ConfigService,
     BrevoService,
-    SesService,
+    GMailService,
+    // SesService,
     EmailTemplate,
     // by  using this nest js automatically bind every endpoint with AuthGuard
     // { provide: APP_GUARD, useClass: RolesGuard },

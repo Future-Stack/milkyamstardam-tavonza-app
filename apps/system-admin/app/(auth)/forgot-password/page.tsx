@@ -2,54 +2,89 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Loader2, ArrowLeft, CheckCircle2, Lock, ShieldCheck, ArrowRight } from "lucide-react";
+import {
+  Mail,
+  Loader2,
+  ArrowLeft,
+  CheckCircle2,
+  Lock,
+  ShieldCheck,
+  ArrowRight,
+  AlertCircle,
+} from "lucide-react";
+import { forgotPasswordAction, resetPasswordAction } from "../../actions/auth";
+
+function FormError({ message }: { message: string | null }) {
+  if (!message) return null;
+  return (
+    <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
+      <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+      <p className="text-sm text-red-300 leading-snug">{message}</p>
+    </div>
+  );
+}
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<"email" | "otp" | "password" | "success">("email");
-  
+
   // Form State
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate sending OTP
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setStep("otp");
-    }, 1500);
+    setError(null);
+
+    const result = await forgotPasswordAction(email.trim());
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
+    setStep("otp");
   };
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const otpValue = otp.join("");
-    if (otpValue.length !== 6) return;
-    
-    setIsSubmitting(true);
-    // Simulate verifying OTP
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setStep("password");
-    }, 1500);
+    if (otp.join("").length !== 6) return;
+
+    // The backend checks the code together with the new password in a single
+    // call, so there is nothing to verify yet — just advance.
+    setError(null);
+    setStep("password");
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setError("Passwords do not match");
       return;
     }
-    
+
     setIsSubmitting(true);
-    // Simulate resetting password
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setStep("success");
-    }, 1500);
+    setError(null);
+
+    const result = await resetPasswordAction({
+      email: email.trim(),
+      otp: otp.join(""),
+      password,
+    });
+
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
+    setStep("success");
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -108,7 +143,9 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
 
-            <button 
+            <FormError message={error} />
+
+            <button
               type="submit"
               disabled={isSubmitting}
               className="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#C4A45D] text-[#090B10] px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
@@ -154,16 +191,14 @@ export default function ForgotPasswordPage() {
               ))}
             </div>
 
-            <button 
+            <FormError message={error} />
+
+            <button
               type="submit"
               disabled={isSubmitting || otp.join("").length !== 6}
               className="w-full flex items-center justify-center gap-2 bg-[#00F2FE] hover:bg-[#00d8e6] text-[#090B10] px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_25px_rgba(0,242,254,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? (
-                <><Loader2 className="w-5 h-5 animate-spin" /> Verifying...</>
-              ) : (
-                <><ShieldCheck className="w-5 h-5" /> Verify Code</>
-              )}
+              <ShieldCheck className="w-5 h-5" /> Continue
             </button>
           </form>
         </div>
@@ -175,7 +210,7 @@ export default function ForgotPasswordPage() {
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-white tracking-tight mb-2">Create New Password</h1>
             <p className="text-sm text-gray-400 leading-relaxed">
-              Your identity has been verified. Please enter your new password below.
+              Enter your new password. We'll check the verification code when you submit.
             </p>
           </div>
 
@@ -210,7 +245,9 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
 
-            <button 
+            <FormError message={error} />
+
+            <button
               type="submit"
               disabled={isSubmitting}
               className="w-full flex items-center justify-center gap-2 bg-[#D4AF37] hover:bg-[#C4A45D] text-[#090B10] px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed mt-4"
