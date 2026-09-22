@@ -28,6 +28,66 @@ export class StaffService {
     private readonly auditLog: AuditLogService,
   ) {}
 
+  /**
+   * The caller's own branch assignments — how a manager discovers which
+   * branches they cover and what they are allowed to do there.
+   *
+   * Returns an empty list for users who are not branch staff (owners, admins,
+   * customers), which is a normal answer rather than an error.
+   */
+  async findMyAssignments(userId: string) {
+    const staff = await this.prisma.staff.findUnique({
+      where: { userId },
+      select: {
+        id: true,
+        staffAssignments: {
+          where: { isActive: true },
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            role: true,
+            permissions: true,
+            isActive: true,
+            createdAt: true,
+            branch: {
+              select: {
+                id: true,
+                name: true,
+                timezone: true,
+                isActive: true,
+                restaurantId: true,
+                restaurant: {
+                  select: { id: true, name: true, organizationId: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return {
+      staffId: staff?.id ?? null,
+      assignments: (staff?.staffAssignments ?? []).map((assignment) => ({
+        id: assignment.id,
+        role: assignment.role,
+        permissions: assignment.permissions,
+        since: assignment.createdAt,
+        branch: {
+          id: assignment.branch.id,
+          name: assignment.branch.name,
+          timezone: assignment.branch.timezone,
+          isActive: assignment.branch.isActive,
+          restaurant: {
+            id: assignment.branch.restaurant.id,
+            name: assignment.branch.restaurant.name,
+            organizationId: assignment.branch.restaurant.organizationId,
+          },
+        },
+      })),
+    };
+  }
+
   async createUser(data: CreateUserDto, actorId: string) {
     const existing = await this.prisma.user.findUnique({ where: { email: data.email } });
     if (existing) throw new ApiError(HttpStatus.CONFLICT, 'User with this email already exists');

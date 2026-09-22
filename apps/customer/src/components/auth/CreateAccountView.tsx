@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Loader2, AlertCircle } from 'lucide-react';
+import { registerAction } from '@/app/actions/auth';
 
 interface CreateAccountViewProps {
   onAccountCreated: () => void;
@@ -14,17 +15,46 @@ export default function CreateAccountView({
 }: CreateAccountViewProps) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('info@gmail.com');
+  const [email, setEmail] = useState('');
   const [countryCode, setCountryCode] = useState('+855');
-  const [phone, setPhone] = useState('123 456 789');
-  const [acceptedTerms, setAcceptedTerms] = useState(true);
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     if (!acceptedTerms) {
-      alert('Please accept the Terms and Conditions to proceed.');
+      setError('Please accept the terms and conditions to continue.');
       return;
     }
+
+    if (password !== confirmPassword) {
+      setError("Those passwords don't match.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const result = await registerAction({
+      name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+      email,
+      password,
+      // The backend stores one contact string, so the dial code rides along.
+      contactNo: phone ? `${countryCode}${phone.replace(/[^0-9]/g, '')}` : undefined,
+    });
+
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
     onAccountCreated();
   };
 
@@ -137,6 +167,38 @@ export default function CreateAccountView({
           </div>
         </div>
 
+        {/* Password */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm text-white font-['Inter']">Password</label>
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="At least 6 characters"
+              className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Confirm Password */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm text-white font-['Inter']">Confirm Password</label>
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Repeat your password"
+              className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
+            />
+          </div>
+        </div>
+
         {/* Terms and Condition Checkbox */}
         <div className="flex items-center gap-2.5 pt-1">
           <button
@@ -158,11 +220,20 @@ export default function CreateAccountView({
         </div>
 
         {/* Create Account Button */}
+        {error && (
+          <div className="flex items-start gap-2 text-xs text-rose-300 leading-relaxed">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-3"
+          disabled={isSubmitting}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-3 disabled:opacity-60"
         >
-          Create Account
+          {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isSubmitting ? 'Creating account…' : 'Create Account'}
         </button>
       </form>
 

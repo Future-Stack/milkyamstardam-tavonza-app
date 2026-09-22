@@ -23,7 +23,8 @@ export interface AddOnOption {
 export interface MenuItem {
   id: string;
   name: string;
-  category: "steaks" | "starters" | "sides" | "drinks";
+  /** Category name from the API — not a fixed set, so this is a plain string. */
+  category: string;
   price: number;
   rating: number;
   reviewsCount: number;
@@ -37,6 +38,8 @@ export interface MenuItem {
   prepTime?: string;
   calories?: string;
   addOns?: AddOnOption[];
+  /** Modifiers the server requires but this UI does not expose as a choice. */
+  impliedModifierIds?: string[];
 }
 
 export interface CartItem {

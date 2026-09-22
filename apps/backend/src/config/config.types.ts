@@ -33,6 +33,12 @@ export interface EnvConfig {
   JWT_REFRESH_EXPIRES_IN: string;
 
   CLIENT_URL: string;
+  /**
+   * Base URL of the customer-facing app — the QR codes encode
+   * `${FRONTEND_URL}/qr-order?token=…`. Must be reachable from a phone (a tunnel
+   * or LAN address), never localhost, or the codes scan and go nowhere.
+   */
+  FRONTEND_URL: string;
 
   SESSION_SECRET: string;
   COOKIE_DOMAIN: string;

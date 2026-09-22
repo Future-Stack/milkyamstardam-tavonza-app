@@ -81,7 +81,8 @@ const SUPER_ADMIN_PASSWORD = '123456';
 const ORG_PASSWORD = 'Demo1234!';
 
 /** Where the customer-facing app lives — used for the printed QR links. */
-const CUSTOMER_APP_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const CUSTOMER_APP_URL =
+  process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:3000';
 
 // ── Small helpers ───────────────────────────────────────────────────────────
 
@@ -844,6 +845,7 @@ async function main() {
           isAvailable: true,
           isVegetarian: item.isVegetarian ?? false,
           spiceLevel: item.spiceLevel,
+          stationType: item.station,
           displayOrder: itemIndex,
         },
       });

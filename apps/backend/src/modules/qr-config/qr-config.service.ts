@@ -15,7 +15,10 @@ export class QrConfigService {
   ) {}
 
   private getQrCodeUrl(token: string) {
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    // Read through ConfigService rather than raw process.env: EnvKey is
+    // `keyof EnvConfig`, so a missing declaration is a compile error instead of
+    // a silent fallback that ships localhost URLs in every printed QR code.
+    const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:3000';
     return `${frontendUrl}/qr-order?token=${token}`;
   }
 

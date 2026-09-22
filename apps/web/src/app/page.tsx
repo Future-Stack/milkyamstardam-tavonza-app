@@ -1,15 +1,8 @@
-'use client';
-
-import React from 'react';
-import CustomerScannerMenu from '@/src/components/CustomerScannerMenu';
-
 export default function HomePage() {
   return (
-    <main className="h-[100dvh] w-screen bg-black text-white flex flex-col overflow-hidden relative font-sans">
-      {/* Main Container - Full screen customer flow without top bar */}
-      <div className="flex-1 w-full overflow-hidden flex flex-col items-center justify-center">
-        <CustomerScannerMenu />
-      </div>
+    <main className="h-screen w-screen flex flex-col items-center justify-center bg-zinc-950 text-white font-sans">
+      <h1 className="text-4xl font-bold">Tavonza Web</h1>
+      <p className="text-zinc-400 mt-4">Landing page placeholder.</p>
     </main>
   );
 }

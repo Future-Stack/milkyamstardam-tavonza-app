@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
+import { forgotPasswordAction } from '@/app/actions/auth';
 
 interface ForgotPasswordViewProps {
   onRequestCode: (email: string) => void;
@@ -13,11 +14,31 @@ export default function ForgotPasswordView({
   onRequestCode,
   onBackToLogin,
 }: ForgotPasswordViewProps) {
-  const [emailOrPhone, setEmailOrPhone] = useState('info@gmail.com');
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onRequestCode(emailOrPhone);
+    setError(null);
+
+    // The API only accepts an email here — the copy says "email or phone", but
+    // there is no SMS provider to deliver a code to.
+    if (!emailOrPhone.includes('@')) {
+      setError('Enter the email address on your account — codes are sent by email.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    const result = await forgotPasswordAction(emailOrPhone);
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
+    onRequestCode(emailOrPhone.trim());
   };
 
   return (
@@ -59,11 +80,20 @@ export default function ForgotPasswordView({
           />
         </div>
 
+        {error && (
+          <div className="flex items-start gap-2 text-xs text-rose-300 leading-relaxed">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4"
+          disabled={isSubmitting}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-60"
         >
-          Request code
+          {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isSubmitting ? 'Sending…' : 'Request code'}
         </button>
       </form>
 

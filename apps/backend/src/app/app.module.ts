@@ -4,6 +4,7 @@ import { FileService } from '@/helper/file.service';
 import { PrismaModule } from '@/helper/prisma.module';
 import { AdminModule } from '@/modules/admin/admin.module';
 import { AnalyticsModule } from '@/modules/analytics/analytics.module';
+import { GuestModule } from '@/modules/guest/guest.module';
 import { AuthGuard } from '@/modules/auth/auth.guard';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CustomerModule } from '@/modules/customer/customer.module';
@@ -53,6 +54,7 @@ import { ConfigModule } from '@/config/config.module';
     UserModule,
     AdminModule,
     AnalyticsModule,
+    GuestModule,
     CustomerModule,
     ConfigModule,
     AuditLogModule,
