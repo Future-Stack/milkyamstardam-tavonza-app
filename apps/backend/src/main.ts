@@ -47,6 +47,7 @@ async function bootstrap() {
       'http://51.21.19.92:3000',
       'http://51.21.19.92:3001',
       'http://51.21.19.92:3002',
+      'https://tavonza.softvenceomegaforce.cloud'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
