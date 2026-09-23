@@ -13,12 +13,8 @@ import type { Meta } from "./types";
  * client component that pulls it in fails to build rather than leaking the token.
  */
 
-<<<<<<< HEAD
 // We use bracket notation so Webpack doesn't statically replace it at build time.
 const API_BASE_URL = "https://tavonzaapi.softvenceomegaforce.cloud/api/v1";
-=======
-const API_BASE_URL =  "http://0000:7777/api/v1";
->>>>>>> 7690c5bb2d633a035f4c9d990eafc1cb024a412d
 
 export interface BackendFieldError {
   path: string;
