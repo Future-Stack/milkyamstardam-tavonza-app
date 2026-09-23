@@ -4,9 +4,10 @@ import { CreateTableDto, TableResponseDto, UpdateTableDto } from './dto/table.dt
 import { CreateReservationDto, ReservationResponseDto, UpdateReservationDto } from './dto/reservation.dto';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../roles/roles.decorator';
-import { GlobalRole, ReservationStatus } from '@prisma/client';
+import { GlobalRole, PermissionAction, ReservationStatus } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
 import { ApiStandardResponse } from '@/utils/swagger.decorator';
+import { Permissions } from '../permissions/permissions.decorator';
 
 @ApiTags('Tables & Reservations')
 @ApiBearerAuth('JWT-auth')
@@ -16,7 +17,8 @@ export class TableController {
 
   // --- TABLES ---
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.STAFF)
+  @Permissions(PermissionAction.MANAGE_TABLES)
   @Post('branches/:branchId/tables')
   @ApiOperation({ summary: 'Create table' })
   @ApiStandardResponse({ type: TableResponseDto })
@@ -25,7 +27,8 @@ export class TableController {
     return ResponseService.formatResponse({ statusCode: HttpStatus.CREATED, message: 'Table created', data: result });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.STAFF)
+  @Permissions(PermissionAction.MANAGE_TABLES)
   @Get('branches/:branchId/tables')
   @ApiOperation({ summary: 'List tables for a branch' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
@@ -45,7 +48,8 @@ export class TableController {
     });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.STAFF)
+  @Permissions(PermissionAction.MANAGE_TABLES)
   @Patch('tables/:id')
   @ApiOperation({ summary: 'Update table' })
   @ApiStandardResponse({ type: TableResponseDto })

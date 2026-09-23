@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Check, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { useAppDispatch, useAppSelector } from '@/redux/store';
-import { registerCustomer, loginUser } from '@/redux/features/authApi';
-import { clearAuthError } from '@/redux/slices/authSlice';
+import { ArrowLeft, Check, Loader2, AlertCircle } from 'lucide-react';
+import { registerAction } from '@/app/actions/auth';
 
 interface CreateAccountViewProps {
   onAccountCreated: () => void;
@@ -21,40 +19,46 @@ export default function CreateAccountView({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [countryCode, setCountryCode] = useState('+855');
   const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     if (!acceptedTerms) {
-      alert('Please accept the Terms and Conditions to proceed.');
+      setError('Please accept the terms and conditions to continue.');
       return;
     }
-    dispatch(clearAuthError());
-    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
-    const contactNo = `${countryCode}${phone.trim()}`;
 
-    const regResult = await dispatch(
-      registerCustomer({
-        name: fullName   ,
-        email,
-        password,
-        contactNo,
-      })
-    );
-
-    if (registerCustomer.fulfilled.match(regResult)) {
-      // Auto-login after successful registration
-      const loginResult = await dispatch(loginUser({ email, password }));
-      if (loginUser.fulfilled.match(loginResult)) {
-        onAccountCreated();
-      } else {
-        onAccountCreated();
-      }
+    if (password !== confirmPassword) {
+      setError("Those passwords don't match.");
+      return;
     }
+
+    setIsSubmitting(true);
+
+    const result = await registerAction({
+      name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+      email,
+      password,
+      // The backend stores one contact string, so the dial code rides along.
+      contactNo: phone ? `${countryCode}${phone.replace(/[^0-9]/g, '')}` : undefined,
+    });
+
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
+    onAccountCreated();
   };
 
   return (
@@ -194,6 +198,38 @@ export default function CreateAccountView({
           </div>
         </div>
 
+        {/* Password */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm text-white font-['Inter']">Password</label>
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="At least 6 characters"
+              className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Confirm Password */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm text-white font-['Inter']">Confirm Password</label>
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Repeat your password"
+              className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
+            />
+          </div>
+        </div>
+
         {/* Terms and Condition Checkbox */}
         <div className="flex items-center gap-2.5 pt-1">
           <button
@@ -215,17 +251,20 @@ export default function CreateAccountView({
         </div>
 
         {/* Create Account Button */}
+        {error && (
+          <div className="flex items-start gap-2 text-xs text-rose-300 leading-relaxed">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <button
           type="submit"
-          disabled={!acceptedTerms || loading}
-          className={`w-full h-11 text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg mt-3 ${
-            !acceptedTerms || loading
-              ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed border border-white/5 opacity-60'
-              : 'bg-yellow-400 hover:bg-yellow-300 text-black shadow-yellow-500/10 cursor-pointer active:scale-[0.99]'
-          }`}
+          disabled={isSubmitting}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-3 disabled:opacity-60"
         >
-          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-          <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
+          {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isSubmitting ? 'Creating account…' : 'Create Account'}
         </button>
       </form>
 

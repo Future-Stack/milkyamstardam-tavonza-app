@@ -13,7 +13,7 @@ import type { Meta } from "./types";
  * client component that pulls it in fails to build rather than leaking the token.
  */
 
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:7777/api/v1";
+const API_BASE_URL =  "http://0000:7777/api/v1";
 
 export interface BackendFieldError {
   path: string;
@@ -86,8 +86,9 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<A
       },
       cache: "no-store",
     });
-  } catch {
-    throw new ApiError(0, "Cannot reach the Tavonza API. Is the backend running on port 7777?");
+  } catch (error) {
+    console.error("Fetch failed for URL:", `${API_BASE_URL}${path}`, error);
+    throw new ApiError(0, `Cannot reach the Tavonza API. URL: ${API_BASE_URL}. Error: ${(error as Error).message}`);
   }
 
   const body = (await response.json().catch(() => null)) as Envelope<T> | null;

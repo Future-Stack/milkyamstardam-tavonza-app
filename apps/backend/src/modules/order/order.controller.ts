@@ -23,7 +23,10 @@ export class OrderController {
   @ApiOperation({ summary: 'Create order' })
   @ApiStandardResponse({ type: OrderResponseDto })
   async createOrder(@Param('branchId') branchId: string, @Body() dto: CreateOrderDto, @Request() req: any) {
-    const result = await this.orderService.createOrder(branchId, dto, req.user.id);
+    const result = await this.orderService.createOrder(branchId, dto, {
+      userId: req.user.id,
+      isStaff: req.user.role !== GlobalRole.CUSTOMER,
+    });
     return ResponseService.formatResponse({ statusCode: HttpStatus.CREATED, message: 'Order created', data: result });
   }
 

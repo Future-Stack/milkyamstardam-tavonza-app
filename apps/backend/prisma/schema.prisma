@@ -497,6 +497,10 @@ model MenuItem {
   isAvailable  Boolean      @default(true)
   isVegetarian Boolean      @default(false)
   spiceLevel   Int? // 0-3, optional
+  // Which station prepares this item. Denormalized onto OrderItem at order time
+  // so the kitchen/bar boards can filter without joining back here — which means
+  // it must be owned HERE, not passed in by whoever places the order.
+  stationType  StationType  @default(KITCHEN)
   displayOrder Int          @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -802,6 +806,9 @@ model OrderItem {
   unitPrice           Float
   quantity            Int
   subtotal            Float
+  // The modifier choices made at placement time, frozen alongside the price so
+  // the kitchen still sees "Hot" / "Extra cheese" after the menu changes.
+  modifiers           Json?
 
   // Denormalized at order time so the kitchen/bar dashboard can filter
   // `WHERE stationType = X AND status = PENDING` without joining Product.

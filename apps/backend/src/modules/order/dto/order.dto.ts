@@ -1,36 +1,33 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsEnum, IsMongoId, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { OrderChannel, OrderItemStatus, OrderRejectionReason, OrderStatus, PaymentStatus, StationType } from '@prisma/client';
+import { OrderChannel, OrderItemStatus, OrderRejectionReason, OrderStatus } from '@prisma/client';
 
+/**
+ * One line of an order.
+ *
+ * Prices are deliberately NOT accepted here. Unit price, line subtotal, the
+ * product-name snapshot and the station are all derived from `productId` on the
+ * server — otherwise a customer could post `unitPrice: 0`.
+ */
 export class CreateOrderItemDto {
   @ApiProperty()
   @IsMongoId()
   productId: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  productNameSnapshot: string;
-
-  @ApiProperty()
-  @IsNumber()
-  @Min(0)
-  unitPrice: number;
 
   @ApiProperty({ minimum: 1 })
   @IsNumber()
   @Min(1)
   quantity: number;
 
-  @ApiProperty()
-  @IsNumber()
-  @Min(0)
-  subtotal: number;
-
-  @ApiProperty({ enum: StationType })
-  @IsEnum(StationType)
-  stationType: StationType;
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'Ids of the Modifier rows the guest selected for this line',
+  })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsOptional()
+  modifierIds?: string[];
 }
 
 export class CreateOrderDto {
@@ -59,47 +56,27 @@ export class CreateOrderDto {
   @IsOptional()
   channel?: OrderChannel;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Promo code; validated and priced server-side' })
+  @IsString()
+  @IsOptional()
+  discountCode?: string;
+
+  @ApiPropertyOptional({ default: 0 })
   @IsNumber()
   @Min(0)
-  subtotal: number;
-
-  @ApiPropertyOptional({ default: 0 })
-  @IsNumber()
-  @IsOptional()
-  discountAmount?: number;
-
-  @ApiPropertyOptional({ default: 0 })
-  @IsNumber()
-  @IsOptional()
-  taxAmount?: number;
-
-  @ApiPropertyOptional({ default: 0 })
-  @IsNumber()
-  @IsOptional()
-  serviceCharge?: number;
-
-  @ApiPropertyOptional({ default: 0 })
-  @IsNumber()
   @IsOptional()
   tipAmount?: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @Min(0)
-  totalAmount: number;
 
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   specialInstructions?: string;
 
-  @ApiPropertyOptional({ type: [CreateOrderItemDto] })
+  @ApiProperty({ type: [CreateOrderItemDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)
-  @IsOptional()
-  items?: CreateOrderItemDto[];
+  items: CreateOrderItemDto[];
 }
 
 export class UpdateOrderStatusDto {

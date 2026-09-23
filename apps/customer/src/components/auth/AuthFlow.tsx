@@ -28,7 +28,8 @@ export default function AuthFlow({
   onBackToLanding,
 }: AuthFlowProps) {
   const [currentScreen, setCurrentScreen] = useState<AuthScreen>(initialScreen);
-  const [userEmail, setUserEmail] = useState('info@gmail.com');
+  const [userEmail, setUserEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
@@ -55,13 +56,20 @@ export default function AuthFlow({
 
         {currentScreen === 'verify-otp' && (
           <OtpVerificationView
-            onVerifySuccess={() => setCurrentScreen('reset-password')}
+            onVerifySuccess={(code) => {
+              // The API only checks the code when the new password is submitted,
+              // so it is carried forward rather than verified here.
+              setOtpCode(code);
+              setCurrentScreen('reset-password');
+            }}
             onBack={() => setCurrentScreen('forgot-password')}
           />
         )}
 
         {currentScreen === 'reset-password' && (
           <ResetPasswordView
+            email={userEmail}
+            otp={otpCode}
             onComplete={onAuthComplete}
             onBack={() => setCurrentScreen('verify-otp')}
           />

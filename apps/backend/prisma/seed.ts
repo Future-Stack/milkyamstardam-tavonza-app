@@ -1,6 +1,6 @@
 /**
  * Tavonza AI — demo seed.
- *
+ *os
  * Builds one complete tenant so the branch + customer flow can be demonstrated
  * end to end: a fully set-up branch with every table AVAILABLE and no open
  * session (so the live QR → OTP → order → accept → prepare → serve → pay →
@@ -8,10 +8,13 @@
  * reports and the audit log are not empty.
  *
  * ── Destructive ────────────────────────────────────────────────────────────
- * This wipes every collection. It refuses to run unless SEED_FORCE=yes is set;
- * without it, it only reports what it would delete.
+ * This wipes every collection. It refuses to run unless forced — either
+ * `pnpm seed -- --force` or SEED_FORCE=yes. Without a force flag it only
+ * reports what it would delete.
  *
- *   SEED_FORCE=yes pnpm seed
+ *   pnpm seed                 # dry run
+ *   pnpm seed -- --force      # wipe and seed
+ *   SEED_FORCE=yes pnpm seed  # same, via the environment
  *
  * ── Demo credentials ───────────────────────────────────────────────────────
  *   Super admin   euhan.dev@gmail.com        123456
@@ -69,7 +72,8 @@ if (!process.env.DATABASE_URL) {
 
 const prisma = new PrismaClient();
 
-const FORCE = process.env.SEED_FORCE === 'yes';
+// `--force` via argv is shell-independent; SEED_FORCE also works for CI.
+const FORCE = process.argv.includes('--force') || process.env.SEED_FORCE === 'yes';
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '12', 10);
 
 const STAFF_PASSWORD = 'Demo1234!';
@@ -77,7 +81,8 @@ const SUPER_ADMIN_PASSWORD = '123456';
 const ORG_PASSWORD = 'Demo1234!';
 
 /** Where the customer-facing app lives — used for the printed QR links. */
-const CUSTOMER_APP_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const CUSTOMER_APP_URL =
+  process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:3000';
 
 // ── Small helpers ───────────────────────────────────────────────────────────
 
@@ -436,14 +441,14 @@ async function wipe() {
 }
 
 async function reportOnly() {
-  console.log('\n⚠️  SEED_FORCE is not set — nothing was deleted.\n');
+  console.log('\n⚠️  No --force flag — nothing was deleted.\n');
   console.log('   This is what WOULD be removed:');
   for (const model of WIPE_ORDER) {
     const delegate = (prisma as unknown as Record<string, { count: (a?: object) => Promise<number> }>)[model];
     const count = await delegate.count({});
     if (count > 0) console.log(`     ${model.padEnd(30)} ${count}`);
   }
-  console.log('\n   Re-run with:  SEED_FORCE=yes pnpm seed\n');
+  console.log('\n   Re-run with:  pnpm seed -- --force\n');
 }
 
 // ── Account helpers ─────────────────────────────────────────────────────────
@@ -840,6 +845,7 @@ async function main() {
           isAvailable: true,
           isVegetarian: item.isVegetarian ?? false,
           spiceLevel: item.spiceLevel,
+          stationType: item.station,
           displayOrder: itemIndex,
         },
       });

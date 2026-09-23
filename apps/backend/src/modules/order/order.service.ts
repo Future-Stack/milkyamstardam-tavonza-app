@@ -2,8 +2,20 @@ import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@/helper/prisma.service';
 import { ApiError } from '@/utils/api_error';
 import { AuditLogService } from '../audit-log/audit-log.service';
-import { CreateOrderDto, UpdateOrderItemStatusDto, UpdateOrderStatusDto } from './dto/order.dto';
-import { Order, OrderAcceptanceMode, OrderItemStatus, OrderRejectionReason, OrderStatus, Prisma } from '@prisma/client';
+import { CreateOrderDto, CreateOrderItemDto, UpdateOrderItemStatusDto, UpdateOrderStatusDto } from './dto/order.dto';
+import {
+  BranchSetting,
+  Discount,
+  DiscountType,
+  Order,
+  OrderAcceptanceMode,
+  OrderChannel,
+  OrderItemStatus,
+  OrderRejectionReason,
+  OrderStatus,
+  Prisma,
+  StationType,
+} from '@prisma/client';
 import QueryBuilder from '@/utils/query_builder';
 import { IGenericResponse } from '@/interface/common';
 import {
@@ -14,6 +26,28 @@ import {
   orderInclude,
 } from './order.constant';
 
+/** Rounds to 2dp so repeated float arithmetic doesn't drift into 12.999998. */
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+/** A line after the server has decided what it costs. */
+interface PricedLine {
+  productId: string;
+  productNameSnapshot: string;
+  unitPrice: number;
+  quantity: number;
+  subtotal: number;
+  stationType: StationType;
+  modifiers: { id: string; name: string; priceDelta: number }[];
+}
+
+/** Who is placing the order — distinguishes a guest self-order from a POS entry. */
+export interface OrderActor {
+  userId: string;
+  isStaff: boolean;
+}
+
 @Injectable()
 export class OrderService {
   private readonly logger = new Logger(OrderService.name);
@@ -23,18 +57,139 @@ export class OrderService {
     private readonly auditLog: AuditLogService,
   ) {}
 
-  async createOrder(branchId: string, data: CreateOrderDto, actorId?: string) {
+  /**
+   * Turns `{ productId, quantity, modifierIds }` lines into fully priced order
+   * lines and order-level totals.
+   *
+   * Every money figure and the station come from the database, never from the
+   * caller: the client decides WHAT is being ordered, the server decides what it
+   * costs. `whitelist: true` on the global ValidationPipe already strips any
+   * price field a caller tries to smuggle in.
+   */
+  async priceOrder(items: CreateOrderItemDto[], settings: BranchSetting, discountCode?: string) {
+    if (!items || items.length === 0) {
+      throw new ApiError(HttpStatus.BAD_REQUEST, 'An order must contain at least one item');
+    }
+
+    const products = await this.prisma.menuItem.findMany({
+      where: { id: { in: [...new Set(items.map((item) => item.productId))] } },
+      include: { modifierGroups: { include: { modifiers: true } } },
+    });
+    const byId = new Map(products.map((product) => [product.id, product]));
+
+    const lines: PricedLine[] = items.map((line) => {
+      const product = byId.get(line.productId);
+      if (!product) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, `Menu item ${line.productId} does not exist`);
+      }
+      if (!product.isAvailable) {
+        throw new ApiError(HttpStatus.CONFLICT, `"${product.name}" is currently unavailable`);
+      }
+
+      // A modifier only counts if it is actually offered on THIS item.
+      const offered = new Map(
+        product.modifierGroups.flatMap((group) => group.modifiers.map((m) => [m.id, m])),
+      );
+      const chosen = (line.modifierIds ?? []).map((id) => {
+        const modifier = offered.get(id);
+        if (!modifier) {
+          throw new ApiError(
+            HttpStatus.BAD_REQUEST,
+            `Option ${id} is not offered on "${product.name}"`,
+          );
+        }
+        if (!modifier.isAvailable) {
+          throw new ApiError(HttpStatus.CONFLICT, `Option "${modifier.name}" is unavailable`);
+        }
+        return modifier;
+      });
+
+      const unitPrice = round2(
+        product.basePrice + chosen.reduce((sum, modifier) => sum + modifier.priceDelta, 0),
+      );
+
+      return {
+        productId: product.id,
+        productNameSnapshot: product.name,
+        unitPrice,
+        quantity: line.quantity,
+        subtotal: round2(unitPrice * line.quantity),
+        stationType: product.stationType,
+        modifiers: chosen.map((m) => ({ id: m.id, name: m.name, priceDelta: m.priceDelta })),
+      };
+    });
+
+    const subtotal = round2(lines.reduce((sum, line) => sum + line.subtotal, 0));
+
+    let discount: Discount | null = null;
+    let discountAmount = 0;
+
+    if (discountCode) {
+      discount = await this.prisma.discount.findUnique({ where: { code: discountCode } });
+      if (!discount || !discount.isActive) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, `Discount code "${discountCode}" is not valid`);
+      }
+
+      const now = new Date();
+      if (discount.validFrom && now < discount.validFrom) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, `Discount code "${discount.code}" is not active yet`);
+      }
+      if (discount.validUntil && now > discount.validUntil) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, `Discount code "${discount.code}" has expired`);
+      }
+      if (discount.usageLimit !== null && discount.timesUsed >= discount.usageLimit) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, `Discount code "${discount.code}" has been fully redeemed`);
+      }
+
+      discountAmount =
+        discount.type === DiscountType.PERCENTAGE
+          ? round2(subtotal * (discount.value / 100))
+          : round2(Math.min(discount.value, subtotal));
+    }
+
+    // Service charge applies to the discounted amount, and tax on top of both —
+    // matching how the seeded history was priced.
+    const taxable = round2(subtotal - discountAmount);
+    const serviceCharge = round2(taxable * ((settings.serviceChargePct ?? 0) / 100));
+    const taxAmount = round2((taxable + serviceCharge) * ((settings.taxPercent ?? 0) / 100));
+
+    return {
+      lines,
+      discount,
+      discountAmount,
+      subtotal,
+      serviceCharge,
+      taxAmount,
+      totalAmount: round2(taxable + serviceCharge + taxAmount),
+    };
+  }
+
+  /** Per-branch daily sequence, e.g. "A1B2-260922-0003". */
+  private async nextOrderNumber(branchId: string): Promise<string> {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const count = await this.prisma.order.count({
+      where: { branchId, createdAt: { gte: startOfDay } },
+    });
+
+    const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+    const sequence = (count + 1).toString().padStart(4, '0');
+    return `${branchId.slice(-4).toUpperCase()}-${dateStr}-${sequence}`;
+  }
+
+  async createOrder(branchId: string, data: CreateOrderDto, actor?: OrderActor) {
     const branchSettings = await this.prisma.branchSetting.findUnique({ where: { branchId } });
     if (!branchSettings) throw new ApiError(HttpStatus.NOT_FOUND, 'Branch settings not found');
 
-    const acceptanceMode = branchSettings.orderAcceptanceMode;
-    const initialStatus = acceptanceMode === OrderAcceptanceMode.AUTO_ACCEPT ? OrderStatus.CONFIRMED : OrderStatus.PENDING;
+    const priced = await this.priceOrder(data.items, branchSettings, data.discountCode);
+    const tipAmount = round2(Math.max(0, data.tipAmount ?? 0));
 
-    // Generate order number (e.g. branchId short + date + sequence)
-    const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
-    const count = await this.prisma.order.count({ where: { branchId, createdAt: { gte: new Date(new Date().setHours(0,0,0,0)) } } });
-    const sequence = (count + 1).toString().padStart(4, '0');
-    const orderNumber = `${branchId.slice(-4).toUpperCase()}-${dateStr}-${sequence}`;
+    const acceptanceMode = branchSettings.orderAcceptanceMode;
+    const initialStatus =
+      acceptanceMode === OrderAcceptanceMode.AUTO_ACCEPT ? OrderStatus.CONFIRMED : OrderStatus.PENDING;
+
+    const orderNumber = await this.nextOrderNumber(branchId);
 
     const order = await this.prisma.order.create({
       data: {
@@ -44,40 +199,59 @@ export class OrderService {
         customerId: data.customerId,
         tableSessionId: data.tableSessionId,
         guestSessionId: data.guestSessionId,
-        channel: data.channel || 'DINE_IN',
+        channel: data.channel || OrderChannel.DINE_IN,
         status: initialStatus,
-        subtotal: data.subtotal,
-        discountAmount: data.discountAmount || 0,
-        taxAmount: data.taxAmount || 0,
-        serviceCharge: data.serviceCharge || 0,
-        tipAmount: data.tipAmount || 0,
-        totalAmount: data.totalAmount,
+        subtotal: priced.subtotal,
+        discountAmount: priced.discountAmount,
+        taxAmount: priced.taxAmount,
+        serviceCharge: priced.serviceCharge,
+        tipAmount,
+        totalAmount: round2(priced.totalAmount + tipAmount),
+        discountId: priced.discount?.id ?? null,
+        discountCodeSnapshot: priced.discount?.code ?? null,
         specialInstructions: data.specialInstructions,
         acceptanceMode,
-        placedByStaffId: actorId,
+        // Only a staff member goes on `placedByStaffId`; a guest order leaves it null.
+        placedByStaffId: actor?.isStaff ? actor.userId : null,
         orderItems: {
-          create: (data.items || []).map(item => ({
-            productId: item.productId,
-            productNameSnapshot: item.productNameSnapshot,
-            unitPrice: item.unitPrice,
-            quantity: item.quantity,
-            subtotal: item.subtotal,
-            stationType: item.stationType,
-            status: initialStatus === OrderStatus.CONFIRMED ? OrderItemStatus.PREPARING : OrderItemStatus.PENDING,
-          }))
-        }
+          create: priced.lines.map((line) => ({
+            productId: line.productId,
+            productNameSnapshot: line.productNameSnapshot,
+            unitPrice: line.unitPrice,
+            quantity: line.quantity,
+            subtotal: line.subtotal,
+            stationType: line.stationType,
+            modifiers: line.modifiers.length > 0 ? line.modifiers : undefined,
+            status:
+              initialStatus === OrderStatus.CONFIRMED
+                ? OrderItemStatus.PREPARING
+                : OrderItemStatus.PENDING,
+          })),
+        },
       },
-      include: { orderItems: true }
+      include: { orderItems: true },
     });
 
-    if (actorId) {
+    if (priced.discount) {
+      await this.prisma.discount.update({
+        where: { id: priced.discount.id },
+        data: { timesUsed: { increment: 1 } },
+      });
+    }
+
+    if (actor) {
       this.auditLog.handleAuditLogEvent({
-        actorId,
+        actorId: actor.userId,
         branchId,
         action: 'ORDER_CREATED',
         entityType: 'Order',
         entityId: order.id,
-        metadata: { orderNumber, status: initialStatus },
+        metadata: {
+          orderNumber,
+          status: initialStatus,
+          total: order.totalAmount,
+          discountCode: priced.discount?.code ?? null,
+        },
       });
     }
 

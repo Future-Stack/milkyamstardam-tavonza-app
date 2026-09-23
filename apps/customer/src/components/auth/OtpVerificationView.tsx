@@ -8,7 +8,8 @@ import { forgotPassword } from '@/redux/features/authApi';
 import { setOtpCode } from '@/redux/slices/authSlice';
 
 interface OtpVerificationViewProps {
-  onVerifySuccess: (otp: string) => void;
+  /** Hands the entered code to the reset step — the API only checks it there. */
+  onVerifySuccess: (code: string) => void;
   onBack: () => void;
 }
 
@@ -16,11 +17,9 @@ export default function OtpVerificationView({
   onVerifySuccess,
   onBack,
 }: OtpVerificationViewProps) {
-  const dispatch = useAppDispatch();
-  const { forgotEmail } = useAppSelector((state) => state.auth);
-
-  const [otp, setOtp] = useState<string[]>(['', '', '', '', '']);
-  const [seconds, setSeconds] = useState(105); // 1 min 45 secs
+  // Six digits — the backend's ResetPasswordDto requires exactly 6.
+  const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
+  const [seconds, setSeconds] = useState(105); // 01.45
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export default function OtpVerificationView({
     setOtp(newOtp);
 
     // Focus next input box automatically
-    if (value && index < 4) {
+    if (value && index < otp.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -54,18 +53,12 @@ export default function OtpVerificationView({
     }
   };
 
-  const handleResend = () => {
-    setSeconds(105);
-    if (forgotEmail) {
-      dispatch(forgotPassword({ email: forgotEmail }));
-    }
-  };
+  const isComplete = otp.every((digit) => digit !== '');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const fullOtp = otp.join('');
-    dispatch(setOtpCode(fullOtp));
-    onVerifySuccess(fullOtp);
+    if (!isComplete) return;
+    onVerifySuccess(otp.join(''));
   };
 
   return (
@@ -132,7 +125,8 @@ export default function OtpVerificationView({
 
         <button
           type="submit"
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 cursor-pointer"
+          disabled={!isComplete}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-50"
         >
           Verify
         </button>

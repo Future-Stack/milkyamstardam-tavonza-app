@@ -44,11 +44,9 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://lifekeys-shepherd.vercel.app',
-      '*',
-      'https://lifekeysshepherd.com',
-      'https://lifekeys-shepherd.com',
-      'https://www.lifekeys-shepherd.com',
+      'http://51.21.19.92:3000',
+      'http://51.21.19.92:3001',
+      'http://51.21.19.92:3002',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -120,7 +118,7 @@ async function bootstrap() {
   console.log('📚 Swagger: Available at /swagger');
 
   // 🚀 Final Startup
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`\n🚀 Server launched successfully!`);
   console.log(`🔗 Application is running on: ${await app.getUrl()}`);
   console.log(`📦 API Prefix: /api/v1`);

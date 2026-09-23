@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
-import { useAppDispatch, useAppSelector } from '@/redux/store';
-import { forgotPassword } from '@/redux/features/authApi';
-import { clearAuthError } from '@/redux/slices/authSlice';
+import { forgotPasswordAction } from '@/app/actions/auth';
 
 interface ForgotPasswordViewProps {
   onRequestCode: (email: string) => void;
@@ -16,18 +14,31 @@ export default function ForgotPasswordView({
   onRequestCode,
   onBackToLogin,
 }: ForgotPasswordViewProps) {
-  const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
-
   const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(clearAuthError());
-    const resultAction = await dispatch(forgotPassword({ email: emailOrPhone }));
-    if (forgotPassword.fulfilled.match(resultAction)) {
-      onRequestCode(emailOrPhone);
+    setError(null);
+
+    // The API only accepts an email here — the copy says "email or phone", but
+    // there is no SMS provider to deliver a code to.
+    if (!emailOrPhone.includes('@')) {
+      setError('Enter the email address on your account — codes are sent by email.');
+      return;
     }
+
+    setIsSubmitting(true);
+    const result = await forgotPasswordAction(emailOrPhone);
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
+
+    onRequestCode(emailOrPhone.trim());
   };
 
   return (
@@ -75,13 +86,20 @@ export default function ForgotPasswordView({
           />
         </div>
 
+        {error && (
+          <div className="flex items-start gap-2 text-xs text-rose-300 leading-relaxed">
+            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <button
           type="submit"
-          disabled={loading}
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 cursor-pointer"
+          disabled={isSubmitting}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-60"
         >
-          {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-          <span>{loading ? 'Sending Code...' : 'Request code'}</span>
+          {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+          {isSubmitting ? 'Sending…' : 'Request code'}
         </button>
       </form>
 

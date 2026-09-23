@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BarChart3, Table2 } from "lucide-react";
 
-import type { GrowthPoint } from "../../lib/types";
+import type { GrowthPoint } from "../lib/types";
 
 const HEIGHT = 240;
 const PADDING = { top: 26, right: 16, bottom: 28, left: 34 };

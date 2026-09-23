@@ -13,6 +13,27 @@ import { ApiStandardResponse } from '@/utils/swagger.decorator';
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
+  /**
+   * No `@Roles` on purpose: every authenticated user may ask which branches they
+   * are assigned to. Non-staff accounts simply get an empty list.
+   */
+  @Get('me/assignments')
+  @ApiOperation({
+    summary: "The caller's own branch assignments",
+    description:
+      'Branches the caller is staffed at, with their StaffRole and granted permissions. ' +
+      'This is what lets a branch or regional manager discover the branches they manage.',
+  })
+  @ApiStandardResponse({ type: StaffAssignmentResponseDto, isArray: true })
+  async findMyAssignments(@Request() req: any) {
+    const result = await this.staffService.findMyAssignments(req.user.id);
+    return ResponseService.formatResponse({
+      statusCode: HttpStatus.OK,
+      message: 'Assignments retrieved',
+      data: result,
+    });
+  }
+
   @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN)
   @Post('users')
   @ApiOperation({ summary: 'Create platform user' })

@@ -28,10 +28,9 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Already signed in and asking for an auth route -> dashboard
-  if (isAuthenticated && isAuthRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // We no longer redirect authenticated users away from /login,
+  // because if their session is stale, they would get stuck in an infinite loop
+  // between the layout redirecting to /login and proxy redirecting to /.
 
   return NextResponse.next();
 }
