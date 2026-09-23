@@ -34,8 +34,8 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - API_BASE_URL=http://backend:7777/api/v1
-      - NEXT_PUBLIC_API_URL=http://localhost:7777/api/v1
+      - API_BASE_URL=http://51.21.19.92:7777/api/v1
+      - NEXT_PUBLIC_API_URL=http://51.21.19.92:7777/api/v1
     depends_on:
       - backend
     networks:
@@ -56,8 +56,8 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - API_BASE_URL=http://backend:7777/api/v1
-      - NEXT_PUBLIC_API_URL=http://localhost:7777/api/v1
+      - API_BASE_URL=http://51.21.19.92:7777/api/v1
+      - NEXT_PUBLIC_API_URL=http://51.21.19.92:7777/api/v1
     depends_on:
       - backend
     networks:
@@ -78,8 +78,8 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - API_BASE_URL=http://backend:7777/api/v1
-      - NEXT_PUBLIC_API_URL=http://localhost:7777/api/v1
+      - API_BASE_URL=http://51.21.19.92:7777/api/v1
+      - NEXT_PUBLIC_API_URL=http://51.21.19.92:7777/api/v1
     depends_on:
       - backend
     networks:
