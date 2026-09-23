@@ -35,6 +35,8 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+# Server actions talk to Nest over the Docker network. Override in compose if needed.
+ENV API_BASE_URL=http://backend:7777/api/v1
 
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
