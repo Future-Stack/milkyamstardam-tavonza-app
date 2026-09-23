@@ -9,11 +9,13 @@ import { setOtpCode } from '@/redux/slices/authSlice';
 
 interface OtpVerificationViewProps {
   /** Hands the entered code to the reset step — the API only checks it there. */
+  email?: string;
   onVerifySuccess: (code: string) => void;
   onBack: () => void;
 }
 
 export default function OtpVerificationView({
+  email = '',
   onVerifySuccess,
   onBack,
 }: OtpVerificationViewProps) {
@@ -21,6 +23,10 @@ export default function OtpVerificationView({
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [seconds, setSeconds] = useState(105); // 01.45
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleResend = () => {
+    setSeconds(105);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -68,7 +74,7 @@ export default function OtpVerificationView({
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition"
+          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -85,7 +91,7 @@ export default function OtpVerificationView({
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-semibold text-white font-['Inter']">Verification Code</h2>
           <p className="text-xs text-neutral-400 font-['Inter'] leading-relaxed">
-            A verification code has been sent to {forgotEmail || 'your email'}.
+            A verification code has been sent to {email || 'your email'}.
           </p>
         </div>
 
@@ -126,7 +132,7 @@ export default function OtpVerificationView({
         <button
           type="submit"
           disabled={!isComplete}
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-50"
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
         >
           Verify
         </button>

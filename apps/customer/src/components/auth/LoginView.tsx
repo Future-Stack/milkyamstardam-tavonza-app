@@ -16,9 +16,6 @@ export default function LoginView({
   onForgotPassword,
   onCreateAccount,
 }: LoginViewProps) {
-  const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -96,7 +93,7 @@ export default function LoginView({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-white/60 hover:text-white p-1"
+                className="text-white/60 hover:text-white p-1 cursor-pointer"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -106,7 +103,7 @@ export default function LoginView({
               <button
                 type="button"
                 onClick={onForgotPassword}
-                className="text-yellow-400 text-xs font-['Inter'] underline hover:text-yellow-300 transition"
+                className="text-yellow-400 text-xs font-['Inter'] underline hover:text-yellow-300 transition cursor-pointer"
               >
                 Forgot password?
               </button>
@@ -124,7 +121,7 @@ export default function LoginView({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-2 disabled:opacity-60"
+            className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-2 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
             {isSubmitting ? 'Signing in…' : 'Login'}
@@ -132,16 +129,15 @@ export default function LoginView({
         </form>
 
         {/* Or Login With Divider */}
-        <div className="w-full flex items-center gap-3 my-1">
+        {/* <div className="w-full flex items-center gap-3 my-1">
           <div className="flex-1 h-px bg-white/60" />
           <span className="text-xs text-white font-['Poppins']">Or login with</span>
           <div className="flex-1 h-px bg-white/60" />
-        </div>
+        </div> */}
 
         {/* Social Logins (Authentic SVG vector logos matching Figma spec) */}
-        <div className="w-full grid grid-cols-3 gap-2.5">
-          {/* Facebook */}
-          <button
+        {/* <div className="w-full grid grid-cols-3 gap-2.5">
+           <button
             type="button"
             disabled
             title="Social sign-in isn't wired up yet — use your email and password"
@@ -157,8 +153,7 @@ export default function LoginView({
             <span className="text-white text-xs font-medium font-['Inter']">Facebook</span>
           </button>
 
-          {/* Gmail */}
-          <button
+           <button
             type="button"
             disabled
             title="Social sign-in isn't wired up yet — use your email and password"
@@ -185,8 +180,7 @@ export default function LoginView({
             <span className="text-white text-xs font-medium font-['Inter']">Gmail</span>
           </button>
 
-          {/* Apple */}
-          <button
+           <button
             type="button"
             disabled
             title="Social sign-in isn't wired up yet — use your email and password"
@@ -197,7 +191,7 @@ export default function LoginView({
             </svg>
             <span className="text-white text-xs font-medium font-['Inter']">Apple</span>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Bottom Sign Up Link */}
@@ -206,7 +200,7 @@ export default function LoginView({
         <button
           type="button"
           onClick={onCreateAccount}
-          className="text-yellow-400 text-sm font-['Inter'] font-semibold underline hover:text-yellow-300 transition"
+          className="text-yellow-400 text-sm font-['Inter'] font-semibold underline hover:text-yellow-300 transition cursor-pointer"
         >
           Create Account
         </button>

@@ -61,7 +61,7 @@ export default function ResetPasswordView({ email, otp, onComplete, onBack }: Re
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition"
+          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -102,7 +102,7 @@ export default function ResetPasswordView({ email, otp, onComplete, onBack }: Re
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="text-white/60 hover:text-white p-1"
+              className="text-white/60 hover:text-white p-1 cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -137,7 +137,7 @@ export default function ResetPasswordView({ email, otp, onComplete, onBack }: Re
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-60"
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
         >
           {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSubmitting ? 'Updating…' : 'Create New Password'}
