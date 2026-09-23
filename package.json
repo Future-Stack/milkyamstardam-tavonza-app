@@ -2,13 +2,14 @@
   "name": "tavonza",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build": "node api.js && turbo run build",
+    "dev": "node api.js && turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "@types/node": "^26.6.2",
     "prettier": "3.9.6",
     "turbo": "^2.10.12",
     "typescript": "7.0.2"
