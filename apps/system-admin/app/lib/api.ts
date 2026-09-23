@@ -13,8 +13,9 @@ import type { Meta } from "./types";
  * client component that pulls it in fails to build rather than leaking the token.
  */
 
-// We use bracket notation so Webpack doesn't statically replace it at build time.
-const API_BASE_URL = "https://tavonzaapi.softvenceomegaforce.cloud/api/v1";
+// Bracket notation keeps Next from inlining this at build time so Docker can
+// inject the backend service URL at runtime (http://backend:7777/api/v1).
+const API_BASE_URL = process.env["API_BASE_URL"] ?? "http://localhost:7777/api/v1";
 
 export interface BackendFieldError {
   path: string;
