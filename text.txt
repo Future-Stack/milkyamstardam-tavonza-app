@@ -1,0 +1,19 @@
+
+we hosted the all the frontends today but here in the demo we've tested it in local its worked properly but in the production it facing some issues we will fix it as soon as possible. don't worry we'll fix it tomorrow.
+
+Live Environment
+System Admin Dashboard:
+http://51.21.19.92:3002/
+
+Customer Dashboard:
+http://51.21.19.92:3000/
+
+
+Production Domain
+
+We have not yet received the production domain from your side. Please provide the domain you would like us to use for the final deployment.
+
+Once the domain is provided and the remaining integration/deployment work is finalized, we will proceed with the final production configuration and deployment.
+As the current timeline is quite short. we need some days more to integrate the frontend apis.
+
+We will complete the remaining integration and deployment work. We will keep you updated on the progress and proceed with the customer demo. Thank you for your cooperation and for taking the time to review the completed backend delivery.

@@ -13,7 +13,8 @@ import type { Meta } from "./types";
  * client component that pulls it in fails to build rather than leaking the token.
  */
 
-const API_BASE_URL =  "http://0000:7777/api/v1";
+// We use bracket notation so Webpack doesn't statically replace it at build time.
+const API_BASE_URL = "http://51.21.19.92:7777/api/v1";
 
 export interface BackendFieldError {
   path: string;
