@@ -3,14 +3,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { forgotPassword } from '@/redux/features/authApi';
+import { setOtpCode } from '@/redux/slices/authSlice';
 
 interface OtpVerificationViewProps {
   /** Hands the entered code to the reset step — the API only checks it there. */
+  email?: string;
   onVerifySuccess: (code: string) => void;
   onBack: () => void;
 }
 
 export default function OtpVerificationView({
+  email = '',
   onVerifySuccess,
   onBack,
 }: OtpVerificationViewProps) {
@@ -18,6 +23,10 @@ export default function OtpVerificationView({
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [seconds, setSeconds] = useState(105); // 01.45
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleResend = () => {
+    setSeconds(105);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,7 +38,7 @@ export default function OtpVerificationView({
   const formatTimer = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
-    return `${mins.toString().padStart(2, '0')}.${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleChange = (index: number, value: string) => {
@@ -65,7 +74,7 @@ export default function OtpVerificationView({
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition"
+          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -81,8 +90,8 @@ export default function OtpVerificationView({
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 my-auto">
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-semibold text-white font-['Inter']">Verification Code</h2>
-          <p className="text-xs text-neutral-400 font-['Inter']">
-            A verification code has been sent to your mail.
+          <p className="text-xs text-neutral-400 font-['Inter'] leading-relaxed">
+            A verification code has been sent to {email || 'your email'}.
           </p>
         </div>
 
@@ -91,7 +100,7 @@ export default function OtpVerificationView({
           {otp.map((digit, idx) => (
             <div
               key={idx}
-              className="w-14 h-12 rounded-md outline outline-1 outline-offset-[-1px] outline-white bg-black flex items-center justify-center"
+              className="w-14 h-12 rounded-md outline outline-1 outline-offset-[-1px] outline-white/30 bg-neutral-900 focus-within:outline-yellow-400 flex items-center justify-center transition"
             >
               <input
                 ref={(el) => {
@@ -102,7 +111,8 @@ export default function OtpVerificationView({
                 value={digit}
                 onChange={(e) => handleChange(idx, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(idx, e)}
-                className="w-full h-full text-center bg-transparent text-white text-base font-medium font-['Poppins'] focus:outline-none"
+                placeholder="•"
+                className="w-full h-full text-center bg-transparent text-white text-lg font-bold font-['Poppins'] focus:outline-none"
               />
             </div>
           ))}
@@ -112,8 +122,8 @@ export default function OtpVerificationView({
         <div>
           <button
             type="button"
-            onClick={() => setSeconds(105)}
-            className="text-yellow-400 text-xs font-['Inter'] hover:underline"
+            onClick={handleResend}
+            className="text-yellow-400 text-xs font-['Inter'] hover:underline cursor-pointer"
           >
             Resend ( {formatTimer(seconds)} )
           </button>
@@ -122,7 +132,7 @@ export default function OtpVerificationView({
         <button
           type="submit"
           disabled={!isComplete}
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-50"
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
         >
           Verify
         </button>

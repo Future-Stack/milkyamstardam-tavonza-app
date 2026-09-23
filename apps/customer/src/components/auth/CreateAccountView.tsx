@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Check, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Check, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { registerAction } from '@/app/actions/auth';
 
 interface CreateAccountViewProps {
@@ -20,6 +20,8 @@ export default function CreateAccountView({
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +67,7 @@ export default function CreateAccountView({
         <button
           type="button"
           onClick={onGoBackToLogin}
-          className="flex items-center gap-1.5 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition"
+          className="flex items-center gap-1.5 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -76,12 +78,19 @@ export default function CreateAccountView({
       <div className="w-full flex flex-col gap-1.5 mb-4">
         <h2 className="text-xl font-semibold text-white font-['Inter']">Create Account</h2>
         <p className="text-xs text-white/50 font-['Poppins'] leading-relaxed">
-          Get the best out of derleng by creating an account
+          Get the best out of Tavonza AI by creating an account
         </p>
       </div>
 
       {/* Form Fields */}
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4 my-auto">
+        {error && (
+          <div className="p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-300 font-['Inter'] flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         {/* First Name */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">First Name</label>
@@ -157,7 +166,6 @@ export default function CreateAccountView({
             <div className="flex-1 h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
               <input
                 type="tel"
-                required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="123 456 789"
@@ -170,25 +178,32 @@ export default function CreateAccountView({
         {/* Password */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Password</label>
-          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               required
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
+              placeholder="Min 6 characters"
               className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-white/60 hover:text-white p-1 cursor-pointer"
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
         {/* Confirm Password */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Confirm Password</label>
-          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
+          <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               required
               minLength={6}
               value={confirmPassword}
@@ -196,6 +211,13 @@ export default function CreateAccountView({
               placeholder="Repeat your password"
               className="w-full bg-transparent text-xs text-white placeholder:text-zinc-100/50 font-['Inter'] focus:outline-none"
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="text-white/60 hover:text-white p-1 cursor-pointer"
+            >
+              {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
@@ -204,7 +226,7 @@ export default function CreateAccountView({
           <button
             type="button"
             onClick={() => setAcceptedTerms(!acceptedTerms)}
-            className={`w-5 h-5 rounded-[4px] outline outline-1 outline-offset-[-1px] outline-white/90 flex items-center justify-center transition ${
+            className={`w-5 h-5 rounded-[4px] outline outline-1 outline-offset-[-1px] outline-white/90 flex items-center justify-center transition cursor-pointer ${
               acceptedTerms ? 'bg-yellow-400 text-black' : 'bg-neutral-950 text-transparent'
             }`}
           >
@@ -213,24 +235,17 @@ export default function CreateAccountView({
           <button
             type="button"
             onClick={() => setAcceptedTerms(!acceptedTerms)}
-            className="text-yellow-400 text-xs font-['Poppins'] underline hover:text-yellow-300 transition"
+            className="text-xs text-white/80 font-['Poppins'] cursor-pointer hover:text-yellow-300 transition"
           >
-            I accept term and condition
+            I accept terms and conditions
           </button>
         </div>
 
         {/* Create Account Button */}
-        {error && (
-          <div className="flex items-start gap-2 text-xs text-rose-300 leading-relaxed">
-            <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-3 disabled:opacity-60"
+          disabled={isSubmitting || !acceptedTerms}
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 disabled:bg-yellow-400/40 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-3 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSubmitting ? 'Creating account…' : 'Create Account'}
@@ -243,11 +258,12 @@ export default function CreateAccountView({
         <button
           type="button"
           onClick={onGoBackToLogin}
-          className="text-yellow-400 text-sm font-['Inter'] font-semibold hover:text-yellow-300 underline transition"
+          className="text-yellow-400 text-sm font-['Inter'] font-semibold hover:text-yellow-300 underline transition cursor-pointer"
         >
-          Go Back
+          Sign in
         </button>
       </div>
     </div>
   );
 }
+

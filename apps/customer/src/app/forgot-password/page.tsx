@@ -3,18 +3,18 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import ForgotPasswordView from '@/components/auth/ForgotPasswordView';
+import AuthDesktopLayout from '@/components/auth/AuthDesktopLayout';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
 
   return (
-    <div className="w-full min-h-screen bg-black text-white flex flex-col justify-center items-center p-6 relative font-sans">
-      <div className="w-full max-w-md md:max-w-xl">
-        <ForgotPasswordView
-          onRequestCode={() => router.push('/verify-otp')}
-          onBackToLogin={() => router.push('/login')}
-        />
-      </div>
-    </div>
+    <AuthDesktopLayout>
+      <ForgotPasswordView
+        onRequestCode={() => router.push('/verify-otp')}
+        onBackToLogin={() => router.push('/login')}
+      />
+    </AuthDesktopLayout>
   );
 }
+

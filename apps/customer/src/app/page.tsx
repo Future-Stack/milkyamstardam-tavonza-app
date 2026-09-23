@@ -135,7 +135,7 @@ export default function CustomerLandingPage() {
 
       {/* Main Full Page Content Container */}
       <main
-        className="w-full max-w-md md:max-w-xl lg:max-w-2xl min-h-screen flex flex-col justify-between p-6 md:p-10 relative"
+        className="w-full max-w-md md:max-w-xl lg:max-w-6xl min-h-screen flex flex-col justify-between p-4 sm:p-6 md:p-10 relative"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >

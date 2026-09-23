@@ -48,7 +48,7 @@ export default function ForgotPasswordView({
         <button
           type="button"
           onClick={onBackToLogin}
-          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition"
+          className="flex items-center gap-1 text-white text-xs font-['Poppins'] hover:text-yellow-400 transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -62,16 +62,22 @@ export default function ForgotPasswordView({
 
       {/* Form Content */}
       <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 my-auto">
+        {error && (
+          <div className="p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-xs text-red-300 font-['Inter']">
+            {error}
+          </div>
+        )}
+
         <div className="flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-white font-['Inter']">Forget password</h2>
+          <h2 className="text-sm font-semibold text-white font-['Inter']">Forgot password</h2>
           <p className="text-xs text-white/60 font-['Inter'] leading-relaxed">
-            Enter your email or phone we will send the verification code to reset your password
+            Enter your email address and we will send a verification OTP code to reset your password.
           </p>
         </div>
 
         <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
           <input
-            type="text"
+            type="email"
             required
             value={emailOrPhone}
             onChange={(e) => setEmailOrPhone(e.target.value)}
@@ -90,7 +96,7 @@ export default function ForgotPasswordView({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-60"
+          className="w-full h-11 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-medium font-['Inter'] rounded-[100px] flex items-center justify-center gap-2 transition shadow-lg shadow-yellow-500/10 active:scale-[0.99] mt-4 disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed"
         >
           {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSubmitting ? 'Sending…' : 'Request code'}
@@ -102,7 +108,7 @@ export default function ForgotPasswordView({
         <button
           type="button"
           onClick={onBackToLogin}
-          className="text-xs text-slate-400 hover:text-white transition"
+          className="text-xs text-slate-400 hover:text-white transition cursor-pointer"
         >
           Remembered password?{' '}
           <span className="text-yellow-400 font-semibold underline">Sign in</span>
