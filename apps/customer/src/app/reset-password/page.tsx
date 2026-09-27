@@ -11,7 +11,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthDesktopLayout>
       <ResetPasswordView
-        onComplete={() => router.push('/home')}
+        onComplete={() => router.push('/menu')}
         onBack={() => router.push('/verify-otp')}
       />
     </AuthDesktopLayout>

@@ -13,6 +13,8 @@ import {
   CreditCard,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLogout } from '@/hooks/useLogout';
+import { useAppSelector } from '@/redux/hooks';
 
 interface CashierHeaderProps {
   searchQuery: string;
@@ -29,8 +31,20 @@ export default function CashierHeader({
   setSidebarOpen,
   onOpenAIModal,
 }: CashierHeaderProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+  const displayName = user?.name || user?.email?.split('@')[0] || 'Emily Wilson';
+  const displayRole = user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Cashier';
+  const branchName = user?.assignments?.[0]?.branch?.name || 'Downtown Branch';
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join('') || 'EW';
 
   return (
     <header className="h-20 bg-black border-b border-white/10 px-3 sm:px-8 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 flex-shrink-0 shadow-[0px_0px_4px_0px_rgba(255,255,255,0.25)] font-['Inter']">
@@ -116,15 +130,15 @@ export default function CashierHeader({
           >
             {/* Avatar with amber ring */}
             <div className="size-7 sm:size-9 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-inner shrink-0">
-              <span className="text-white font-bold text-xs sm:text-sm font-['Inter']">EW</span>
+              <span className="text-white font-bold text-xs sm:text-sm font-['Inter']">{initials}</span>
             </div>
 
             <div className="text-left hidden sm:block border-l border-white/10 pl-3">
               <div className="text-slate-200 text-sm md:text-base font-medium font-['Inter'] leading-4">
-                Emily Wilson
+                {displayName}
               </div>
-              <div className="text-slate-500 text-xs sm:text-sm font-medium font-['Inter'] leading-4">
-                Cashier
+              <div className="text-slate-500 text-xs sm:text-sm font-medium font-['Inter'] leading-4 capitalize">
+                {displayRole}
               </div>
             </div>
 
@@ -135,8 +149,8 @@ export default function CashierHeader({
           {profileDropdownOpen && (
             <div className="absolute right-0 mt-2 w-52 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl z-50 space-y-1 animate-in fade-in zoom-in-95 font-['Inter']">
               <div className="px-3 py-2 border-b border-white/5 mb-1">
-                <p className="text-sm font-semibold text-white font-['Inter']">Emily Wilson</p>
-                <p className="text-xs text-zinc-400 font-['Inter']">Shift Cashier · Downtown</p>
+                <p className="text-sm font-semibold text-white font-['Inter']">{displayName}</p>
+                <p className="text-xs text-zinc-400 font-['Inter'] capitalize">{displayRole} · {branchName}</p>
               </div>
               <button
                 type="button"
@@ -164,8 +178,8 @@ export default function CashierHeader({
                 <button
                   type="button"
                   onClick={() => {
-                    toast.info('Cashier shift ended.');
                     setProfileDropdownOpen(false);
+                    handleLogout();
                   }}
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-rose-400 hover:bg-rose-500/10 rounded-lg cursor-pointer font-['Inter']"
                 >

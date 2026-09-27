@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "sonner";
+import ReduxProvider from "@/redux/ReduxProvider";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -40,8 +41,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col font-sans">
-        {children}
-        <Toaster position="top-right" theme="dark" richColors closeButton />
+        <ReduxProvider>
+          {children}
+          <Toaster position="top-right" theme="dark" richColors closeButton />
+        </ReduxProvider>
       </body>
     </html>
   );

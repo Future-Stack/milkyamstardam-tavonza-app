@@ -15,18 +15,22 @@ import {
   ChevronRight,
   Check,
 } from 'lucide-react';
+import { useLogout } from '@/hooks/useLogout';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function SettingsView() {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
   const [activeTab, setActiveTab] = useState<'Profile' | 'Notifications' | 'Shift' | 'Security'>('Profile');
 
   // Profile Form State
   const [profileData, setProfileData] = useState({
-    fullName: 'Michael Davis',
-    employeeId: 'TVZ-2041',
-    role: 'Senior Waiter',
-    branch: 'Downtown Branch',
-    email: 'michael.davis@tavonza.com',
-    phone: '+1 (555) 012-3456',
+    fullName: user?.name || user?.email?.split('@')[0] || 'Michael Davis',
+    employeeId: user?.id?.substring(0, 8).toUpperCase() || 'TVZ-2041',
+    role: user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Senior Waiter',
+    branch: user?.assignments?.[0]?.branch?.name || 'Downtown Branch',
+    email: user?.email || 'michael.davis@tavonza.com',
+    phone: user?.phone || '+1 (555) 012-3456',
   });
 
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -113,7 +117,7 @@ export default function SettingsView() {
               type="button"
               onClick={() => {
                 if (confirm('Are you sure you want to sign out?')) {
-                  window.location.href = '/signin';
+                  handleLogout();
                 }
               }}
               className="w-full px-3 py-2 rounded-xl flex items-center gap-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 text-base font-medium font-['DM_Sans'] transition-colors cursor-pointer"

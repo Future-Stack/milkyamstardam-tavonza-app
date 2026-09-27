@@ -57,7 +57,11 @@ export class MenuService {
   }
 
   async findAllCategories(query: Record<string, any>): Promise<IGenericResponse<MenuCategory[]>> {
-    const queryBuilder = new QueryBuilder<MenuCategory>(query, this.prisma.menuCategory);
+    const sanitizedQuery = { ...query };
+    if (!sanitizedQuery.sort) {
+      sanitizedQuery.sort = 'displayOrder';
+    }
+    const queryBuilder = new QueryBuilder<MenuCategory>(sanitizedQuery, this.prisma.menuCategory);
     const result = (await queryBuilder
       .filter(menuCategoryFilterFields as string[])
       .search(menuCategorySearchFields as string[])

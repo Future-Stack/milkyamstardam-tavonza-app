@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getCookie, setCookie } from '@/redux/api/baseApi';
 
 export interface CartItem {
   id: string;
@@ -47,7 +48,12 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(defaultCartItems);
-  const [tableNumber, setTableNumber] = useState('Table 8');
+  const [tableNumber, setTableNumberState] = useState('Table 8');
+
+  const setTableNumber = (table: string) => {
+    setTableNumberState(table);
+    setCookie('tavonza_table', table);
+  };
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -64,7 +70,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      const savedTable = localStorage.getItem('tavonza_table');
+      const cookieTable = getCookie('tavonza_table');
+      const savedTable = cookieTable || localStorage.getItem('tavonza_table');
       if (savedTable) {
         setTableNumber(savedTable);
       }

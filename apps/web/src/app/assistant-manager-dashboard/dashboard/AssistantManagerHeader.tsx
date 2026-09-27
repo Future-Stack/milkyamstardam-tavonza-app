@@ -7,8 +7,12 @@ import {
   Clock,
   UserCheck,
   Smartphone,
-  Menu
+  Menu,
+  LogOut,
+  User
 } from 'lucide-react';
+import { useAppSelector } from '@/redux/hooks';
+import { useLogout } from '@/hooks/useLogout';
 
 export interface AssistantManagerHeaderProps {
   onOpenMobileSidebar?: () => void;
@@ -17,9 +21,21 @@ export interface AssistantManagerHeaderProps {
 export function AssistantManagerHeader({
   onOpenMobileSidebar,
 }: AssistantManagerHeaderProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [timeStr, setTimeStr] = useState('10:20AM');
   const [branchSelectOpen, setBranchSelectOpen] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('Downtown Branch');
+  const [selectedBranch, setSelectedBranch] = useState(user?.assignments?.[0]?.branch?.name || 'Downtown Branch');
+
+  const displayName = user?.name || user?.email?.split('@')[0] || 'Marcus';
+  const displayRole = user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Assistant Manager';
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join('') || 'AM';
 
   useEffect(() => {
     const updateTime = () => {
@@ -113,20 +129,48 @@ export function AssistantManagerHeader({
       </div>
 
       {/* Right User Profile */}
-      <div className="flex items-center gap-3 flex-shrink-0 pl-2">
-        <div className="text-right hidden sm:block">
-          <div className="text-white text-sm font-semibold font-['Poppins'] leading-tight">
-            Marcus
+      <div className="relative flex items-center gap-3 flex-shrink-0 pl-2">
+        <button
+          type="button"
+          onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+          className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-zinc-800/80 transition-colors cursor-pointer"
+        >
+          <div className="text-right hidden sm:block">
+            <div className="text-white text-sm font-semibold font-['Poppins'] leading-tight">
+              {displayName}
+            </div>
+            <div className="text-zinc-400 text-xs font-normal font-['Inter'] leading-4 capitalize">
+              {displayRole}
+            </div>
           </div>
-          <div className="text-zinc-400 text-xs font-normal font-['Inter'] leading-4">
-            Assistant Manager
+          <div className="size-10 rounded-full bg-amber-500 border-2 border-amber-400/40 flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0">
+            {initials}
           </div>
-        </div>
-        <img
-          src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80"
-          alt="Marcus Avatar"
-          className="size-10 rounded-full border-2 border-slate-300 object-cover shadow-sm flex-shrink-0"
-        />
+          <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
+        </button>
+
+        {profileDropdownOpen && (
+          <div className="absolute right-0 top-12 w-52 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl z-50 space-y-1 animate-in fade-in zoom-in-95 font-['Inter']">
+            <div className="px-3 py-2 border-b border-white/5 mb-1">
+              <p className="text-sm font-semibold text-white">{displayName}</p>
+              <p className="text-xs text-zinc-400">{user?.email || selectedBranch}</p>
+              <p className="text-xs text-amber-400 mt-0.5 capitalize">{displayRole}</p>
+            </div>
+            <div className="border-t border-white/5 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setProfileDropdownOpen(false);
+                  handleLogout();
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-rose-400 hover:bg-rose-500/10 rounded-lg cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Logout
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

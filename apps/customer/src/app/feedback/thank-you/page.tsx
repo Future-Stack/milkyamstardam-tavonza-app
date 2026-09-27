@@ -48,7 +48,7 @@ function ThankYouContent() {
         <div className="w-full pt-4">
           <button
             type="button"
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="w-full py-4 bg-[#FFD60A] hover:bg-yellow-300 active:scale-[0.99] text-[#0B0B0B] text-base font-semibold font-montserrat rounded-xl shadow-[0px_8px_20px_rgba(227,172,56,0.35)] transition cursor-pointer flex items-center justify-center gap-2"
           >
             <span>Back To Order Menu</span>

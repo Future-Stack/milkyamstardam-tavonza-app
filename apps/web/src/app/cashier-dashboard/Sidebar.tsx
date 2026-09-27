@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLogout } from '@/hooks/useLogout';
 
 export interface CashierNavItem {
   name: string;
@@ -56,9 +57,7 @@ export default function Sidebar({
     setSidebarOpen(false);
   };
 
-  const handleLogout = () => {
-    toast.info('Cashier logged out successfully.');
-  };
+  const { handleLogout } = useLogout();
 
   return (
     <>

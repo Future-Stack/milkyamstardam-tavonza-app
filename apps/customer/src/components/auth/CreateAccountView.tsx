@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react';
 import { ArrowLeft, Check, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
-import { registerAction } from '@/app/actions/auth';
+import { rawUserApi } from '@/redux/features/userApi';
+import { rawAuthApi } from '@/redux/features/authApi';
+import { setCookie } from '@/redux/api/baseApi';
+import { useAppDispatch } from '@/redux/store';
+import { setUser } from '@/redux/slices/authSlice';
 
 interface CreateAccountViewProps {
   onAccountCreated: () => void;
@@ -13,6 +17,7 @@ export default function CreateAccountView({
   onAccountCreated,
   onGoBackToLogin,
 }: CreateAccountViewProps) {
+  const dispatch = useAppDispatch();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -40,23 +45,65 @@ export default function CreateAccountView({
       return;
     }
 
-    if (!email.trim() && !phone.trim()) {
-      setError('Please enter your email or phone number.');
+    if (!email.trim()) {
+      setError('Please enter your email.');
       return;
     }
 
-    // Save basic signup state for OTP screen
+    const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+    const contactNo = phone.trim() ? `${countryCode}${phone.trim()}` : undefined;
+
+    // Save basic signup state in cookies (NO localStorage)
     if (typeof window !== 'undefined') {
-      localStorage.setItem('tavonza_signup_email', email);
-      localStorage.setItem('tavonza_signup_name', `${firstName} ${lastName}`.trim());
-      localStorage.setItem('tavonza_signup_phone', phone ? `${countryCode} ${phone}` : '');
+      setCookie('tavonza_signup_email', email.trim());
+      setCookie('tavonza_signup_name', fullName);
+      if (contactNo) setCookie('tavonza_signup_phone', contactNo);
+    }
+
+    // Validate password
+    if (!password) {
+      setError('Please create a password for your account.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match. Please verify and try again.');
+      return;
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      const newUser = await rawUserApi.createCustomer({
+        name: fullName,
+        email: email.trim(),
+        password: password,
+        contactNo,
+        role: 'CUSTOMER',
+        customer: {},
+      });
+
+      // Automatically sign in to establish session tokens in cookies
+      try {
+        await rawAuthApi.login({
+          email: email.trim(),
+          password: password,
+        });
+      } catch {
+        // Continue if login response already handled
+      }
+
+      dispatch(setUser(newUser as any));
       setIsSubmitting(false);
       onAccountCreated();
-    }, 300);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setError(err.message || 'Failed to create customer account. Please try again.');
+    }
   };
 
   return (
@@ -175,7 +222,7 @@ export default function CreateAccountView({
         </div>
 
         {/* Password */}
-        {/* <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Password</label>
           <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
             <input
@@ -195,10 +242,10 @@ export default function CreateAccountView({
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </div> */}
+        </div>
 
         {/* Confirm Password */}
-        {/* <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Confirm Password</label>
           <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
             <input
@@ -218,7 +265,7 @@ export default function CreateAccountView({
               {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </div> */}
+        </div>
 
         {/* Terms and Condition Checkbox */}
         <div className="flex items-center gap-2.5 pt-1">

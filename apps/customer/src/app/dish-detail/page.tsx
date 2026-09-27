@@ -19,17 +19,76 @@ import {
 import { MENU_ITEMS, MenuItem } from '@/data/menuData';
 import { useCart } from '@/context/CartContext';
 import DraggableAskAi from '@/components/common/DraggableAskAi';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { fetchMenuItemById } from '@/redux/features/menu-items/menuItemApi';
+import { getItemImage } from '@/lib/menuUtils';
 
 function DishDetailContent() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const { cart, upsertCartItem } = useCart();
 
   const dishParam = searchParams.get('dish');
   const tableParam = searchParams.get('table') || 'Table 8';
 
-  // Find dish or fallback to Arancini al Tartufo from Figma
+  const { items: backendItems, selectedItem } = useAppSelector((state) => state.menuItems);
+
+  useEffect(() => {
+    if (dishParam) {
+      dispatch(fetchMenuItemById(dishParam));
+    }
+  }, [dispatch, dishParam]);
+
+  // Find dish from dynamic backend data or fallback
   const dish: MenuItem = useMemo(() => {
+    if (selectedItem && (selectedItem.id === dishParam || !dishParam)) {
+      const addOns: { id: string; name: string; price: number }[] = [];
+      if (selectedItem.modifierGroups) {
+        for (const grp of selectedItem.modifierGroups) {
+          for (const mod of grp.modifiers) {
+            addOns.push({
+              id: mod.id,
+              name: `${grp.name}: ${mod.name}`,
+              price: mod.priceDelta,
+            });
+          }
+        }
+      }
+      return {
+        id: selectedItem.id,
+        name: selectedItem.name,
+        subtitle: selectedItem.description || selectedItem.category?.name || 'Chef Specialty',
+        price: selectedItem.basePrice,
+        category: selectedItem.categoryId,
+        image: getItemImage(selectedItem.name, selectedItem.category?.name, selectedItem.imageUrl),
+        popular: selectedItem.isAvailable,
+        description: selectedItem.description || 'Prepared fresh with the finest seasonal ingredients by Tavonza chefs.',
+        addOns: addOns.length > 0 ? addOns : [
+          { id: 'addon-extra-cheese', name: 'Extra Cheddar', price: 1.5 },
+          { id: 'addon-truffle-oil', name: 'Truffle Oil Drizzle', price: 2.0 },
+        ],
+      };
+    }
+
+    const foundBackend = backendItems?.find((i) => i.id === dishParam);
+    if (foundBackend) {
+      return {
+        id: foundBackend.id,
+        name: foundBackend.name,
+        subtitle: foundBackend.description || foundBackend.category?.name || 'Chef Specialty',
+        price: foundBackend.basePrice,
+        category: foundBackend.categoryId,
+        image: getItemImage(foundBackend.name, foundBackend.category?.name, foundBackend.imageUrl),
+        popular: foundBackend.isAvailable,
+        description: foundBackend.description || 'Prepared fresh with the finest seasonal ingredients by Tavonza chefs.',
+        addOns: [
+          { id: 'addon-extra-cheese', name: 'Extra Cheddar', price: 1.5 },
+          { id: 'addon-truffle-oil', name: 'Truffle Oil Drizzle', price: 2.0 },
+        ],
+      };
+    }
+
     if (dishParam) {
       const found = MENU_ITEMS.find((item) => item.id === dishParam);
       if (found) return found;
@@ -38,7 +97,7 @@ function DishDetailContent() {
       MENU_ITEMS.find((item) => item.id === 'arancini-al-tartufo') ||
       MENU_ITEMS[0]
     );
-  }, [dishParam]);
+  }, [dishParam, selectedItem, backendItems]);
 
   // Find previously added/saved configuration for this dish in cart state
   const previousItem = useMemo(() => {
@@ -130,7 +189,7 @@ function DishDetailContent() {
   // Saves current dish & selections to state, then redirects back to Menu page
   const handleSaveAndRedirectToMenu = () => {
     saveCurrentDishToState();
-    router.push(`/home?table=${encodeURIComponent(tableParam)}`);
+    router.push(`/menu?table=${encodeURIComponent(tableParam)}`);
   };
 
   // Adds to cart and redirects to cart checkout page

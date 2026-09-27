@@ -6,6 +6,7 @@ import { TavonzaLogo } from '../TavonzaLogo';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { forgotPassword } from '@/redux/features/authApi';
 import { setOtpCode } from '@/redux/slices/authSlice';
+import { getCookie } from '@/redux/api/baseApi';
 
 interface OtpVerificationViewProps {
   /** Hands the entered code to the reset step — the API only checks it there. */
@@ -27,8 +28,8 @@ export default function OtpVerificationView({
 
   useEffect(() => {
     if (!email && typeof window !== 'undefined') {
-      const savedEmail = localStorage.getItem('tavonza_signup_email');
-      const savedPhone = localStorage.getItem('tavonza_signup_phone');
+      const savedEmail = getCookie('tavonza_signup_email');
+      const savedPhone = getCookie('tavonza_signup_phone');
       if (savedEmail) setDisplayTarget(savedEmail);
       else if (savedPhone) setDisplayTarget(savedPhone);
     }

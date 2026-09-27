@@ -34,7 +34,7 @@ interface CustomerDashboardViewProps {
 
 export default function CustomerDashboardView({
   showAuthSuccessModal = true,
-  initialTab = 'home',
+  initialTab = 'menu',
 }: CustomerDashboardViewProps) {
   const router = useRouter();
   const [activeIntent, setActiveIntent] = useState('Date Night');
@@ -55,7 +55,7 @@ export default function CustomerDashboardView({
 
   const handleTabChange = (tab: DashboardTab) => {
     setActiveTab(tab);
-    const targetRoute = tab === 'home' ? '/home' : `/${tab}`;
+    const targetRoute = tab === 'menu' || tab === 'home' ? '/menu' : `/${tab}`;
     router.push(targetRoute);
   };
 

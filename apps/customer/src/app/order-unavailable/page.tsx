@@ -47,7 +47,7 @@ function UnavailableContent() {
         <header className="w-full flex items-center justify-between pt-1">
           <button
             type="button"
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="w-8 h-8 bg-[#191818] border border-neutral-800 rounded-full flex items-center justify-center hover:bg-neutral-800 transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-white" />
@@ -78,7 +78,7 @@ function UnavailableContent() {
         <div className="w-full pt-2">
           <button
             type="button"
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="w-full py-4 bg-[#FFD60A] hover:bg-yellow-300 active:scale-[0.99] text-black text-sm sm:text-base font-semibold font-montserrat rounded-xl shadow-[0px_8px_20px_rgba(227,172,56,0.25)] transition cursor-pointer flex items-center justify-center gap-2"
           >
             <span>Order Something Else</span>

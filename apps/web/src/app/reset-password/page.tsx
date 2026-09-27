@@ -17,15 +17,21 @@ import {
   UtensilsCrossed,
   Receipt,
   Wine,
+  Hash,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/redux/store";
+import { resetPassword } from "@/redux/features/authApi";
 
 function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const emailParam = searchParams.get("email") || "";
-  const otpParam = searchParams.get("otp") || "";
+  const dispatch = useAppDispatch();
 
+  const emailParam = searchParams.get("email") || "";
+  const initialOtp = searchParams.get("otp") || "";
+
+  const [otp, setOtp] = useState<string>(initialOtp);
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -34,6 +40,18 @@ function ResetPasswordContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!emailParam) {
+      toast.error("Missing staff email address. Please restart from Forgot Password.");
+      router.push("/forgot-password");
+      return;
+    }
+
+    if (!otp || otp.length < 6) {
+      toast.error("Please enter the complete 6-digit OTP code");
+      return;
+    }
+
     if (!password || !confirmPassword) {
       toast.error("Please enter both password fields");
       return;
@@ -50,13 +68,33 @@ function ResetPasswordContent() {
     }
 
     setIsLoading(true);
-    toast.info("Updating your password on database...");
+    const toastId = toast.loading("Updating your password on database...");
 
-    setTimeout(() => {
+    try {
+      const resultAction = await dispatch(
+        resetPassword({
+          email: emailParam.trim().toLowerCase(),
+          otp: otp.trim(),
+          password,
+        })
+      );
+
+      if (resetPassword.fulfilled.match(resultAction)) {
+        toast.success("Password reset successfully! Please sign in with your new credentials.", {
+          id: toastId,
+        });
+        router.push("/signin");
+      } else {
+        const errorMsg =
+          (resultAction.payload as string) ||
+          "Password reset failed. Please ensure the OTP is correct and unexpired.";
+        toast.error(errorMsg, { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to reset password. Please try again.", { id: toastId });
+    } finally {
       setIsLoading(false);
-      toast.success("Password reset successfully! Please sign in with your new password.");
-      router.push("/");
-    }, 700);
+    }
   };
 
   return (
@@ -64,7 +102,7 @@ function ResetPasswordContent() {
       {/* Back Button */}
       <div>
         <Link
-          href="/"
+          href="/signin"
           className="inline-flex items-center gap-2 text-xs font-medium text-neutral-400 hover:text-amber-400 transition"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -78,12 +116,32 @@ function ResetPasswordContent() {
           Create New Password
         </h2>
         <p className="text-xs text-neutral-400 leading-relaxed">
-          Set a secure new password for your staff terminal account. Ensure it is at least 6 characters.
+          Set a secure new password for staff account{" "}
+          <span className="text-amber-400 font-semibold">{emailParam || "account"}</span>.
         </p>
       </div>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* OTP Input (Shown only if not in URL) */}
+        {!initialOtp && (
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-neutral-300">6-Digit OTP Code</label>
+            <div className="relative flex items-center">
+              <Hash className="absolute left-3.5 w-4 h-4 text-neutral-500 pointer-events-none" />
+              <input
+                type="text"
+                required
+                maxLength={6}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                placeholder="123456"
+                className="w-full h-11 pl-10 pr-3.5 bg-neutral-900 border border-neutral-800 focus:border-amber-400 rounded-xl text-xs text-white placeholder:text-neutral-600 focus:outline-none transition font-mono tracking-widest"
+              />
+            </div>
+          </div>
+        )}
+
         {/* New Password */}
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-neutral-300">New Password</label>
@@ -95,13 +153,13 @@ function ResetPasswordContent() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter new password"
+              placeholder="Enter new password (min. 6 chars)"
               className="w-full h-11 pl-10 pr-10 bg-neutral-900 border border-neutral-800 focus:border-amber-400 rounded-xl text-xs text-white placeholder:text-neutral-600 focus:outline-none transition"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 text-neutral-500 hover:text-neutral-300 p-1"
+              className="absolute right-3 text-neutral-500 hover:text-neutral-300 p-1 cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -125,7 +183,7 @@ function ResetPasswordContent() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 text-neutral-500 hover:text-neutral-300 p-1"
+              className="absolute right-3 text-neutral-500 hover:text-neutral-300 p-1 cursor-pointer"
             >
               {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -135,13 +193,14 @@ function ResetPasswordContent() {
         {/* Password Strength Note */}
         <div className="p-3 bg-neutral-900/60 border border-neutral-800/80 rounded-xl text-[11px] text-neutral-400">
           • Must be at least 6 characters long
-          <br />• Recommended: use numbers and letters for extra security
+          <br />• Recommended: use numbers and letters for extra terminal security
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full h-11 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-neutral-950 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-amber-500/10 active:scale-[0.99] mt-1 cursor-pointer"
+          className="w-full h-11 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-neutral-950 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-amber-500/10 active:scale-[0.99] mt-2 cursor-pointer"
         >
           {isLoading ? (
             <>
@@ -150,7 +209,7 @@ function ResetPasswordContent() {
             </>
           ) : (
             <>
-              <span>Save New Password & Sign In</span>
+              <span>Save Password & Sign In</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}
@@ -197,15 +256,15 @@ export default function ResetPasswordPage() {
         <div className="relative z-10 flex flex-col gap-6 max-w-lg my-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-medium w-fit">
             <KeyRound className="w-3.5 h-3.5" />
-            <span>Secure Password Reset</span>
+            <span>Staff Password Overwrite</span>
           </div>
 
           <h1 className="text-3xl xl:text-4xl font-extrabold tracking-tight text-white leading-tight font-['Inter']">
-            Set Your New Terminal Password
+            Secure Credential Provisioning
           </h1>
 
           <p className="text-sm text-neutral-300 leading-relaxed">
-            Ensure your terminal login remains protected with modern password standards and encrypted credential storage.
+            Re-encrypt your terminal access key with zero downtime across POS terminals, kitchen display monitors, and management portals.
           </p>
 
           <div className="grid grid-cols-2 gap-3 pt-2">
@@ -219,11 +278,11 @@ export default function ResetPasswordPage() {
             </div>
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-neutral-900/70 border border-neutral-800/80 backdrop-blur-md">
               <Receipt className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span className="text-xs text-neutral-200 font-medium">Cashier Stations</span>
+              <span className="text-xs text-neutral-200 font-medium">Cashier Register</span>
             </div>
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-neutral-900/70 border border-neutral-800/80 backdrop-blur-md">
               <Wine className="w-4 h-4 text-purple-400 shrink-0" />
-              <span className="text-xs text-neutral-200 font-medium">Bar Display Logs</span>
+              <span className="text-xs text-neutral-200 font-medium">Bar Station Routing</span>
             </div>
           </div>
         </div>
@@ -232,17 +291,23 @@ export default function ResetPasswordPage() {
         <div className="relative z-10 flex items-center justify-between pt-6 border-t border-neutral-800/60 text-xs text-neutral-400">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>Encrypted Database Password Sync</span>
+            <span>Multi-Branch Cloud Node Online</span>
           </div>
-          <span className="font-mono text-[11px] text-neutral-500">Bcrypt + Salt</span>
+          <span className="font-mono text-[11px] text-neutral-500">v2.4 — Enterprise RBAC</span>
         </div>
       </div>
 
       {/* ───────────────────────────────────────────────────────────
-          RIGHT SIDE: Reset Password Form
+          RIGHT SIDE: Form
       ─────────────────────────────────────────────────────────── */}
       <div className="w-full lg:w-1/2 xl:w-5/12 flex flex-col justify-center items-center p-6 sm:p-12 lg:p-14 relative z-10 my-auto">
-        <Suspense fallback={<div className="text-neutral-400 text-xs">Loading reset form...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+            </div>
+          }
+        >
           <ResetPasswordContent />
         </Suspense>
       </div>

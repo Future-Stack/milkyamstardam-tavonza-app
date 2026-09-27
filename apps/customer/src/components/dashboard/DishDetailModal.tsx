@@ -163,7 +163,7 @@ export default function DishDetailModal({
       onAddToCart(dish, quantity, selectedAddOns, specialInstructions);
     }
     onClose();
-    router.push('/home');
+    router.push('/menu');
   };
 
   const handleAddToCartClick = () => {

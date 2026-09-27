@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar, { waiterNavItems } from './Sidebar';
 import {
   WaiterHeader,
@@ -143,9 +144,20 @@ export default function WaiterDashboard({ initialNav = 'Dashboard' }: WaiterDash
   };
 
   return (
-    <div className="h-screen bg-black text-zinc-100 font-sans antialiased flex flex-col md:flex-row overflow-hidden selection:bg-amber-500 selection:text-black">
-      {/* 1. Sidebar */}
-      <Sidebar
+    <AuthGuard
+      allowedRoles={[
+        'WAITER',
+        'HOST',
+        'BRANCH_MANAGER',
+        'REGIONAL_MANAGER',
+        'RESTAURANT_OWNER',
+        'SUPER_ADMIN',
+        'ADMIN',
+      ]}
+    >
+      <div className="h-screen bg-black text-zinc-100 font-sans antialiased flex flex-col md:flex-row overflow-hidden selection:bg-amber-500 selection:text-black">
+        {/* 1. Sidebar */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -283,5 +295,6 @@ export default function WaiterDashboard({ initialNav = 'Dashboard' }: WaiterDash
         onClose={() => setIsVoiceModalOpen(false)}
       />
     </div>
+    </AuthGuard>
   );
 }

@@ -22,6 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLogout } from '@/hooks/useLogout';
 
 export const managerNavItems = [
   { name: 'Dashboard', icon: LayoutDashboard },
@@ -72,9 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
-  const handleLogout = () => {
-    toast.info('Manager logged out successfully.');
-  };
+  const { handleLogout } = useLogout();
 
   return (
     <>

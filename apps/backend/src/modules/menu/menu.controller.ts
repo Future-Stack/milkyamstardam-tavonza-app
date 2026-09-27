@@ -26,7 +26,7 @@ export class MenuController {
     return ResponseService.formatResponse({ statusCode: HttpStatus.CREATED, message: 'Category created', data: result });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.CUSTOMER)
   @Get('menu-categories')
   @ApiOperation({ summary: 'List menu categories' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
@@ -83,7 +83,7 @@ export class MenuController {
     return ResponseService.formatResponse({ statusCode: HttpStatus.CREATED, message: 'Item created', data: result });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER,GlobalRole.CUSTOMER)
   @Get('menu-items')
   @ApiOperation({ summary: 'List menu items' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
@@ -105,7 +105,7 @@ export class MenuController {
     });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER,GlobalRole.CUSTOMER)
   @Get('menu-items/:id')
   @ApiOperation({ summary: 'Get menu item with modifiers' })
   @ApiStandardResponse({ type: MenuItemResponseDto })

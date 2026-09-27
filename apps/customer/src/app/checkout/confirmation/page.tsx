@@ -64,7 +64,7 @@ function ConfirmationContent() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+              onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
               className="w-8 h-8 bg-[#191818] border border-neutral-800 rounded-full flex items-center justify-center hover:bg-neutral-800 transition cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 text-white" />
@@ -146,7 +146,7 @@ function ConfirmationContent() {
         <div className="w-full flex flex-col gap-3 pt-2">
           <button
             type="button"
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="w-full py-3.5 bg-[#FFD60A] hover:bg-yellow-300 active:scale-[0.99] text-[#0B0B0B] text-base font-semibold font-inter rounded-xl shadow-[0px_8px_20px_rgba(227,172,56,0.35)] transition cursor-pointer"
           >
             Back to Order

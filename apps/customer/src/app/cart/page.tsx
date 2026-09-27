@@ -51,7 +51,7 @@ function CartContent() {
         {/* HEADER: Back Button + Title */}
         <header className="w-full flex items-center justify-between pt-1">
           <button
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="inline-flex items-center gap-2.5 text-white hover:text-yellow-400 transition cursor-pointer"
           >
             <div className="w-7 h-7 bg-neutral-900 border border-neutral-800 rounded-full flex items-center justify-center">
@@ -88,7 +88,7 @@ function CartContent() {
               Explore our delicious menu and add your favorite dishes to start ordering.
             </p>
             <button
-              onClick={() => router.push('/home')}
+              onClick={() => router.push('/menu')}
               className="mt-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold text-sm font-montserrat rounded-xl shadow-lg transition active:scale-95 cursor-pointer"
             >
               Browse Menu

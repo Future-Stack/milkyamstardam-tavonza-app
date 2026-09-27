@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar, { bartenderNavItems } from './Sidebar';
 import {
   BartenderHeader,
@@ -104,9 +105,19 @@ export default function BartenderDashboard({ initialNav = 'Dashboard' }: Bartend
   };
 
   return (
-    <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
-      {/* 1. Fixed Left Sidebar */}
-      <Sidebar
+    <AuthGuard
+      allowedRoles={[
+        'BARTENDER',
+        'BRANCH_MANAGER',
+        'REGIONAL_MANAGER',
+        'RESTAURANT_OWNER',
+        'SUPER_ADMIN',
+        'ADMIN',
+      ]}
+    >
+      <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
+        {/* 1. Fixed Left Sidebar */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -219,5 +230,6 @@ export default function BartenderDashboard({ initialNav = 'Dashboard' }: Bartend
         onClose={() => setIsAIModalOpen(false)}
       />
     </div>
+    </AuthGuard>
   );
 }

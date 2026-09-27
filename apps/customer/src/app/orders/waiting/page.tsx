@@ -77,7 +77,7 @@ function WaitingContent() {
         <header className="w-full flex items-center justify-between pt-1">
           <button
             type="button"
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="w-8 h-8 bg-[#191818] border border-neutral-800 rounded-full flex items-center justify-center hover:bg-neutral-800 transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-white" />

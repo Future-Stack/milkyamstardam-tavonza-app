@@ -23,21 +23,25 @@ import {
   Monitor
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLogout } from '@/hooks/useLogout';
+import { useAppSelector } from '@/redux/hooks';
 
 type SettingsTab = 'Profile' | 'Kitchen' | 'Notifications' | 'AI Assistant' | 'Appearance' | 'Security';
 
 export default function KitchenSettingsView() {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
   const [activeTab, setActiveTab] = useState<SettingsTab>('Profile');
 
   // --- Profile State ---
   const [profileData, setProfileData] = useState({
-    fullName: 'Michael Torres',
+    fullName: user?.name || user?.email?.split('@')[0] || 'Michael Torres',
     shift: 'AM (6:00 AM – 2:00 PM)',
-    role: 'Head Chef',
-    branch: 'Downtown Branch',
-    email: 'michael.davis@tavonza.com',
-    phone: '+1 (555) 234-5678',
-    employeeId: '#CHF-0042',
+    role: user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Head Chef',
+    branch: user?.assignments?.[0]?.branch?.name || 'Downtown Branch',
+    email: user?.email || 'michael.davis@tavonza.com',
+    phone: user?.phone || '+1 (555) 234-5678',
+    employeeId: user?.id?.substring(0, 8).toUpperCase() || '#CHF-0042',
   });
 
   // --- Kitchen Config State ---
@@ -186,7 +190,11 @@ export default function KitchenSettingsView() {
             <div className="pt-3.5 mt-2 border-t border-white/5">
               <button
                 type="button"
-                onClick={() => toast.info('Chef Michael shift signed out.')}
+                onClick={() => {
+                  if (confirm('Are you sure you want to sign out?')) {
+                    handleLogout();
+                  }
+                }}
                 className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-base font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
               >
                 <LogOut className="w-4 h-4 text-red-400" />

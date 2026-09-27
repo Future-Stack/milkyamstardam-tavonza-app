@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TavonzaLogoIcon } from '@/components/TavonzaLogo';
 
+import { getCookie, setCookie } from '@/redux/api/baseApi';
+
 function WelcomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,10 +22,10 @@ function WelcomeContent() {
         : `Table ${tableParam.padStart(2, '0')}`;
       setTableName(formatted);
       if (typeof window !== 'undefined') {
-        localStorage.setItem('tavonza_table', formatted);
+        setCookie('tavonza_table', formatted);
       }
     } else if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('tavonza_table');
+      const saved = getCookie('tavonza_table');
       if (saved) {
         setTableName(saved);
       }
@@ -32,7 +34,7 @@ function WelcomeContent() {
 
   const handleViewMenu = () => {
     const tableParam = searchParams.get('table') || tableName.replace(/[^0-9]/g, '');
-    router.push(tableParam ? `/home?table=${tableParam}` : '/home');
+    router.push(tableParam ? `/menu?table=${tableParam}` : '/menu');
   };
 
   return (
@@ -44,6 +46,7 @@ function WelcomeContent() {
           alt="Restaurant Ambiance"
           fill
           priority
+          sizes="100vw"
           className="object-cover opacity-25 scale-105 filter blur-[2px]"
         />
         {/* Figma Gradients: from-black/70 via-black/40 to-black/90 */}

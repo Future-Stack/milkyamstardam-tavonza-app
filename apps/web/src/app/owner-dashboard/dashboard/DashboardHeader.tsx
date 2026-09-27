@@ -8,6 +8,7 @@ import {
   Bell,
   User,
 } from 'lucide-react';
+import { useAppSelector } from '@/redux/store';
 
 export interface DashboardHeaderProps {
   sidebarOpen: boolean;
@@ -35,6 +36,10 @@ export default function DashboardHeader({
   setShowNotifications,
   onOpenSettings,
 }: DashboardHeaderProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const displayName = user?.name || 'Owner / Administrator';
+  const displayEmail = user?.email || 'owner@tavonza.demo';
+
   const defaultBranches = [
     'Downtown Branch',
     'Tavonza Downtown',
@@ -173,8 +178,8 @@ export default function DashboardHeader({
               <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-950 stroke-[2.5]" />
             </div>
             <div className="hidden md:block text-left">
-              <div className="text-sm sm:text-base font-medium text-white leading-4">Admin User</div>
-              <div className="text-xs text-slate-500 leading-4">admin@steelhub.com</div>
+              <div className="text-sm font-medium text-white leading-4 truncate max-w-[150px]">{displayName}</div>
+              <div className="text-xs text-zinc-400 leading-4 truncate max-w-[150px]">{displayEmail}</div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-white/80 ml-0.5 hidden md:block" />
           </div>

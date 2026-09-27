@@ -18,27 +18,44 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { useAppDispatch } from "@/redux/store";
+import { forgotPassword } from "@/redux/features/authApi";
+
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
+    if (!email.trim()) {
       toast.error("Please enter your staff email address");
       return;
     }
 
     setIsLoading(true);
-    toast.info("Sending OTP verification code...");
+    const toastId = toast.loading("Sending OTP verification code...");
 
-    setTimeout(() => {
+    try {
+      const resultAction = await dispatch(
+        forgotPassword({ email: email.trim().toLowerCase() })
+      );
+
+      if (forgotPassword.fulfilled.match(resultAction)) {
+        toast.success("Verification code sent! Please check your email inbox.", { id: toastId });
+        router.push(`/verify-otp?email=${encodeURIComponent(email.trim().toLowerCase())}`);
+      } else {
+        const errorMsg =
+          (resultAction.payload as string) ||
+          "Failed to send OTP code. Please check that this email is registered.";
+        toast.error(errorMsg, { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send OTP code.", { id: toastId });
+    } finally {
       setIsLoading(false);
-      toast.success("Verification code sent! Please check your email inbox.");
-      // Pass email via search params or state
-      router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
-    }, 700);
+    }
   };
 
   return (

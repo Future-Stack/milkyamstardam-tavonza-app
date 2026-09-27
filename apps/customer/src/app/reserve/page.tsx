@@ -11,8 +11,8 @@ export default function ReservePage() {
     <div className="w-full min-h-screen bg-black text-white flex flex-col justify-center items-center p-4 relative font-sans">
       <InstantReserveModal
         restaurantName="Maison Verde - Tuscan Trattoria"
-        onClose={() => router.push('/home')}
-        onSuccess={() => router.push('/home')}
+        onClose={() => router.push('/menu')}
+        onSuccess={() => router.push('/menu')}
       />
     </div>
   );

@@ -2,9 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Home, FileSearch, FileText, User } from 'lucide-react';
+import { UtensilsCrossed, Home, FileSearch, FileText, User } from 'lucide-react';
 
-export type DashboardTab = 'home' | 'search' | 'jarvis' | 'orders' | 'profile';
+export type DashboardTab = 'menu' | 'home' | 'search' | 'jarvis' | 'orders' | 'profile';
 
 interface BottomNavProps {
   activeTab: DashboardTab;
@@ -13,6 +13,8 @@ interface BottomNavProps {
 }
 
 export default function BottomNav({ activeTab, onTabChange, isVisible = true }: BottomNavProps) {
+  const isMenuActive = activeTab === 'menu' || activeTab === 'home';
+
   return (
     <div
       className={`w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto fixed -bottom-1 left-0 right-0 bg-black/85 backdrop-blur-xl border-t border-white/10 rounded-t-[14px] shadow-[0px_-10px_25px_rgba(0,0,0,0.8)] z-50 overflow-hidden font-sans transition-transform duration-300 ease-in-out ${
@@ -23,29 +25,29 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true }: 
         {/* Active Ambient Blur Background Glow */}
         <div className="w-80 h-9 left-1/2 -translate-x-1/2 top-[-26px] absolute bg-zinc-800/80 rounded-full blur-xl pointer-events-none" />
 
-        {/* 1. Home Tab */}
+        {/* 1. Menu Tab */}
         <button
-          onClick={() => onTabChange('home')}
+          onClick={() => onTabChange('menu')}
           className="flex flex-col items-center justify-center w-14 h-14 relative group transition active:scale-95"
         >
-          {activeTab === 'home' && (
+          {isMenuActive && (
             <div className="absolute top-1 w-7 h-7 bg-yellow-400/20 rounded-full blur-[10px] -z-10" />
           )}
-          <Home
+          <UtensilsCrossed
             className={`w-5 h-5 transition-all ${
-              activeTab === 'home'
+              isMenuActive
                 ? 'text-yellow-400 stroke-[2] scale-110'
                 : 'text-white/70 group-hover:text-white stroke-[1.75]'
             }`}
           />
           <span
             className={`text-[10px] font-medium font-['Inter'] mt-1 transition-colors ${
-              activeTab === 'home'
+              isMenuActive
                 ? 'text-yellow-400 underline underline-offset-2 font-semibold'
                 : 'text-violet-100/60'
             }`}
           >
-            Home
+            Menu
           </span>
         </button>
 

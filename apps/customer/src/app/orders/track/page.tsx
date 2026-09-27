@@ -174,7 +174,7 @@ function TrackContent() {
         <div className="w-full flex flex-col gap-2.5 pt-1">
           <button
             type="button"
-            onClick={() => router.push(`/home?table=${encodeURIComponent(activeTable)}`)}
+            onClick={() => router.push(`/menu?table=${encodeURIComponent(activeTable)}`)}
             className="w-full py-3.5 bg-[#FFD60A] hover:bg-yellow-300 active:scale-[0.99] text-[#0B0B0B] text-sm sm:text-base font-semibold font-inter rounded-xl shadow-[0px_8px_20px_rgba(227,172,56,0.25)] transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>+ Add More Food</span>

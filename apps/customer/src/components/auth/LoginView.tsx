@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
 import { loginAction } from '@/app/actions/auth';
+import { useAppDispatch } from '@/redux/store';
+import { loginUser } from '@/redux/features/authApi';
 
 interface LoginViewProps {
   onLoginSuccess: () => void;
@@ -16,6 +18,7 @@ export default function LoginView({
   onForgotPassword,
   onCreateAccount,
 }: LoginViewProps) {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -27,15 +30,29 @@ export default function LoginView({
     setIsSubmitting(true);
     setError(null);
 
-    const result = await loginAction(email, password);
+    try {
+      // 1. Authenticate with backend API via Redux so cookies (access_token) are set in browser
+      const res: any = await dispatch(loginUser({ email: email.trim(), password })).unwrap();
+      const userProfile = res?.user || res;
 
-    if (!result.success) {
-      setError(result.message);
+      if (userProfile?.role && userProfile.role.toUpperCase() !== 'CUSTOMER') {
+        setError('Only customer accounts can sign in here. Please use your customer account.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 2. Also keep server action session synchronized
+      try {
+        await loginAction(email.trim(), password);
+      } catch {
+        // non-blocking
+      }
+
+      onLoginSuccess();
+    } catch (err: any) {
+      setError(typeof err === 'string' ? err : err?.message || 'Login failed. Please check your credentials.');
       setIsSubmitting(false);
-      return;
     }
-
-    onLoginSuccess();
   };
 
   return (

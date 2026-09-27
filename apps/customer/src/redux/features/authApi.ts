@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { baseApiFetch } from '../api/baseApi';
+import { baseApiFetch, setAuthToken, removeAuthToken, getAuthToken } from '../api/baseApi';
 
 export interface LoginPayload {
   email: string;
@@ -28,6 +28,18 @@ export interface ChangePasswordPayload {
   newPassword: string;
 }
 
+export interface SetFCMTokenPayload {
+  deviceToken: string;
+}
+
+export interface RequestEmailChangePayload {
+  newEmail: string;
+}
+
+export interface ConfirmEmailChangePayload {
+  token: string;
+}
+
 // ─────────────────────────────────────────
 // 📡 Direct Raw API Handlers
 // ─────────────────────────────────────────
@@ -37,6 +49,9 @@ export const rawAuthApi = {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
+    if (response.data?.access_token) {
+      setAuthToken(response.data.access_token);
+    }
     return response.data;
   },
 
@@ -53,10 +68,15 @@ export const rawAuthApi = {
   },
 
   getMe: async () => {
-    const response = await baseApiFetch('/auth/get-me', {
-      method: 'GET',
-    });
-    return response.data;
+    try {
+      const response = await baseApiFetch('/auth/get-me', {
+        method: 'GET',
+      });
+      return response.data;
+    } catch (err) {
+      removeAuthToken();
+      throw err;
+    }
   },
 
   forgotPassword: async (payload: ForgotPasswordPayload) => {
@@ -84,10 +104,38 @@ export const rawAuthApi = {
   },
 
   logout: async () => {
-    const response = await baseApiFetch('/auth/logout', {
+    try {
+      const response = await baseApiFetch('/auth/logout', {
+        method: 'POST',
+      });
+      return response.data;
+    } finally {
+      removeAuthToken();
+    }
+  },
+
+  setFCMToken: async (payload: SetFCMTokenPayload) => {
+    const response = await baseApiFetch('/auth/fcm-token', {
       method: 'POST',
+      body: JSON.stringify(payload),
     });
     return response.data;
+  },
+
+  requestEmailChange: async (payload: RequestEmailChangePayload) => {
+    const response = await baseApiFetch('/auth/change-email-request', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.message || 'Confirmation email sent successfully';
+  },
+
+  confirmEmailChange: async (payload: ConfirmEmailChangePayload) => {
+    const response = await baseApiFetch('/auth/confirm-email-change', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.message || 'Email updated successfully';
   },
 };
 
@@ -95,12 +143,19 @@ export const rawAuthApi = {
 // ⚡ Async Thunks (Feature API Layer)
 // ─────────────────────────────────────────
 
-// 1. Login User (Cookies set automatically by backend)
+// 1. Login User (Cookies set automatically by backend + client cookie)
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials: LoginPayload, { rejectWithValue }) => {
     try {
-      return await rawAuthApi.login(credentials);
+      const tokenData = await rawAuthApi.login(credentials);
+      // Fetch full user profile immediately
+      try {
+        const userProfile = await rawAuthApi.getMe();
+        return { ...tokenData, user: userProfile };
+      } catch {
+        return tokenData;
+      }
     } catch (err: any) {
       return rejectWithValue(err.message || 'Login failed. Please check your credentials.');
     }
@@ -120,13 +175,33 @@ export const registerCustomer = createAsyncThunk(
 );
 
 // 3. Get Current User Profile (Cookies authenticated)
-export const getMe = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
-  try {
-    return await rawAuthApi.getMe();
-  } catch (err: any) {
-    return rejectWithValue(err.message || 'Session expired.');
+export const getMe = createAsyncThunk(
+  'auth/getMe',
+  async (_, { rejectWithValue }) => {
+    const token = getAuthToken();
+    if (!token) {
+      return rejectWithValue('No authentication token found in cookies.');
+    }
+    try {
+      return await rawAuthApi.getMe();
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Session expired.');
+    }
+  },
+  {
+    condition: (_, { getState }) => {
+      const state = (getState() as any)?.auth;
+      // If already loading getMe or if there's no auth token in cookies, skip call
+      if (state?.loading) {
+        return false;
+      }
+      if (!getAuthToken()) {
+        return false;
+      }
+      return true;
+    },
   }
-});
+);
 
 // 4. Forgot Password (Request OTP)
 export const forgotPassword = createAsyncThunk(
@@ -172,3 +247,39 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
     // Ignore logout errors
   }
 });
+
+// 8. Set FCM Token (Push notifications)
+export const setFCMToken = createAsyncThunk(
+  'auth/setFCMToken',
+  async (payload: SetFCMTokenPayload, { rejectWithValue }) => {
+    try {
+      return await rawAuthApi.setFCMToken(payload);
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to update FCM token.');
+    }
+  }
+);
+
+// 9. Request Email Change
+export const requestEmailChange = createAsyncThunk(
+  'auth/requestEmailChange',
+  async (payload: RequestEmailChangePayload, { rejectWithValue }) => {
+    try {
+      return await rawAuthApi.requestEmailChange(payload);
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to request email change.');
+    }
+  }
+);
+
+// 10. Confirm Email Change
+export const confirmEmailChange = createAsyncThunk(
+  'auth/confirmEmailChange',
+  async (payload: ConfirmEmailChangePayload, { rejectWithValue }) => {
+    try {
+      return await rawAuthApi.confirmEmailChange(payload);
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to confirm email change.');
+    }
+  }
+);

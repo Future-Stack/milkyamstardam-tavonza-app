@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import {
   Sidebar,
   assistantManagerNavItems,
@@ -169,9 +170,18 @@ export default function AssistantManagerDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-['Inter'] flex">
-      {/* Sidebar */}
-      <Sidebar
+    <AuthGuard
+      allowedRoles={[
+        'REGIONAL_MANAGER',
+        'BRANCH_MANAGER',
+        'RESTAURANT_OWNER',
+        'SUPER_ADMIN',
+        'ADMIN',
+      ]}
+    >
+      <div className="min-h-screen bg-black text-white font-['Inter'] flex">
+        {/* Sidebar */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -251,5 +261,6 @@ export default function AssistantManagerDashboard({
         onClose={() => setIsAlertsSnapshotOpen(false)}
       />
     </div>
+    </AuthGuard>
   );
 }

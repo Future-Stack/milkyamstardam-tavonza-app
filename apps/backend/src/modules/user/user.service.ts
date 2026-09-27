@@ -42,10 +42,19 @@ export class UserService {
       if (!userData.password) {
         userData.password = this.configService.get('DEFAULT_CUSTOMER_PASSWORD') || 'customer123456';
       }
-      const passwordHash = await this.bcryptService.hash(userData.password);
+      const hashedPassword = await this.bcryptService.hash(userData.password);
 
-      const payload: any = { ...userData, passwordHash };
-      delete payload.password;
+      const payload: any = { ...userData, password: hashedPassword };
+
+      if (!payload.contactNo || !payload.contactNo.trim()) {
+        payload.contactNo = `no_phone_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+      } else {
+        payload.contactNo = payload.contactNo.trim();
+        const contactExists = await tx.user.findUnique({ where: { contactNo: payload.contactNo } });
+        if (contactExists) {
+          throw new ApiError(HttpStatus.CONFLICT, `Contact number already in use`);
+        }
+      }
 
       const isEmailExists = await tx.user.findUnique({ where: { email: payload.email } });
       if (isEmailExists) {
@@ -56,7 +65,19 @@ export class UserService {
 
       const customerPayload: any = { ...customerData, user: { connect: { id: userCreation.id } } };
       if (customerData?.defaultAddress) {
-        customerPayload.defaultAddress = { set: customerData.defaultAddress };
+        const addr: any = customerData.defaultAddress;
+        customerPayload.defaultAddress = {
+          set: {
+            line1: addr.line1 || addr.street || 'Address Line 1',
+            line2: addr.line2 || null,
+            city: addr.city || 'City',
+            state: addr.state || null,
+            postalCode: addr.postalCode || null,
+            country: addr.country || 'Country',
+            lat: addr.lat || null,
+            lng: addr.lng || null,
+          },
+        };
       }
 
       const customerCreation = await tx.customer.create({

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar, { cashierNavItems } from './Sidebar';
 import {
   CashierHeader,
@@ -132,9 +133,19 @@ export default function CashierDashboard({ initialNav = 'Dashboard' }: CashierDa
   };
 
   return (
-    <div className="flex h-screen bg-black text-white font-['Inter'] font-sans overflow-hidden">
-      {/* 1. Left Sidebar */}
-      <Sidebar
+    <AuthGuard
+      allowedRoles={[
+        'CASHIER',
+        'BRANCH_MANAGER',
+        'REGIONAL_MANAGER',
+        'RESTAURANT_OWNER',
+        'SUPER_ADMIN',
+        'ADMIN',
+      ]}
+    >
+      <div className="flex h-screen bg-black text-white font-['Inter'] font-sans overflow-hidden">
+        {/* 1. Left Sidebar */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -296,5 +307,6 @@ export default function CashierDashboard({ initialNav = 'Dashboard' }: CashierDa
         </div>
       )}
     </div>
+    </AuthGuard>
   );
 }

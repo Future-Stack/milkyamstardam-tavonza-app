@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { mockWaiterProfile } from '../data';
 import SmartRemindersPopover from './SmartRemindersPopover';
+import { useAppSelector } from '@/redux/hooks';
+import { useLogout } from '@/hooks/useLogout';
 
 export interface WaiterHeaderProps {
   sidebarOpen: boolean;
@@ -31,12 +33,23 @@ export default function WaiterHeader({
   onOpenVoiceModal,
   onOpenAIModal,
 }: WaiterHeaderProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('Downtown Branch');
+  const [selectedBranch, setSelectedBranch] = useState(user?.assignments?.[0]?.branch?.name || 'Downtown Branch');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [remindersCount, setRemindersCount] = useState(4);
+
+  const displayName = user?.name || user?.email?.split('@')[0] || mockWaiterProfile.name;
+  const displayRole = user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Waiter';
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join('') || 'W';
 
   const branches = ['Downtown Branch', 'Uptown Bistro', 'Seaside Terrace', 'Airport Lounge'];
 
@@ -197,14 +210,14 @@ export default function WaiterHeader({
             className="h-10 sm:h-11 px-2 sm:px-2.5 py-1 bg-zinc-900 border border-zinc-700/80 rounded-xl flex items-center gap-2 hover:border-zinc-500 transition-all cursor-pointer shrink-0"
           >
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-400 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md shrink-0">
-              MD
+              {initials}
             </div>
             <div className="text-left hidden md:block">
               <div className="text-sm font-semibold text-slate-200 font-['Plus_Jakarta_Sans'] leading-tight">
-                {mockWaiterProfile.name}
+                {displayName}
               </div>
               <div className="text-xs font-medium font-['Inter'] leading-tight">
-                <span className="text-slate-400">Waiter</span>
+                <span className="text-slate-400 capitalize">{displayRole}</span>
                 <span className="text-emerald-500 mx-1">·</span>
                 <span className="text-emerald-400">Shift Active</span>
               </div>
@@ -215,9 +228,9 @@ export default function WaiterHeader({
           {profileDropdownOpen && (
             <div className="absolute right-0 top-13 w-56 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
               <div className="px-3 py-2 border-b border-zinc-800">
-                <div className="text-sm font-bold text-white">{mockWaiterProfile.name}</div>
-                <div className="text-xs text-zinc-400">{mockWaiterProfile.branch}</div>
-                <div className="text-xs text-emerald-400 mt-0.5">Shift: {mockWaiterProfile.shiftStart} - {mockWaiterProfile.shiftEnd}</div>
+                <div className="text-sm font-bold text-white">{displayName}</div>
+                <div className="text-xs text-zinc-400">{user?.email || selectedBranch}</div>
+                <div className="text-xs text-emerald-400 mt-0.5">Role: {displayRole}</div>
               </div>
               <button
                 type="button"
@@ -233,9 +246,9 @@ export default function WaiterHeader({
                 type="button"
                 onClick={() => {
                   setProfileDropdownOpen(false);
-                  alert('Shift handed over.');
+                  handleLogout();
                 }}
-                className="w-full text-left px-3 py-2 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg"
+                className="w-full text-left px-3 py-2 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg cursor-pointer"
               >
                 End Shift & Logout
               </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import {
   Sparkles,
   X,
@@ -47,13 +48,20 @@ import {
   initialHealthMetrics,
 } from './data';
 import { LiveOrder, SmartAlert } from './types';
+import { useAppSelector } from '@/redux/store';
 
 interface ManagerDashboardProps {
   initialTab?: string;
 }
 
 export default function ManagerDashboard({ initialTab = 'Dashboard' }: ManagerDashboardProps) {
-  const [profile] = useState(initialManagerProfile);
+  const { user } = useAppSelector((state) => state.auth);
+  const profile = {
+    ...initialManagerProfile,
+    name: user?.name || initialManagerProfile.name,
+    email: user?.email || initialManagerProfile.email,
+    branch: user?.assignments?.[0]?.branch?.name || initialManagerProfile.branch,
+  };
   const [summary] = useState(initialOperationsSummary);
   const [kpiCards] = useState(initialKPICards);
   const [quickActions] = useState(quickActionList);
@@ -191,9 +199,18 @@ export default function ManagerDashboard({ initialTab = 'Dashboard' }: ManagerDa
   const isAnyModalOpen = isAIModalOpen || Boolean(selectedOrder) || Boolean(selectedAlert);
 
   return (
-    <div className="flex h-screen bg-black text-white font-['Inter'] overflow-hidden selection:bg-amber-500 selection:text-black">
-      {/* 1. Left Sidebar (Desktop 288px / Mobile Drawer) */}
-      <Sidebar
+    <AuthGuard
+      allowedRoles={[
+        'BRANCH_MANAGER',
+        'REGIONAL_MANAGER',
+        'RESTAURANT_OWNER',
+        'SUPER_ADMIN',
+        'ADMIN',
+      ]}
+    >
+      <div className="flex h-screen bg-black text-white font-['Inter'] overflow-hidden selection:bg-amber-500 selection:text-black">
+        {/* 1. Left Sidebar (Desktop 288px / Mobile Drawer) */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -536,5 +553,6 @@ export default function ManagerDashboard({ initialTab = 'Dashboard' }: ManagerDa
         </div>
       )}
     </div>
+    </AuthGuard>
   );
 }

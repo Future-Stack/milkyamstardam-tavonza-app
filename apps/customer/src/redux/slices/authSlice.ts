@@ -23,6 +23,7 @@ export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
+  isInitialized: boolean;
   error: string | null;
   successMessage: string | null;
   forgotEmail: string | null;
@@ -33,6 +34,7 @@ const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   loading: false,
+  isInitialized: false,
   error: null,
   successMessage: null,
   forgotEmail: null,
@@ -46,9 +48,14 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
+      state.isInitialized = true;
     },
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
+      state.isInitialized = true;
+    },
+    setInitialized: (state, action: PayloadAction<boolean>) => {
+      state.isInitialized = action.payload;
     },
     clearAuthError: (state) => {
       state.error = null;
@@ -74,6 +81,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user || action.payload;
         state.isAuthenticated = true;
+        state.isInitialized = true;
         state.error = null;
         state.successMessage = 'Login successful!';
       })
@@ -107,11 +115,13 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.isInitialized = true;
       })
       .addCase(getMe.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.isInitialized = true;
       });
 
     // 4. Forgot Password
@@ -164,6 +174,7 @@ const authSlice = createSlice({
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isInitialized = true;
       state.loading = false;
       state.error = null;
     });
@@ -173,6 +184,7 @@ const authSlice = createSlice({
 export const {
   setUser,
   setAuthenticated,
+  setInitialized,
   clearAuthError,
   clearSuccessMessage,
   setForgotEmail,

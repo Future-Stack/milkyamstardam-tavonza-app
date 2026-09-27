@@ -13,6 +13,8 @@ import {
   Wine
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLogout } from '@/hooks/useLogout';
+import { useAppSelector } from '@/redux/hooks';
 
 interface BartenderHeaderProps {
   searchQuery: string;
@@ -29,8 +31,14 @@ export default function BartenderHeader({
   setSidebarOpen,
   onOpenAIModal,
 }: BartenderHeaderProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+  const displayName = user?.name || user?.email?.split('@')[0] || 'Bartender';
+  const displayRole = user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Head Mixologist';
+  const branchName = user?.assignments?.[0]?.branch?.name || 'Downtown Branch';
 
   return (
     <header className="h-20 bg-black border-b border-white/10 px-3 sm:px-8 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 flex-shrink-0 shadow-[0px_0px_4px_0px_rgba(255,255,255,0.15)]">
@@ -118,10 +126,10 @@ export default function BartenderHeader({
             </div>
             <div className="text-left hidden sm:block">
               <div className="text-white text-sm font-medium font-['Inter'] leading-tight">
-                Admin User
+                {displayName}
               </div>
               <div className="text-slate-400 text-xs font-medium font-['Inter'] leading-tight">
-                admin@steelhub.com
+                {user?.email || 'bartender@tavonza.demo'}
               </div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5 sm:ml-1 shrink-0" />
@@ -131,8 +139,8 @@ export default function BartenderHeader({
           {profileDropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl z-50 space-y-1 animate-in fade-in zoom-in-95">
               <div className="px-3 py-2 border-b border-white/5 mb-1">
-                <p className="text-sm font-semibold text-white">James (Bartender)</p>
-                <p className="text-xs text-zinc-400">Head Mixologist</p>
+                <p className="text-sm font-semibold text-white">{displayName}</p>
+                <p className="text-xs text-zinc-400 capitalize">{displayRole}</p>
               </div>
               <button
                 type="button"
@@ -160,8 +168,8 @@ export default function BartenderHeader({
                 <button
                   type="button"
                   onClick={() => {
-                    toast.info('Bartender shift logged out.');
                     setProfileDropdownOpen(false);
+                    handleLogout();
                   }}
                   className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-rose-400 hover:bg-rose-500/10 rounded-lg cursor-pointer"
                 >

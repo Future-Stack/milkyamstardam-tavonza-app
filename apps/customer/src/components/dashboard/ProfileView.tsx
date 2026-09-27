@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { logoutUser, changePassword } from '@/redux/features/authApi';
+import { updateMe } from '@/redux/features/userApi';
 import { clearAuthError } from '@/redux/slices/authSlice';
 
 export default function ProfileView() {
@@ -92,7 +93,26 @@ export default function ProfileView() {
     }
   };
 
-  const handleSaveChanges = (sectionName: string) => {
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+
+  const handleSaveChanges = async (sectionName: string) => {
+    if (sectionName === 'Profile') {
+      setIsUpdatingProfile(true);
+      try {
+        const res = await dispatch(updateMe({ name: fullName, contactNo: phone }));
+        setIsUpdatingProfile(false);
+        if (updateMe.fulfilled.match(res)) {
+          setSavedSuccessMsg('Profile updated successfully!');
+          setTimeout(() => setSavedSuccessMsg(null), 3000);
+        } else {
+          alert((res.payload as string) || 'Failed to update profile');
+        }
+      } catch (e: any) {
+        setIsUpdatingProfile(false);
+        alert(e.message || 'Failed to update profile');
+      }
+      return;
+    }
     setSavedSuccessMsg(`${sectionName} updated successfully!`);
     setTimeout(() => setSavedSuccessMsg(null), 3000);
   };

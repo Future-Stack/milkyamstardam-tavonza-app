@@ -46,9 +46,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${outfit.variable} ${poppins.variable} ${montserrat.variable} ${dmSans.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full bg-neutral-950 text-white font-sans flex flex-col selection:bg-yellow-400 selection:text-black">
+      <body
+        suppressHydrationWarning
+        className="min-h-full bg-neutral-950 text-white font-sans flex flex-col selection:bg-yellow-400 selection:text-black"
+      >
         <ReduxProvider>
           <CartProvider>{children}</CartProvider>
         </ReduxProvider>

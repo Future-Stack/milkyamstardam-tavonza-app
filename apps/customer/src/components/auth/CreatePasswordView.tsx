@@ -3,6 +3,11 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { TavonzaLogo } from '../TavonzaLogo';
+import { rawUserApi } from '@/redux/features/userApi';
+import { rawAuthApi } from '@/redux/features/authApi';
+import { getCookie } from '@/redux/api/baseApi';
+import { useAppDispatch } from '@/redux/store';
+import { setUser } from '@/redux/slices/authSlice';
 
 interface CreatePasswordViewProps {
   onComplete: () => void;
@@ -10,6 +15,7 @@ interface CreatePasswordViewProps {
 }
 
 export default function CreatePasswordView({ onComplete, onBack }: CreatePasswordViewProps) {
+  const dispatch = useAppDispatch();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -32,11 +38,41 @@ export default function CreatePasswordView({ onComplete, onBack }: CreatePasswor
     }
 
     setIsSubmitting(true);
-    // Simulating password save/auth state update
-    setTimeout(() => {
+    try {
+      const email = typeof window !== 'undefined' ? getCookie('tavonza_signup_email') || '' : '';
+      const name = typeof window !== 'undefined' ? getCookie('tavonza_signup_name') || 'Customer' : 'Customer';
+      const phone = typeof window !== 'undefined' ? getCookie('tavonza_signup_phone') || undefined : undefined;
+
+      if (!email) {
+        throw new Error('Registration email missing. Please go back to step 1.');
+      }
+
+      const newUser = await rawUserApi.createCustomer({
+        name,
+        email,
+        password,
+        contactNo: phone,
+        role: 'CUSTOMER',
+        customer: {},
+      });
+
+      // Automatically sign in to establish HTTP-only session cookies
+      try {
+        await rawAuthApi.login({
+          email,
+          password,
+        });
+      } catch {
+        // Continue
+      }
+
+      dispatch(setUser(newUser as any));
       setIsSubmitting(false);
       onComplete();
-    }, 400);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setError(err.message || 'Failed to create customer account. Please try again.');
+    }
   };
 
   return (

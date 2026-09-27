@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar, { kitchenNavItems } from './Sidebar';
 import {
   KitchenHeader,
@@ -117,9 +118,19 @@ export default function KitchenDashboard({ initialNav = 'Dashboard' }: KitchenDa
   };
 
   return (
-    <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
-      {/* 1. Fixed Left Sidebar */}
-      <Sidebar
+    <AuthGuard
+      allowedRoles={[
+        'KITCHEN_STAFF',
+        'BRANCH_MANAGER',
+        'REGIONAL_MANAGER',
+        'RESTAURANT_OWNER',
+        'SUPER_ADMIN',
+        'ADMIN',
+      ]}
+    >
+      <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
+        {/* 1. Fixed Left Sidebar */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -236,5 +247,6 @@ export default function KitchenDashboard({ initialNav = 'Dashboard' }: KitchenDa
         onClose={() => setIsAIModalOpen(false)}
       />
     </div>
+    </AuthGuard>
   );
 }

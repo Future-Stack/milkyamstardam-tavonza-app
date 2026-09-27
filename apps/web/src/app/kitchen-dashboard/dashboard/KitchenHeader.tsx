@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Bell, ChevronDown, Menu, Sparkles } from 'lucide-react';
+import { Search, Bell, ChevronDown, Menu, Sparkles, User, LogOut } from 'lucide-react';
+import { useAppSelector } from '@/redux/hooks';
+import { useLogout } from '@/hooks/useLogout';
 
 interface KitchenHeaderProps {
   searchQuery: string;
@@ -18,8 +20,20 @@ export default function KitchenHeader({
   setSidebarOpen,
   onOpenAIModal,
 }: KitchenHeaderProps) {
+  const { user } = useAppSelector((state) => state.auth);
+  const { handleLogout } = useLogout();
   const [branchOpen, setBranchOpen] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('Downtown Branch');
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState(user?.assignments?.[0]?.branch?.name || 'Downtown Branch');
+
+  const displayName = user?.name || user?.email?.split('@')[0] || 'Chef Michael';
+  const displayRole = user?.assignments?.[0]?.role?.replace(/_/g, ' ') || 'Kitchen Operation';
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join('') || 'KM';
 
   return (
     <header className="h-20 bg-black border-b border-white/10 shadow-[0px_0px_10px_0px_rgba(255,255,255,0.08)] px-3 sm:px-8 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 flex-shrink-0">
@@ -107,19 +121,49 @@ export default function KitchenHeader({
           </button>
         </div>
 
-        {/* Chef Michael Profile */}
-        <div className="h-10 sm:h-12 bg-zinc-900 rounded-lg px-2 sm:px-2.5 flex items-center gap-2 sm:gap-3 border border-white/10">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-inner shrink-0">
-            CM
-          </div>
-          <div className="hidden sm:block text-left">
-            <div className="text-sm font-semibold text-slate-200 font-['Plus_Jakarta_Sans'] leading-tight">
-              Chef Michael
+        {/* Staff Profile */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+            className="h-10 sm:h-12 bg-zinc-900 rounded-lg px-2 sm:px-2.5 flex items-center gap-2 sm:gap-3 border border-white/10 hover:border-white/20 cursor-pointer transition-colors"
+          >
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-inner shrink-0">
+              {initials}
             </div>
-            <div className="text-xs text-slate-500 font-medium font-['Inter'] leading-tight">
-              Kitchen Operation
+            <div className="hidden sm:block text-left">
+              <div className="text-sm font-semibold text-slate-200 font-['Plus_Jakarta_Sans'] leading-tight">
+                {displayName}
+              </div>
+              <div className="text-xs text-slate-500 font-medium font-['Inter'] leading-tight capitalize">
+                {displayRole}
+              </div>
             </div>
-          </div>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          </button>
+
+          {profileDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-52 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl z-50 space-y-1 animate-in fade-in zoom-in-95">
+              <div className="px-3 py-2 border-b border-white/5 mb-1">
+                <p className="text-sm font-semibold text-white">{displayName}</p>
+                <p className="text-xs text-zinc-400">{user?.email || selectedBranch}</p>
+                <p className="text-xs text-amber-400 mt-0.5 capitalize">{displayRole}</p>
+              </div>
+              <div className="border-t border-white/5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProfileDropdownOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-rose-400 hover:bg-rose-500/10 rounded-lg cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

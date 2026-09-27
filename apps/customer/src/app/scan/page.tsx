@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, QrCode, CheckCircle2, Users, ArrowRight } from 'lucide-react';
 import { TavonzaLogoIcon } from '@/components/TavonzaLogo';
+import { setCookie } from '@/redux/api/baseApi';
 
 function ScanRedirectContent() {
   const router = useRouter();
@@ -19,10 +20,10 @@ function ScanRedirectContent() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('tavonza_table', formattedTable);
+      setCookie('tavonza_table', formattedTable);
       if (connectParam) {
-        localStorage.setItem('tavonza_connected_session', connectParam);
-        localStorage.setItem('tavonza_guest_mode', 'individual');
+        setCookie('tavonza_connected_session', connectParam);
+        setCookie('tavonza_guest_mode', 'individual');
       }
     }
 
@@ -31,7 +32,7 @@ function ScanRedirectContent() {
       const t1 = setTimeout(() => setStatus('connected'), 600);
       const t2 = setTimeout(() => {
         router.replace(
-          `/home?table=${encodeURIComponent(formattedTable)}&connected=true&connect=${encodeURIComponent(connectParam)}`
+          `/menu?table=${encodeURIComponent(formattedTable)}&connected=true&connect=${encodeURIComponent(connectParam)}`
         );
       }, 1600);
 
@@ -80,7 +81,7 @@ function ScanRedirectContent() {
               type="button"
               onClick={() =>
                 router.replace(
-                  `/home?table=${encodeURIComponent(formattedTable)}&connected=true&connect=${encodeURIComponent(connectParam)}`
+                  `/menu?table=${encodeURIComponent(formattedTable)}&connected=true&connect=${encodeURIComponent(connectParam)}`
                 )
               }
               className="w-full mt-2 py-3 bg-yellow-400 hover:bg-yellow-300 text-neutral-950 text-sm font-semibold font-inter rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md"

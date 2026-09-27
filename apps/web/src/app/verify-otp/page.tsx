@@ -9,7 +9,6 @@ import {
   ArrowLeft,
   Loader2,
   CheckCircle2,
-  ShieldAlert,
   KeyRound,
   ChefHat,
   UtensilsCrossed,
@@ -17,15 +16,20 @@ import {
   Wine,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/redux/store";
+import { forgotPassword } from "@/redux/features/authApi";
 
 function VerifyOtpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
   const emailParam = searchParams.get("email") || "staff@restaurant.com";
 
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", ""]);
+  // Backend generates 6-digit OTP
+  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [seconds, setSeconds] = useState<number>(120);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isResending, setIsResending] = useState<boolean>(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -48,7 +52,7 @@ function VerifyOtpContent() {
     setOtp(newOtp);
 
     // Auto focus next box
-    if (value && index < 4) {
+    if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -59,27 +63,54 @@ function VerifyOtpContent() {
     }
   };
 
-  const handleResend = () => {
-    setSeconds(120);
-    toast.success(`New verification code sent to ${emailParam}`);
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted) {
+      const newOtp = [...otp];
+      for (let i = 0; i < 6; i++) {
+        newOtp[i] = pasted[i] || "";
+      }
+      setOtp(newOtp);
+      const focusIndex = Math.min(pasted.length, 5);
+      inputRefs.current[focusIndex]?.focus();
+      toast.info("Pasted 6-digit verification code");
+    }
+  };
+
+  const handleResend = async () => {
+    if (isResending) return;
+    setIsResending(true);
+    const toastId = toast.loading(`Resending code to ${emailParam}...`);
+
+    try {
+      const resultAction = await dispatch(forgotPassword({ email: emailParam }));
+      if (forgotPassword.fulfilled.match(resultAction)) {
+        setSeconds(120);
+        toast.success(`New 6-digit verification code sent to ${emailParam}`, { id: toastId });
+      } else {
+        toast.error((resultAction.payload as string) || "Failed to resend code.", { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to resend code.", { id: toastId });
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const fullOtp = otp.join("");
-    if (fullOtp.length < 5) {
-      toast.error("Please enter the complete 5-digit verification code");
+    if (fullOtp.length < 6) {
+      toast.error("Please enter the complete 6-digit verification code");
       return;
     }
 
     setIsLoading(true);
-    toast.info("Verifying OTP code...");
-
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success("Code verified successfully! Please set your new password.");
-      router.push(`/reset-password?email=${encodeURIComponent(emailParam)}&otp=${encodeURIComponent(fullOtp)}`);
-    }, 600);
+    toast.success("Code confirmed! Please set your new password.");
+    router.push(
+      `/reset-password?email=${encodeURIComponent(emailParam)}&otp=${encodeURIComponent(fullOtp)}`
+    );
   };
 
   return (
@@ -101,18 +132,20 @@ function VerifyOtpContent() {
           Enter Verification Code
         </h2>
         <p className="text-xs text-neutral-400 leading-relaxed">
-          We have sent a 5-digit code to <span className="text-amber-400 font-semibold">{emailParam}</span>. Enter the code below to verify your identity.
+          We have sent a 6-digit code to{" "}
+          <span className="text-amber-400 font-semibold">{emailParam}</span>. Enter the code below
+          to verify your identity.
         </p>
       </div>
 
       {/* OTP Form */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        {/* 5 Digit Input Boxes */}
-        <div className="flex items-center justify-between gap-2.5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6" onPaste={handlePaste}>
+        {/* 6 Digit Input Boxes */}
+        <div className="grid grid-cols-6 gap-2">
           {otp.map((digit, idx) => (
             <div
               key={idx}
-              className="w-14 h-14 rounded-xl bg-neutral-900 border border-neutral-800 focus-within:border-amber-400 flex items-center justify-center transition shadow-inner"
+              className="h-13 rounded-xl bg-neutral-900 border border-neutral-800 focus-within:border-amber-400 flex items-center justify-center transition shadow-inner"
             >
               <input
                 ref={(el) => {
@@ -140,17 +173,18 @@ function VerifyOtpContent() {
           ) : (
             <button
               type="button"
+              disabled={isResending}
               onClick={handleResend}
-              className="text-amber-400 font-semibold hover:underline cursor-pointer"
+              className="text-amber-400 font-semibold hover:underline cursor-pointer disabled:opacity-50"
             >
-              Resend Code Now
+              {isResending ? "Sending..." : "Resend Code Now"}
             </button>
           )}
         </div>
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || otp.join("").length < 6}
           className="w-full h-11 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-neutral-950 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-amber-500/10 active:scale-[0.99] cursor-pointer"
         >
           {isLoading ? (
@@ -170,7 +204,7 @@ function VerifyOtpContent() {
       {/* Bottom Help */}
       <div className="pt-2 text-center">
         <span className="text-xs text-neutral-500">
-          Need assistance? Contact your restaurant shift supervisor.
+          Need assistance? Contact your restaurant shift supervisor or system administrator.
         </span>
       </div>
     </div>
@@ -213,16 +247,16 @@ export default function VerifyOtpPage() {
         {/* Center Content: Restaurant Feature Showcase */}
         <div className="relative z-10 flex flex-col gap-6 max-w-lg my-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-medium w-fit">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-            <span>Two-Factor Terminal Security</span>
+            <KeyRound className="w-3.5 h-3.5" />
+            <span>Two-Factor Security Gate</span>
           </div>
 
           <h1 className="text-3xl xl:text-4xl font-extrabold tracking-tight text-white leading-tight font-['Inter']">
-            Verify Your Operational Access
+            Instant 6-Digit Station Verification
           </h1>
 
           <p className="text-sm text-neutral-300 leading-relaxed">
-            Multi-factor verification prevents unauthorized station takeovers and preserves restaurant security across all digital order terminals.
+            Ensure only authorized shift supervisors, line cooks, and service team members access restaurant station workflows.
           </p>
 
           <div className="grid grid-cols-2 gap-3 pt-2">
@@ -236,11 +270,11 @@ export default function VerifyOtpPage() {
             </div>
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-neutral-900/70 border border-neutral-800/80 backdrop-blur-md">
               <Receipt className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span className="text-xs text-neutral-200 font-medium">Cashier Stations</span>
+              <span className="text-xs text-neutral-200 font-medium">Cashier Register</span>
             </div>
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-neutral-900/70 border border-neutral-800/80 backdrop-blur-md">
               <Wine className="w-4 h-4 text-purple-400 shrink-0" />
-              <span className="text-xs text-neutral-200 font-medium">Bar Display Logs</span>
+              <span className="text-xs text-neutral-200 font-medium">Bar Dispense Station</span>
             </div>
           </div>
         </div>
@@ -249,17 +283,23 @@ export default function VerifyOtpPage() {
         <div className="relative z-10 flex items-center justify-between pt-6 border-t border-neutral-800/60 text-xs text-neutral-400">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>Encrypted Session Verification</span>
+            <span>Multi-Branch Cloud Node Online</span>
           </div>
-          <span className="font-mono text-[11px] text-neutral-500">TLS 1.3 Active</span>
+          <span className="font-mono text-[11px] text-neutral-500">v2.4 — Enterprise RBAC</span>
         </div>
       </div>
 
       {/* ───────────────────────────────────────────────────────────
-          RIGHT SIDE: Verification Code Input
+          RIGHT SIDE: Verify Form
       ─────────────────────────────────────────────────────────── */}
       <div className="w-full lg:w-1/2 xl:w-5/12 flex flex-col justify-center items-center p-6 sm:p-12 lg:p-14 relative z-10 my-auto">
-        <Suspense fallback={<div className="text-neutral-400 text-xs">Loading verification form...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+            </div>
+          }
+        >
           <VerifyOtpContent />
         </Suspense>
       </div>

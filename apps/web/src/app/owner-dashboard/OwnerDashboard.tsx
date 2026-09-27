@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import AuthGuard from '@/components/auth/AuthGuard';
 import {
   Sidebar,
   DashboardHeader,
@@ -196,9 +197,10 @@ export default function OwnerDashboard({
   const currentRevenueData = revenueChartData[timeRange];
 
   return (
-    <div className="h-screen bg-black text-zinc-100 font-sans antialiased flex flex-col md:flex-row overflow-hidden selection:bg-amber-500 selection:text-black">
-      {/* 1. Sidebar */}
-      <Sidebar
+    <AuthGuard allowedRoles={['RESTAURANT_OWNER', 'SUPER_ADMIN', 'ADMIN']}>
+      <div className="h-screen bg-black text-zinc-100 font-sans antialiased flex flex-col md:flex-row overflow-hidden selection:bg-amber-500 selection:text-black">
+        {/* 1. Sidebar */}
+        <Sidebar
         activeNav={activeNav}
         setActiveNav={handleSetActiveNav}
         sidebarOpen={sidebarOpen}
@@ -335,8 +337,9 @@ export default function OwnerDashboard({
         </main>
       </div>
 
-      {/* AI Daily Briefing Diagnostic Report Modal */}
-      <AIReportModal isOpen={isAIReportOpen} onClose={() => setIsAIReportOpen(false)} />
-    </div>
+        {/* AI Daily Briefing Diagnostic Report Modal */}
+        <AIReportModal isOpen={isAIReportOpen} onClose={() => setIsAIReportOpen(false)} />
+      </div>
+    </AuthGuard>
   );
 }

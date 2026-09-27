@@ -13,6 +13,7 @@ import {
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLogout } from '@/hooks/useLogout';
 
 export interface AssistantManagerSidebarProps {
   activeNav: string;
@@ -35,6 +36,7 @@ export default function Sidebar({
   sidebarOpen,
   setSidebarOpen,
 }: AssistantManagerSidebarProps) {
+  const { handleLogout } = useLogout();
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape' && sidebarOpen) {
@@ -172,7 +174,7 @@ export default function Sidebar({
 
           <button
             type="button"
-            onClick={() => toast.info('Marcus (Assistant Manager) logged out.')}
+            onClick={handleLogout}
             className="w-full h-10 px-3 py-2.5 rounded-lg flex items-center gap-3 text-sm font-['Inter'] text-white/60 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />

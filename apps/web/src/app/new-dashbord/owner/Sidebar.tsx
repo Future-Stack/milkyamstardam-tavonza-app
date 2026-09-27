@@ -16,6 +16,7 @@ import {
   X,
   Layers,
 } from 'lucide-react';
+import { useLogout } from '@/hooks/useLogout';
 
 export interface OwnerNavItem {
   id: string;
@@ -46,6 +47,7 @@ export default function OwnerSidebar({
   isOpen,
   onClose,
 }: OwnerSidebarProps) {
+  const { handleLogout } = useLogout();
   return (
     <>
       {/* Mobile Backdrop */}
@@ -138,12 +140,8 @@ export default function OwnerSidebar({
           </Link>
 
           <button
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.location.href = '/login';
-              }
-            }}
-            className="w-full h-10 px-3 rounded-[20px] flex items-center gap-3 text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-colors text-left"
+            onClick={handleLogout}
+            className="w-full h-10 px-3 rounded-[20px] flex items-center gap-3 text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-colors text-left cursor-pointer"
           >
             <LogOut className="w-5 h-5" />
             <span className="text-sm font-normal font-['Inter']">Logout</span>
