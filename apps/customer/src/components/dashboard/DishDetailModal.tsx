@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
   ChevronLeft,
   Star,
@@ -14,7 +15,10 @@ import {
   Sparkles,
   ShoppingBag,
   Check,
+  ArrowRight,
 } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import DraggableAskAi from '@/components/common/DraggableAskAi';
 
 export interface DishData {
   id: string | number;
@@ -74,10 +78,45 @@ export default function DishDetailModal({
   onAddToCart,
   onAskAI,
 }: DishDetailModalProps) {
+  const router = useRouter();
+  const { cart, upsertCartItem } = useCart();
+
+  const previousItem = useMemo(() => {
+    return cart.find(
+      (item) =>
+        item.dishId === String(dish.id) ||
+        item.id.startsWith(String(dish.id)) ||
+        item.name.toLowerCase() === dish.title.toLowerCase()
+    );
+  }, [cart, dish.id, dish.title]);
+
   const [quantity, setQuantity] = useState(1);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [isAdded, setIsAdded] = useState(false);
+  const initializedDishRef = useRef<string | null>(null);
+
+  // Restore previous selections if the dish was already added or configured
+  useEffect(() => {
+    if (dish && initializedDishRef.current !== String(dish.id)) {
+      initializedDishRef.current = String(dish.id);
+      if (previousItem) {
+        setQuantity(previousItem.quantity || 1);
+        if (previousItem.selectedAddOnIds && previousItem.selectedAddOnIds.length > 0) {
+          setSelectedAddOns(previousItem.selectedAddOnIds);
+        } else if (previousItem.addOns && previousItem.addOns.length > 0) {
+          setSelectedAddOns(previousItem.addOns.map((a) => a.name));
+        }
+        if (previousItem.specialInstructions) {
+          setSpecialInstructions(previousItem.specialInstructions);
+        }
+      } else {
+        setQuantity(1);
+        setSelectedAddOns([]);
+        setSpecialInstructions('');
+      }
+    }
+  }, [dish, previousItem]);
 
   const toggleAddOn = (name: string) => {
     if (selectedAddOns.includes(name)) {
@@ -93,7 +132,42 @@ export default function DishDetailModal({
 
   const totalAmount = (dish.price + addOnsTotal) * quantity;
 
+  // Save current dish customization into Cart state (preserves previous selections)
+  const saveCurrentDishToCart = () => {
+    const chosenAddOns = (dish.addOns || [])
+      .filter((item) => selectedAddOns.includes(item.name))
+      .map((a) => ({ name: a.name, price: a.price }));
+
+    const itemId = `${dish.id}-${[...selectedAddOns].sort().join('-') || 'default'}`;
+
+    upsertCartItem(
+      {
+        id: itemId,
+        dishId: String(dish.id),
+        name: dish.title,
+        subtitle: dish.restaurant,
+        price: dish.price + addOnsTotal,
+        quantity,
+        image: dish.image,
+        addOns: chosenAddOns,
+        selectedAddOnIds: selectedAddOns,
+        specialInstructions,
+      },
+      String(dish.id)
+    );
+  };
+
+  const handleSaveAndRedirectToMenu = () => {
+    saveCurrentDishToCart();
+    if (onAddToCart) {
+      onAddToCart(dish, quantity, selectedAddOns, specialInstructions);
+    }
+    onClose();
+    router.push('/home');
+  };
+
   const handleAddToCartClick = () => {
+    saveCurrentDishToCart();
     setIsAdded(true);
     if (onAddToCart) {
       onAddToCart(dish, quantity, selectedAddOns, specialInstructions);
@@ -249,7 +323,30 @@ export default function DishDetailModal({
           {/* 7. Add On Options */}
           {dish.addOns && dish.addOns.length > 0 && (
             <div className="px-5 flex flex-col gap-2.5">
-              <h3 className="text-base font-semibold text-white font-['Montserrat']">Add On</h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-white font-['Montserrat']">
+                    Add On
+                  </h3>
+                  {previousItem && (
+                    <span className="text-[10px] bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      In Order ({previousItem.quantity})
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSaveAndRedirectToMenu}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/15 hover:bg-amber-500/25 active:scale-95 border border-amber-500/40 rounded-full text-amber-400 text-xs font-semibold font-montserrat transition cursor-pointer shadow-sm group"
+                  title="Save current item selections and browse menu for more items/add-ons"
+                >
+                  <Plus className="w-3.5 h-3.5 stroke-[2.5] group-hover:rotate-90 transition-transform" />
+                  <span>Add More from Menu</span>
+                </button>
+              </div>
+
               <div className="flex flex-col gap-2">
                 {dish.addOns.map((addOn, idx) => {
                   const isChecked = selectedAddOns.includes(addOn.name);
@@ -257,7 +354,7 @@ export default function DishDetailModal({
                     <button
                       key={idx}
                       onClick={() => toggleAddOn(addOn.name)}
-                      className={`w-full p-3 bg-neutral-900 rounded-xl border flex items-center justify-between transition text-left ${
+                      className={`w-full p-3 bg-neutral-900 rounded-xl border flex items-center justify-between transition text-left cursor-pointer ${
                         isChecked ? 'border-amber-500 bg-neutral-800' : 'border-white/5 hover:border-white/20'
                       }`}
                     >
@@ -280,6 +377,31 @@ export default function DishDetailModal({
                     </button>
                   );
                 })}
+
+                {/* Secondary card to browse menu */}
+                <button
+                  type="button"
+                  onClick={handleSaveAndRedirectToMenu}
+                  className="w-full mt-1 p-3 rounded-xl border border-dashed border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 active:scale-[0.99] flex items-center justify-between cursor-pointer transition-all group text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-black transition-colors shrink-0">
+                      <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-white text-xs sm:text-sm font-semibold font-montserrat group-hover:text-amber-400 transition-colors">
+                        Want additional sides, drinks or add-ons?
+                      </span>
+                      <span className="text-zinc-400 text-[11px] font-dm-sans">
+                        Saves your current selections & opens full menu
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-amber-400 text-xs font-semibold font-montserrat group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0 ml-2">
+                    <span>Menu</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </button>
               </div>
             </div>
           )}
@@ -309,17 +431,15 @@ export default function DishDetailModal({
           </div>
         </div>
 
-        {/* Floating "Ask AI" Button */}
-        <button
+        {/* Floating Draggable "Ask AI" Button (can be moved anywhere: up, down, left, right) */}
+        <DraggableAskAi
           onClick={() => {
             if (onAskAI) onAskAI(dish.title);
             onClose();
           }}
-          className="fixed bottom-20 right-6 z-50 px-4 py-2.5 bg-amber-500/90 hover:bg-amber-400 text-neutral-950 font-semibold text-xs rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 transition hover:scale-105"
-        >
-          <Sparkles className="w-4 h-4 text-neutral-950" />
-          <span>Ask AI</span>
-        </button>
+          defaultBottom={80}
+          defaultRight={24}
+        />
 
         {/* 10. Bottom Action Bar: Add To Cart */}
         <div className="px-5 pb-4">

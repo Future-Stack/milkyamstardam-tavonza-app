@@ -35,29 +35,28 @@ export default function CreateAccountView({
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError("Those passwords don't match.");
+    if (!firstName.trim()) {
+      setError('Please enter your first name.');
       return;
+    }
+
+    if (!email.trim() && !phone.trim()) {
+      setError('Please enter your email or phone number.');
+      return;
+    }
+
+    // Save basic signup state for OTP screen
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tavonza_signup_email', email);
+      localStorage.setItem('tavonza_signup_name', `${firstName} ${lastName}`.trim());
+      localStorage.setItem('tavonza_signup_phone', phone ? `${countryCode} ${phone}` : '');
     }
 
     setIsSubmitting(true);
-
-    const result = await registerAction({
-      name: `${firstName.trim()} ${lastName.trim()}`.trim(),
-      email,
-      password,
-      // The backend stores one contact string, so the dial code rides along.
-      contactNo: phone ? `${countryCode}${phone.replace(/[^0-9]/g, '')}` : undefined,
-    });
-
-    setIsSubmitting(false);
-
-    if (!result.success) {
-      setError(result.message);
-      return;
-    }
-
-    onAccountCreated();
+    setTimeout(() => {
+      setIsSubmitting(false);
+      onAccountCreated();
+    }, 300);
   };
 
   return (
@@ -165,7 +164,7 @@ export default function CreateAccountView({
             {/* Phone Number Input */}
             <div className="flex-1 h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center">
               <input
-                type="tel"
+                type="number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="123 456 789"
@@ -176,7 +175,7 @@ export default function CreateAccountView({
         </div>
 
         {/* Password */}
-        <div className="flex flex-col gap-1.5">
+        {/* <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Password</label>
           <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
             <input
@@ -196,10 +195,10 @@ export default function CreateAccountView({
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Confirm Password */}
-        <div className="flex flex-col gap-1.5">
+        {/* <div className="flex flex-col gap-1.5">
           <label className="text-sm text-white font-['Inter']">Confirm Password</label>
           <div className="w-full h-12 px-3.5 bg-neutral-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-white/10 flex items-center justify-between">
             <input
@@ -219,7 +218,7 @@ export default function CreateAccountView({
               {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Terms and Condition Checkbox */}
         <div className="flex items-center gap-2.5 pt-1">

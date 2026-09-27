@@ -21,8 +21,18 @@ export default function OtpVerificationView({
 }: OtpVerificationViewProps) {
   // Six digits — the backend's ResetPasswordDto requires exactly 6.
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
+  const [displayTarget, setDisplayTarget] = useState(email);
   const [seconds, setSeconds] = useState(105); // 01.45
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!email && typeof window !== 'undefined') {
+      const savedEmail = localStorage.getItem('tavonza_signup_email');
+      const savedPhone = localStorage.getItem('tavonza_signup_phone');
+      if (savedEmail) setDisplayTarget(savedEmail);
+      else if (savedPhone) setDisplayTarget(savedPhone);
+    }
+  }, [email]);
 
   const handleResend = () => {
     setSeconds(105);
@@ -91,7 +101,7 @@ export default function OtpVerificationView({
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-semibold text-white font-['Inter']">Verification Code</h2>
           <p className="text-xs text-neutral-400 font-['Inter'] leading-relaxed">
-            A verification code has been sent to {email || 'your email'}.
+            A verification code has been sent to {displayTarget || 'your email'}.
           </p>
         </div>
 

@@ -8,6 +8,19 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+@layer utilities {
+  .font-poppins {
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+  }
+  .font-montserrat {
+    font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  }
+  .font-dm-sans {
+    font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+  }
 }
 
 /* Custom utilities */
@@ -49,6 +62,19 @@ body {
   100% {
     transform: scale(1) translate(0%, 0%);
   }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
 }
 
 .animate-float-slow {

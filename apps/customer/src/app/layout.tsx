@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Outfit, Poppins, Montserrat, DM_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,12 +12,31 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Tavonza AI | Customer Hospitality & Dining",
   description: "Discover restaurants around you, order for delivery, pickup, or dine-in, and get personalized Tavonza AI recommendations.",
 };
 
 import ReduxProvider from "@/redux/ReduxProvider";
+import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
   children,
@@ -27,10 +46,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${outfit.variable} dark h-full antialiased`}
+      className={`${inter.variable} ${outfit.variable} ${poppins.variable} ${montserrat.variable} ${dmSans.variable} dark h-full antialiased`}
     >
       <body className="min-h-full bg-neutral-950 text-white font-sans flex flex-col selection:bg-yellow-400 selection:text-black">
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          <CartProvider>{children}</CartProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

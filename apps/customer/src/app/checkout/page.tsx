@@ -1,19 +1,36 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import CartFlowModal from '@/components/dashboard/CartFlowModal';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function CheckoutPage() {
+function CheckoutRedirect() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const table = searchParams.get('table') || 'Table 8';
+    router.replace(`/checkout/payment?table=${encodeURIComponent(table)}`);
+  }, [router, searchParams]);
 
   return (
-    <div className="w-full min-h-screen bg-black text-white flex flex-col justify-center items-center p-4 relative font-sans">
-      <CartFlowModal
-        initialStep="payment"
-        onClose={() => router.push('/home')}
-        onGoHome={() => router.push('/home')}
-      />
+    <div className="w-full min-h-screen bg-[#111111] flex items-center justify-center text-white">
+      <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 }
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full min-h-screen bg-[#111111] flex items-center justify-center text-white">
+          <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <CheckoutRedirect />
+    </Suspense>
+  );
+}
+

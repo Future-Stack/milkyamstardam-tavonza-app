@@ -2,10 +2,10 @@
 
 import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import OtpVerificationView from '@/components/auth/OtpVerificationView';
+import CreatePasswordView from '@/components/auth/CreatePasswordView';
 import AuthDesktopLayout from '@/components/auth/AuthDesktopLayout';
 
-function VerifyOtpContent() {
+function CreatePasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const table = searchParams.get('table');
@@ -14,15 +14,15 @@ function VerifyOtpContent() {
 
   return (
     <AuthDesktopLayout>
-      <OtpVerificationView
-        onVerifySuccess={() => router.push(`/create-password${forwardParam}`)}
-        onBack={() => router.push(`/register${forwardParam}`)}
+      <CreatePasswordView
+        onComplete={() => router.push(`/welcome${forwardParam}`)}
+        onBack={() => router.push(`/verify-otp${forwardParam}`)}
       />
     </AuthDesktopLayout>
   );
 }
 
-export default function VerifyOtpPage() {
+export default function CreatePasswordPage() {
   return (
     <Suspense
       fallback={
@@ -31,7 +31,7 @@ export default function VerifyOtpPage() {
         </div>
       }
     >
-      <VerifyOtpContent />
+      <CreatePasswordContent />
     </Suspense>
   );
 }

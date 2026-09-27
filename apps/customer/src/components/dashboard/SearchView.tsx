@@ -87,7 +87,7 @@ export default function SearchView({ onReserveClick, onDishClick }: SearchViewPr
   };
 
   return (
-    <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto min-h-screen bg-black text-white flex flex-col justify-between relative overflow-x-hidden font-sans">
+    <div className="w-full max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto min-h-screen bg-black text-white flex flex-col justify-between relative overflow-x-hidden font-sans">
       <div className="w-full flex-1 flex flex-col gap-5 pb-24 pt-2">
 
         {/* 1. Curated Discovery Header Hero Banner */}
