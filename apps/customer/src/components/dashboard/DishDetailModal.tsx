@@ -434,7 +434,11 @@ export default function DishDetailModal({
         {/* Floating Draggable "Ask AI" Button (can be moved anywhere: up, down, left, right) */}
         <DraggableAskAi
           onClick={() => {
-            if (onAskAI) onAskAI(dish.title);
+            if (onAskAI) {
+              onAskAI(dish.title);
+            } else {
+              router.push(`/chat?query=${encodeURIComponent(`Tell me about ${dish.title} and ingredients`)}`);
+            }
             onClose();
           }}
           defaultBottom={80}

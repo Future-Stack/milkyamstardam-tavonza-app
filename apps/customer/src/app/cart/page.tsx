@@ -11,6 +11,7 @@ import {
   ShoppingBag,
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import DraggableAskAi from '@/components/common/DraggableAskAi';
 
 function CartContent() {
   const router = useRouter();
@@ -220,6 +221,9 @@ function CartContent() {
         )}
 
       </div>
+
+      {/* Floating Draggable Ask AI Button */}
+      <DraggableAskAi defaultBottom={24} defaultRight={24} />
 
       {/* HOSTGUEST ORDER PREFERENCE MODAL (Matches Figma) */}
       {showPreferenceModal && (

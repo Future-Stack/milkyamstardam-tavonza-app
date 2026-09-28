@@ -508,7 +508,10 @@ export default function CustomerDashboardView({
             setSelectedDishDetail(null);
             setCartFlowStep('cart');
           }}
-          onAskAI={(dishTitle) => handleAskJarvis(`Tell me more about ${dishTitle} and wine pairings`)}
+          onAskAI={(dishTitle) => {
+            setSelectedDishDetail(null);
+            router.push(`/chat?query=${encodeURIComponent(`Tell me more about ${dishTitle} and wine pairings`)}`);
+          }}
         />
       )}
 
