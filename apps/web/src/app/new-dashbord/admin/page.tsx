@@ -2,14 +2,14 @@ import React from 'react';
 import OwnerDashboard from './OwnerDashboard';
 
 export const metadata = {
-  title: 'Owner Dashboard & Restaurants | Tavonza AI Hospitality',
+  title: 'Admin Dashboard & Restaurants | Tavonza AI Hospitality',
   description:
-    'Executive owner dashboard for multi-restaurant portfolio management, branch operations, real-time analytics, and teams.',
+    'Executive admin dashboard for multi-restaurant portfolio management, branch operations, real-time analytics, and teams.',
 };
 
 export const dynamic = 'force-dynamic';
 
-export default async function OwnerPage({
+export default async function AdminPage({
   searchParams,
 }: {
   searchParams?: Promise<{ tab?: string; branchRestaurantId?: string; id?: string }>;

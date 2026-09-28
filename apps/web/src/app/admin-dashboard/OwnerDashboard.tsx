@@ -93,7 +93,7 @@ const getInitialNav = (initialNav?: string, initialTab?: string): string => {
       }
 
       // 3. Saved localStorage preference
-      const savedNav = localStorage.getItem('owner_active_nav');
+      const savedNav = localStorage.getItem('admin_active_nav') || localStorage.getItem('owner_active_nav');
       if (savedNav && navItems.some((item) => item.name === savedNav)) {
         return savedNav;
       }
@@ -165,7 +165,7 @@ export default function OwnerDashboard({
   const handleSetActiveNav = (nav: string) => {
     setActiveNav(nav);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('owner_active_nav', nav);
+      localStorage.setItem('admin_active_nav', nav);
       const url = new URL(window.location.href);
       url.searchParams.set('tab', nav.toLowerCase().replace(/\s+/g, '-'));
       window.history.replaceState({}, '', url.toString());
@@ -225,7 +225,7 @@ export default function OwnerDashboard({
         />
 
         {/* Dashboard Main Content Area */}
-        <main className={`owner-dashboard-main flex-1 ${activeNav === 'POS' ? 'p-3 sm:p-5 md:p-6 flex flex-col min-h-0 overflow-hidden' : 'p-3 sm:p-5 md:p-6 space-y-6'} w-full relative`}>
+        <main className={`admin-dashboard-main owner-dashboard-main flex-1 ${activeNav === 'POS' ? 'p-3 sm:p-5 md:p-6 flex flex-col min-h-0 overflow-hidden' : 'p-3 sm:p-5 md:p-6 space-y-6'} w-full relative`}>
           {activeNav === 'Orders' ? (
             <OrdersView />
           ) : activeNav === 'POS' ? (

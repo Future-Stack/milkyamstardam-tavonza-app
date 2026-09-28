@@ -132,7 +132,7 @@ export default function OwnerSidebar({
         {/* Bottom Menu: Settings & Logout */}
         <div className="p-4 border-t border-white/25 space-y-1">
           <Link
-            href="/owner-dashboard?tab=settings"
+            href="/admin-dashboard?tab=settings"
             className="w-full h-10 px-3 rounded-[20px] flex items-center gap-3 text-white/50 hover:text-white hover:bg-zinc-900/60 transition-colors"
           >
             <Settings className="w-5 h-5" />
