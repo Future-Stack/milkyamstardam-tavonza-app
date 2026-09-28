@@ -1,225 +1,52 @@
 import { MenuItem } from './types';
 
-export const INITIAL_MENU_ITEMS: MenuItem[] = [
-  {
-    id: 'm-1',
-    name: 'Smokey Salmon',
-    category: 'Savory',
-    categoryLabel: 'Savory',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: '/assets/costomerpages/steak-rating-card.png',
-    description: 'Fresh Norwegian smoked salmon with capers and cream cheese.',
-  },
-  {
-    id: 'm-2',
-    name: 'Classic Burger',
-    category: 'Burgers',
-    categoryLabel: 'Burgers',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: '/assets/costomerpages/ribeye-steak-butter.png',
-    description: '100% Angus beef patty with cheddar cheese, caramelized onions and aioli.',
-  },
-  {
-    id: 'm-3',
-    name: 'Mini Pancakes',
-    category: 'Pancake',
-    categoryLabel: 'Pancakes',
-    price: 18.5,
-    costPrice: 5.55,
-    marginPercent: 70,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80',
-    description: 'Fluffy Dutch poffertjes with organic powdered sugar and melted butter.',
-  },
-  {
-    id: 'm-4',
-    name: 'Sushi Rolls',
-    category: 'Savory',
-    categoryLabel: 'Rolls',
-    price: 18.5,
-    costPrice: 5.92,
-    marginPercent: 68,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80',
-    description: 'Fresh salmon, avocado, cucumber and Japanese spicy mayo roll.',
-  },
-  {
-    id: 'm-5',
-    name: 'Vis schotel',
-    category: 'Savory',
-    categoryLabel: 'Savoy',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: '/assets/costomerpages/filet-mignon-steak.png',
-    description: 'Platter of grilled sea bass, prawns and calamari with herb butter.',
-  },
-  {
-    id: 'm-6',
-    name: 'Kaasplankje',
-    category: 'Savory',
-    categoryLabel: 'Savory',
-    price: 18.5,
-    costPrice: 5.18,
-    marginPercent: 72,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1631379578550-7038263db699?auto=format&fit=crop&w=600&q=80',
-    description: 'Selection of aged Gouda, blue cheese, fig jam, nuts and crackers.',
-  },
-  {
-    id: 'm-7',
-    name: 'Classic Burger',
-    category: 'Burgers',
-    categoryLabel: 'Burgers',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: '/assets/costomerpages/sliced-flank-steak.png',
-    description: 'Juicy Angus burger with fresh lettuce, tomato, and house relish.',
-  },
-  {
-    id: 'm-8',
-    name: 'Tapas mix',
-    category: 'Savory',
-    categoryLabel: 'Savory',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=600&q=80',
-    description: 'Spanish tapas assortment: Patatas bravas, chorizo bites and olives.',
-  },
-  {
-    id: 'm-9',
-    name: 'Toetje',
-    category: 'Sweet',
-    categoryLabel: 'Savoy',
-    price: 18.5,
-    costPrice: 4.81,
-    marginPercent: 74,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80',
-    description: 'Decadent chocolate lava cake served with bourbon vanilla gelato.',
-  },
-  {
-    id: 'm-10',
-    name: 'Grill',
-    category: 'Savory',
-    categoryLabel: 'grill',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: '/assets/costomerpages/tomahawk-ribeye-steak.png',
-    description: 'Charcoal grilled steak served with seasonal vegetables and peppercorn sauce.',
-  },
-  {
-    id: 'm-11',
-    name: 'Panspecialiteit',
-    category: 'Savory',
-    categoryLabel: 'Savoy',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
-    description: 'Sizzling pan specialty with tender chicken chunks and garlic mushrooms.',
-  },
-  {
-    id: 'm-12',
-    name: 'Kalfskotelet',
-    category: 'Savory',
-    categoryLabel: 'Savory',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: '/assets/costomerpages/fine-dining-wine-table.jpg',
-    description: 'Prime pan-seared veal chop with rosemary butter and roasted potatoes.',
-  },
-  {
-    id: 'm-13',
-    name: 'Pineapple Cooler',
-    category: 'Drinks',
-    categoryLabel: 'Cocktail',
-    price: 18.5,
-    costPrice: 3.7,
-    marginPercent: 80,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
-    description: 'Tropical blend of fresh pineapple, passion fruit, lime and sparkling soda.',
-  },
-  {
-    id: 'm-14',
-    name: 'Arabia Coffee',
-    category: 'Coffee',
-    categoryLabel: 'Coffee',
-    price: 18.5,
-    costPrice: 2.96,
-    marginPercent: 84,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
-    description: 'Traditional Arabica single-origin roast brewed with cardamom notes.',
-  },
-  {
-    id: 'm-15',
-    name: 'Lolo - Cocktails',
-    category: 'Drinks',
-    categoryLabel: 'Cocktails',
-    price: 18.5,
-    costPrice: 4.44,
-    marginPercent: 76,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80',
-    description: 'Signature gin cocktail infused with elderflower, cucumber and mint.',
-  },
-  {
-    id: 'm-16',
-    name: 'Fondue & Fondue',
-    category: 'Savory',
-    categoryLabel: 'Savoy',
-    price: 18.5,
-    costPrice: 6.29,
-    marginPercent: 66,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
-    description: 'Swiss Gruyère and Emmental melted fondue served with sourdough cubes.',
-  },
-  {
-    id: 'm-17',
-    name: 'Mezcal Negroni',
-    category: 'Drinks',
-    categoryLabel: 'Drinks',
-    price: 18.5,
-    costPrice: 4.07,
-    marginPercent: 78,
-    soldToday: 124,
-    isActive: true,
-    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
-    description: 'Smokey artisan mezcal, Campari, sweet vermouth and flamed orange peel.',
-  },
-];
+export const INITIAL_MENU_ITEMS: MenuItem[] = [];
+
+export function getFallbackImageByCategory(cat: string = ''): string {
+  const c = cat.toLowerCase();
+  if (c.includes('starter') || c.includes('appetizer')) {
+    return 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=600&q=80';
+  }
+  if (c.includes('main') || c.includes('steak') || c.includes('grill') || c.includes('meat')) {
+    return '/assets/costomerpages/ribeye-steak-butter.png';
+  }
+  if (c.includes('pizza')) {
+    return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80';
+  }
+  if (c.includes('burger')) {
+    return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80';
+  }
+  if (c.includes('dessert') || c.includes('sweet') || c.includes('pancake')) {
+    return 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80';
+  }
+  if (c.includes('cocktail') || c.includes('drink') || c.includes('wine') || c.includes('beer') || c.includes('beverage')) {
+    return 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80';
+  }
+  return '/assets/costomerpages/steak-rating-card.png';
+}
+
+export function mapBackendToMenuItem(backendItem: any): MenuItem {
+  const categoryName = backendItem.category?.name || 'Mains';
+  const defaultImage = getFallbackImageByCategory(categoryName);
+  const price = typeof backendItem.basePrice === 'number' ? backendItem.basePrice : Number(backendItem.basePrice) || 0;
+  const cost = Math.round(price * 0.34 * 100) / 100;
+  const margin = price > 0 ? Math.round(((price - cost) / price) * 100) : 66;
+
+  return {
+    id: backendItem.id,
+    name: backendItem.name,
+    category: categoryName,
+    categoryLabel: categoryName,
+    categoryId: backendItem.categoryId,
+    restaurantId: backendItem.restaurantId,
+    price: price,
+    costPrice: cost,
+    marginPercent: margin,
+    soldToday: 0,
+    isActive: backendItem.isAvailable !== false,
+    isVegetarian: backendItem.isVegetarian || false,
+    spiceLevel: backendItem.spiceLevel,
+    image: backendItem.imageUrl || defaultImage,
+    description: backendItem.description || '',
+  };
+}

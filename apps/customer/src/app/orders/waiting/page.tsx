@@ -16,28 +16,57 @@ function WaitingContent() {
 
   const [secondsElapsed, setSecondsElapsed] = useState(0);
 
-  // Auto-advance simulation after 8 seconds (or click the quick simulation button)
+  // Real-time elapsed time counter (NO auto-acceptance: strictly awaits waiter / staff approval)
   useEffect(() => {
     const timer = setInterval(() => {
-      setSecondsElapsed((prev) => {
-        if (prev >= 8) {
-          clearInterval(timer);
-          router.push(`/orders/confirmed?table=${encodeURIComponent(activeTable)}&order=${encodeURIComponent(orderId)}`);
-          return prev;
-        }
-        return prev + 1;
-      });
+      setSecondsElapsed((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [router, activeTable, orderId]);
+  }, []);
+
+  // Poll backend for real waiter order confirmation if orderId exists
+  useEffect(() => {
+    if (!orderId) return;
+
+    let isMounted = true;
+    const checkStatus = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7777/api/v1';
+        const res = await fetch(`${apiUrl}/orders/${orderId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const order = data?.data || data;
+
+        if (order && isMounted) {
+          const status = String(order.status || '').toUpperCase();
+          if (
+            status === 'ACCEPTED' ||
+            status === 'CONFIRMED' ||
+            status === 'IN_PREPARATION' ||
+            status === 'PREPARING' ||
+            status === 'READY' ||
+            status === 'SERVED'
+          ) {
+            router.push(`/orders/confirmed?table=${encodeURIComponent(activeTable)}&order=${encodeURIComponent(orderId)}`);
+          } else if (status === 'REJECTED' || status === 'CANCELLED') {
+            router.push(`/order-unavailable?table=${encodeURIComponent(activeTable)}&reason=${status.toLowerCase()}`);
+          }
+        }
+      } catch {
+        // network or mock fallback: continue waiting for waiter
+      }
+    };
+
+    const pollInterval = setInterval(checkStatus, 4000);
+    return () => {
+      isMounted = false;
+      clearInterval(pollInterval);
+    };
+  }, [orderId, activeTable, router]);
 
   const handleCancelOrder = () => {
     router.push(`/order-unavailable?table=${encodeURIComponent(activeTable)}&reason=cancelled`);
-  };
-
-  const handleManualAccept = () => {
-    router.push(`/orders/confirmed?table=${encodeURIComponent(activeTable)}&order=${encodeURIComponent(orderId)}`);
   };
 
   return (
@@ -63,7 +92,7 @@ function WaitingContent() {
             </div>
             <div className="flex flex-col">
               <span className="text-white text-xs font-semibold font-montserrat">Order {orderId}</span>
-              <span className="text-yellow-400 text-sm font-bold">Elapsed: {secondsElapsed}s / 8s</span>
+              <span className="text-yellow-400 text-sm font-bold">Waiting: {secondsElapsed}s</span>
             </div>
           </div>
           <span className="px-2.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-mono font-medium animate-pulse">
@@ -134,17 +163,8 @@ function WaitingContent() {
           </div>
         </div>
 
-        {/* BOTTOM ACTION BUTTONS */}
+        {/* BOTTOM ACTION BUTTON */}
         <div className="w-full flex flex-col gap-3 pt-2">
-          <button
-            type="button"
-            onClick={handleManualAccept}
-            className="w-full py-3.5 bg-yellow-400 hover:bg-yellow-300 text-neutral-950 font-semibold font-inter text-sm rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
-          >
-            <CheckCircle className="w-4 h-4" />
-            <span>Simulate Waiter Acceptance</span>
-          </button>
-
           <button
             type="button"
             onClick={handleCancelOrder}

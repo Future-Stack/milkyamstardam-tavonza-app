@@ -51,7 +51,7 @@ export class OrderController {
     });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.STAFF)
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.STAFF, GlobalRole.CUSTOMER)
   @Get('orders/:id')
   @ApiOperation({ summary: 'Get order details' })
   @ApiStandardResponse({ type: OrderResponseDto })

@@ -5,6 +5,7 @@ import { CreateMenuItemDto, UpdateMenuItemDto, MenuItemResponseDto } from './dto
 import { CreateModifierGroupDto, UpdateModifierGroupDto, CreateModifierDto, UpdateModifierDto } from './dto/modifier.dto';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../roles/roles.decorator';
+import { Public } from '../auth/auth.decorator';
 import { GlobalRole } from '@prisma/client';
 import { ResponseService } from '@/utils/response';
 import { ApiStandardResponse } from '@/utils/swagger.decorator';
@@ -26,7 +27,8 @@ export class MenuController {
     return ResponseService.formatResponse({ statusCode: HttpStatus.CREATED, message: 'Category created', data: result });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.CUSTOMER)
+  @Public()
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.CUSTOMER, GlobalRole.STAFF)
   @Get('menu-categories')
   @ApiOperation({ summary: 'List menu categories' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
@@ -46,7 +48,8 @@ export class MenuController {
     });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
+  @Public()
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.CUSTOMER, GlobalRole.STAFF)
   @Get('menu-categories/:id')
   @ApiOperation({ summary: 'Get menu category' })
   @ApiStandardResponse({ type: MenuCategoryResponseDto })
@@ -83,7 +86,8 @@ export class MenuController {
     return ResponseService.formatResponse({ statusCode: HttpStatus.CREATED, message: 'Item created', data: result });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER,GlobalRole.CUSTOMER)
+  @Public()
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.CUSTOMER, GlobalRole.STAFF)
   @Get('menu-items')
   @ApiOperation({ summary: 'List menu items' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
@@ -105,7 +109,8 @@ export class MenuController {
     });
   }
 
-  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER,GlobalRole.CUSTOMER)
+  @Public()
+  @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER, GlobalRole.CUSTOMER, GlobalRole.STAFF)
   @Get('menu-items/:id')
   @ApiOperation({ summary: 'Get menu item with modifiers' })
   @ApiStandardResponse({ type: MenuItemResponseDto })
@@ -113,6 +118,7 @@ export class MenuController {
     const result = await this.menuService.findMenuItem(id);
     return ResponseService.formatResponse({ statusCode: HttpStatus.OK, message: 'Item retrieved', data: result });
   }
+
 
   @Roles(GlobalRole.SUPER_ADMIN, GlobalRole.ADMIN, GlobalRole.RESTAURANT_OWNER)
   @Patch('menu-items/:id')

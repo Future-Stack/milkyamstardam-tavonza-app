@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { Customer, CustomerSegment } from '../types';
 
@@ -10,41 +11,51 @@ export interface AddCustomerModalProps {
   onAdd: (newCustomer: Omit<Customer, 'id'>) => void;
 }
 
+export interface AddCustomerFormData {
+  name: string;
+  email: string;
+  phone: string;
+  segment: CustomerSegment;
+  notes: string;
+}
+
 export default function AddCustomerModal({
   isOpen,
   onClose,
   onAdd,
 }: AddCustomerModalProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [segment, setSegment] = useState<CustomerSegment>('New');
-  const [notes, setNotes] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AddCustomerFormData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      segment: 'New',
+      notes: '',
+    },
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) return;
-
+  const onSubmit = (data: AddCustomerFormData) => {
     onAdd({
-      name: name.trim(),
-      email: email.trim() || `${name.toLowerCase().replace(/\s+/g, '')}@email.com`,
-      phone: phone.trim() || '+1 (555) 000-0000',
-      segment,
+      name: data.name.trim(),
+      email: data.email.trim() || `${data.name.toLowerCase().replace(/\s+/g, '')}@email.com`,
+      phone: data.phone.trim() || '+1 (555) 000-0000',
+      segment: data.segment,
       visits: 1,
       totalSpent: 0,
       rating: 5.0,
       lastVisit: 'Today',
       memberSince: 'Aug 2026',
-      notes: notes.trim() || 'New customer registration.',
+      notes: data.notes.trim() || 'New customer registration.',
     });
 
-    // Reset
-    setName('');
-    setEmail('');
-    setPhone('');
-    setNotes('');
+    reset();
     onClose();
   };
 
@@ -56,7 +67,7 @@ export default function AddCustomerModal({
         className="w-full max-w-[440px] bg-[#141416] border border-zinc-800 rounded-2xl shadow-2xl flex flex-col font-['Inter'] animate-in zoom-in-95 duration-150 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Header matching Screenshot 1 */}
+        {/* Top Header */}
         <div className="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
           <h3 className="text-white text-lg font-bold font-['Plus_Jakarta_Sans']">
             Add New Customer
@@ -70,19 +81,23 @@ export default function AddCustomerModal({
           </button>
         </div>
 
-        {/* Form Body matching Screenshot 1 */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-sm">
+        {/* Form Body using React Hook Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 text-sm">
           {/* Full Name * */}
           <div className="space-y-1.5">
             <label className="text-white text-sm font-medium">Full Name *</label>
             <input
+              {...register('name', { required: 'Full name is required' })}
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Alice Walker"
-              className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
-              required
+              className={`w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border text-stone-200 text-sm focus:outline-none transition-colors placeholder-zinc-500 ${
+                errors.name ? 'border-red-500 focus:border-red-500' : 'border-zinc-700/70 focus:border-amber-500'
+              }`}
+              autoFocus
             />
+            {errors.name && (
+              <p className="text-xs text-red-400 font-medium">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Email & Phone Row */}
@@ -90,9 +105,8 @@ export default function AddCustomerModal({
             <div className="space-y-1.5">
               <label className="text-white text-sm font-medium">Email</label>
               <input
+                {...register('email')}
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="customer@email.com"
                 className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
               />
@@ -101,10 +115,9 @@ export default function AddCustomerModal({
             <div className="space-y-1.5">
               <label className="text-white text-sm font-medium">Phone</label>
               <input
+                {...register('phone')}
                 type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1 555-0000"
+                placeholder="+1 (555) 000-0000"
                 className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
               />
             </div>
@@ -112,55 +125,50 @@ export default function AddCustomerModal({
 
           {/* Customer Segment */}
           <div className="space-y-1.5">
-            <label className="text-white text-sm font-medium">Customer Segment</label>
+            <label className="text-white text-sm font-medium">Segment</label>
             <div className="grid grid-cols-3 gap-2">
-              {segments.map((seg) => {
-                const isSelected = segment === seg;
-
-                return (
-                  <button
-                    key={seg}
-                    type="button"
-                    onClick={() => setSegment(seg)}
-                    className={`h-9 rounded-lg text-sm font-semibold transition-all cursor-pointer flex items-center justify-center ${
-                      isSelected
-                        ? 'bg-amber-950/50 text-amber-400 border border-amber-500 shadow-sm'
-                        : 'bg-zinc-800/80 text-zinc-400 border border-zinc-700/60 hover:text-white hover:bg-zinc-700'
-                    }`}
-                  >
-                    {seg}
-                  </button>
-                );
-              })}
+              {segments.map((seg) => (
+                <label
+                  key={seg}
+                  className="flex items-center justify-center py-2 px-3 bg-zinc-800/80 border border-zinc-700/70 rounded-xl cursor-pointer hover:bg-zinc-700/80 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-500/10 has-[:checked]:text-amber-400 text-zinc-300 text-xs font-semibold transition-all"
+                >
+                  <input
+                    {...register('segment')}
+                    type="radio"
+                    value={seg}
+                    className="sr-only"
+                  />
+                  {seg}
+                </label>
+              ))}
             </div>
           </div>
 
           {/* Notes */}
           <div className="space-y-1.5">
-            <label className="text-white text-sm font-medium">Notes</label>
+            <label className="text-white text-sm font-medium">Notes & Preferences</label>
             <textarea
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Any dietary restrictions or preferences..."
-              className="w-full p-3 bg-zinc-800/80 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors resize-none placeholder-zinc-500"
+              {...register('notes')}
+              rows={2}
+              placeholder="e.g. Prefers corner booth, loves Cabernet..."
+              className="w-full p-3 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500 resize-none"
             />
           </div>
 
-          {/* Footer Action Buttons */}
-          <div className="pt-3 flex items-center gap-3">
+          {/* Footer Actions */}
+          <div className="pt-2 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 h-10 rounded-xl border border-zinc-700/80 bg-zinc-900/60 text-slate-400 hover:text-white text-sm font-semibold transition-colors cursor-pointer"
+              className="px-4 py-2 text-zinc-400 hover:text-white transition-colors cursor-pointer text-sm font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 h-10 bg-[#f59e0b] hover:bg-amber-400 text-white text-sm font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center"
+              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold rounded-xl text-sm transition-colors shadow-lg shadow-amber-500/20 cursor-pointer"
             >
-              Add Customer
+              Create Customer
             </button>
           </div>
         </form>

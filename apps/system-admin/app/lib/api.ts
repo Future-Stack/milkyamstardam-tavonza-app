@@ -15,7 +15,10 @@ import type { Meta } from "./types";
 
 // Bracket notation keeps Next from inlining this at build time so Docker can
 // inject the backend service URL at runtime (http://backend:7777/api/v1).
-const API_BASE_URL = process.env["API_BASE_URL"] ?? "http://localhost:7777/api/v1";
+const API_BASE_URL =
+  process.env["API_BASE_URL"] ??
+  process.env["NEXT_PUBLIC_API_URL"] ??
+  "http://localhost:7777/api/v1";
 
 export interface BackendFieldError {
   path: string;

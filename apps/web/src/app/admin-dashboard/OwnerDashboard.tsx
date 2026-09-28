@@ -112,7 +112,13 @@ export default function OwnerDashboard({
   // Initialize directly from URL/localStorage without waiting for post-mount effect
   const [activeNav, setActiveNav] = useState<string>(() => getInitialNav(initialNav, initialTab));
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const sp = new URLSearchParams(window.location.search);
+      return sp.get('search') || sp.get('q') || '';
+    }
+    return '';
+  });
   const [timeRange, setTimeRange] = useState<'All' | 'Week' | 'Month' | 'Year'>('Week');
   const [isAIReportOpen, setIsAIReportOpen] = useState(false);
   const [orderStatusFilter, setOrderStatusFilter] = useState<'All' | 'Preparing' | 'Ready'>('All');
@@ -135,6 +141,21 @@ export default function OwnerDashboard({
     }
   }, []);
 
+  // Update route query search param without refreshing
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (query && query.trim()) {
+        url.searchParams.set('search', query.trim());
+      } else {
+        url.searchParams.delete('search');
+        url.searchParams.delete('q');
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+  };
+
   // Listen to browser Back/Forward (popstate) navigation
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -143,6 +164,9 @@ export default function OwnerDashboard({
         const tabParam = urlParams.get('tab');
         const resolved = normalizeTab(tabParam) || 'Dashboard';
         setActiveNav(resolved);
+
+        const q = urlParams.get('search') || urlParams.get('q') || '';
+        setSearchQuery(q);
       };
       window.addEventListener('popstate', handlePopState);
       return () => window.removeEventListener('popstate', handlePopState);
@@ -161,6 +185,7 @@ export default function OwnerDashboard({
       }
     }
   }, [activeNav]);
+
 
   const handleSetActiveNav = (nav: string) => {
     setActiveNav(nav);
@@ -218,7 +243,7 @@ export default function OwnerDashboard({
           branchDropdownOpen={branchDropdownOpen}
           setBranchDropdownOpen={setBranchDropdownOpen}
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          setSearchQuery={handleSearchQueryChange}
           showNotifications={showNotifications}
           setShowNotifications={setShowNotifications}
           onOpenSettings={() => handleSetActiveNav('Settings')}
@@ -233,7 +258,10 @@ export default function OwnerDashboard({
           ) : activeNav === 'QR Ordering' ? (
             <QROrderingView />
           ) : activeNav === 'Menu' ? (
-            <MenuView />
+            <MenuView
+              globalSearchQuery={searchQuery}
+              onGlobalSearchChange={handleSearchQueryChange}
+            />
           ) : activeNav === 'Tables' ? (
             <TablesView />
           ) : activeNav === 'Kitchen Display' ? (

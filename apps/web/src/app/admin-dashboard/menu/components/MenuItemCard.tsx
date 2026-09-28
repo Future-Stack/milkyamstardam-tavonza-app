@@ -68,10 +68,17 @@ export default function MenuItemCard({
           </button>
         </div>
 
-        {/* Category Subtitle */}
-        <p className="text-gray-400 text-xs font-normal font-['Inter'] leading-4">
-          {item.categoryLabel || item.category}
-        </p>
+        {/* Category Subtitle & Vegetarian Tag */}
+        <div className="flex items-center gap-2">
+          <p className="text-gray-400 text-xs font-normal font-['Inter'] leading-4 truncate">
+            {item.categoryLabel || item.category}
+          </p>
+          {item.isVegetarian && (
+            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.2 rounded font-medium shrink-0">
+              Veg 🌱
+            </span>
+          )}
+        </div>
 
         {/* Price & Margin Row */}
         <div className="flex items-center gap-2 pt-0.5">
@@ -90,9 +97,9 @@ export default function MenuItemCard({
 
       {/* Bottom Footer Row: Sold Today & Actions */}
       <div className="flex items-center justify-between gap-2 pt-0.5">
-        {/* Sold Today */}
-        <span className="text-zinc-500 text-sm sm:text-base font-normal font-['Inter'] leading-4">
-          Sold Today : <strong className="text-zinc-400 font-medium">{item.soldToday}</strong>
+        {/* Live Status from Database */}
+        <span className="text-zinc-500 text-xs font-normal font-['Inter'] leading-4">
+          Status: <strong className={item.isActive ? 'text-emerald-400 font-medium' : 'text-zinc-500 font-medium'}>{item.isActive ? 'Available' : 'Hidden'}</strong>
         </span>
 
         {/* Action Buttons */}

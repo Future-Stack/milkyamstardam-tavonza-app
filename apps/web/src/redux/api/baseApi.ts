@@ -35,23 +35,46 @@ export function getAuthToken(): string | null {
   const sessionToken = getCookie('customer_session');
   if (sessionToken) return sessionToken;
 
+  // 3. Fallback to localStorage (browser runtime)
+  if (typeof window !== 'undefined') {
+    try {
+      const lsToken = localStorage.getItem('access_token') || localStorage.getItem('token');
+      if (lsToken) return lsToken;
+    } catch {}
+  }
+
   return null;
 }
 
 export function setAuthToken(token: string) {
- 
-  setCookie('access_token', token  );
+  setCookie('access_token', token);
   setCookie('customer_session', token);
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('access_token', token);
+    } catch {}
+  }
 }
 
 export function removeAuthToken() {
   removeCookie('access_token');
   removeCookie('refresh_token');
   removeCookie('customer_session');
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('token');
+    } catch {}
+  }
 }
 
 export function getApiBaseUrl(): string {
-  return (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7777/api/v1').replace(/\/$/, '');
+  const url =
+    (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) ||
+    (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL) ||
+    (typeof process !== 'undefined' && process.env?.API_BASE_URL) ||
+    'http://localhost:7777/api/v1';
+  return String(url || 'http://localhost:7777/api/v1').replace(/\/$/, '');
 }
 
 export const API_BASE_URL = getApiBaseUrl();

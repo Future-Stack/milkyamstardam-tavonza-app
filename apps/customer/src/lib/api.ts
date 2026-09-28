@@ -10,10 +10,14 @@ import type { Meta } from "./types";
  * customer's token is never exposed to client JavaScript and no CORS is involved.
  */
 
+<<<<<<< HEAD
 const API_BASE_URL =
   process.env["NEXT_PUBLIC_API_URL"] ??
   process.env["API_BASE_URL"] ??
   "http://127.0.0.1:7777/api/v1";
+=======
+const API_BASE_URL = process.env["API_BASE_URL"] ?? "http://localhost:7777/api/v1";
+>>>>>>> 7c7e7dbd930b321f2bf2fe9102d463d962f8dc9a
 
 export interface BackendFieldError {
   path: string;

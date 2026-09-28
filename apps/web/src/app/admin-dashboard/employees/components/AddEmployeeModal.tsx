@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { X, ChevronDown } from 'lucide-react';
 import { Employee, EmployeeRole, EmployeeShiftType } from '../types';
 
@@ -10,48 +11,63 @@ export interface AddEmployeeModalProps {
   onAdd: (newEmployee: Omit<Employee, 'id'>) => void;
 }
 
+export interface AddEmployeeFormData {
+  name: string;
+  role: EmployeeRole;
+  shiftType: EmployeeShiftType;
+  phone: string;
+  email: string;
+  salary: string | number;
+}
+
 export default function AddEmployeeModal({
   isOpen,
   onClose,
   onAdd,
 }: AddEmployeeModalProps) {
-  const [name, setName] = useState('');
-  const [role, setRole] = useState<EmployeeRole>('Waiter');
-  const [shiftType, setShiftType] = useState<EmployeeShiftType>('Morning');
-  const [phone, setPhone] = useState('+1 555-0000');
-  const [email, setEmail] = useState('employee@tavonza.com');
-  const [salary, setSalary] = useState('3500');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AddEmployeeFormData>({
+    defaultValues: {
+      name: '',
+      role: 'Waiter',
+      shiftType: 'Morning',
+      phone: '+1 555-0000',
+      email: 'employee@tavonza.com',
+      salary: '3500',
+    },
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) return;
-
+  const onSubmit = (data: AddEmployeeFormData) => {
     let shiftHours = '10:00 AM – 6:00 PM';
-    if (shiftType === 'Evening') shiftHours = '3:00 PM – 11:00 PM';
-    else if (shiftType === 'Night') shiftHours = '5:00 PM – 1:00 AM';
-    else if (shiftType === 'Full Day') shiftHours = '9:00 AM – 9:00 PM';
+    if (data.shiftType === 'Evening') shiftHours = '3:00 PM – 11:00 PM';
+    else if (data.shiftType === 'Night') shiftHours = '5:00 PM – 1:00 AM';
+    else if (data.shiftType === 'Full Day') shiftHours = '9:00 AM – 9:00 PM';
 
     onAdd({
-      name: name.trim(),
+      name: data.name.trim(),
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      role,
+      role: data.role,
       status: 'On Shift',
       shiftHours,
-      shiftType,
+      shiftType: data.shiftType,
       rating: 5.0,
       tablesToday: 0,
       accuracy: 100,
-      phone: phone.trim(),
-      email: email.trim(),
-      bio: `${role} at Tavonza Downtown Branch.`,
+      phone: data.phone.trim(),
+      email: data.email.trim(),
+      bio: `${data.role} at Tavonza Downtown Branch.`,
       notes: 'New team member onboarded.',
       hireDate: 'Aug 2026',
-      salary: Number(salary) || 3500,
+      salary: Number(data.salary) || 3500,
     });
 
-    setName('');
+    reset();
     onClose();
   };
 
@@ -88,19 +104,23 @@ export default function AddEmployeeModal({
           </button>
         </div>
 
-        {/* Form Body matching Screenshot 2 */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-sm">
+        {/* Form Body using React Hook Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 text-sm">
           {/* Full Name * */}
           <div className="space-y-1.5">
             <label className="text-white text-sm font-medium">Full Name *</label>
             <input
+              {...register('name', { required: 'Please enter employee name' })}
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Jordan Lee"
-              className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
-              required
+              className={`w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border text-stone-200 text-sm focus:outline-none transition-colors placeholder-zinc-500 ${
+                errors.name ? 'border-red-500 focus:border-red-500' : 'border-zinc-700/70 focus:border-amber-500'
+              }`}
+              autoFocus
             />
+            {errors.name && (
+              <p className="text-xs text-red-400 font-medium">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Role & Shift Row */}
@@ -109,8 +129,7 @@ export default function AddEmployeeModal({
               <label className="text-white text-sm font-medium">Role</label>
               <div className="relative">
                 <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value as EmployeeRole)}
+                  {...register('role')}
                   className="w-full h-10 px-3.5 pr-8 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors appearance-none cursor-pointer"
                 >
                   {roles.map((r) => (
@@ -127,8 +146,7 @@ export default function AddEmployeeModal({
               <label className="text-white text-sm font-medium">Shift</label>
               <div className="relative">
                 <select
-                  value={shiftType}
-                  onChange={(e) => setShiftType(e.target.value as EmployeeShiftType)}
+                  {...register('shiftType')}
                   className="w-full h-10 px-3.5 pr-8 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors appearance-none cursor-pointer"
                 >
                   {shifts.map((s) => (
@@ -147,9 +165,8 @@ export default function AddEmployeeModal({
             <div className="space-y-1.5">
               <label className="text-white text-sm font-medium">Phone</label>
               <input
+                {...register('phone')}
                 type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 555-0000"
                 className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
               />
@@ -158,9 +175,8 @@ export default function AddEmployeeModal({
             <div className="space-y-1.5">
               <label className="text-white text-sm font-medium">Email</label>
               <input
+                {...register('email')}
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="employee@tavonza.com"
                 className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
               />
@@ -171,9 +187,8 @@ export default function AddEmployeeModal({
           <div className="space-y-1.5">
             <label className="text-white text-sm font-medium">Monthly Salary ($)</label>
             <input
+              {...register('salary')}
               type="number"
-              value={salary}
-              onChange={(e) => setSalary(e.target.value)}
               placeholder="e.g. 3500"
               className="w-full h-10 px-3.5 bg-zinc-800/90 rounded-xl border border-zinc-700/70 text-stone-200 text-sm focus:outline-none focus:border-amber-500 transition-colors placeholder-zinc-500"
             />

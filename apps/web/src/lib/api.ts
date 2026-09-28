@@ -10,7 +10,10 @@ import type { Meta } from "./types";
  * guest's token is never exposed to client JavaScript.
  */
 
-const API_BASE_URL = process.env["API_BASE_URL"] ?? "http://localhost:7777/api/v1";
+const API_BASE_URL =
+  process.env["API_BASE_URL"] ??
+  process.env["NEXT_PUBLIC_API_URL"] ??
+  "http://localhost:7777/api/v1";
 
 export interface BackendFieldError {
   path: string;

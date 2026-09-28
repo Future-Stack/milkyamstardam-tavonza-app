@@ -1,27 +1,55 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { X, Loader2 } from 'lucide-react';
 import { MenuItem } from '../types';
 import { toast } from 'sonner';
+
+export interface CategoryOption {
+  id: string;
+  name: string;
+  restaurantId?: string;
+}
+
+export interface EditMenuItemFormData {
+  name: string;
+  categoryId: string;
+  sellingPrice: string | number;
+  costPrice?: string | number;
+  description?: string;
+  isAvailable: boolean;
+  isVegetarian: boolean;
+  imageUrl?: string;
+}
 
 export interface EditMenuItemModalProps {
   item: MenuItem | null;
   isOpen: boolean;
   onClose: () => void;
-  onUpdateItem: (item: MenuItem) => void;
+  onUpdateItem: (updatedData: {
+    id: string;
+    name: string;
+    categoryId?: string;
+    categoryName: string;
+    basePrice: number;
+    costPrice?: number;
+    description?: string;
+    isAvailable?: boolean;
+    isVegetarian?: boolean;
+    imageUrl?: string;
+  }) => Promise<void> | void;
+  categories?: CategoryOption[];
+  loading?: boolean;
 }
 
-const CATEGORY_OPTIONS = [
-  { label: 'Burgers', icon: '🍔' },
-  { label: 'Pizza', icon: '🍕' },
-  { label: 'Pasta', icon: '🍝' },
-  { label: 'Salads', icon: '🥗' },
-  { label: 'Desserts', icon: '🍰' },
-  { label: 'Drinks', icon: '🍹' },
-  { label: 'Savory', icon: '🥩' },
-  { label: 'Sweet', icon: '🥞' },
-  { label: 'Coffee', icon: '☕' },
+const DEFAULT_CATEGORIES: CategoryOption[] = [
+  { id: 'cat-mains', name: 'Mains' },
+  { id: 'cat-starters', name: 'Starters & Small Plates' },
+  { id: 'cat-desserts', name: 'Desserts' },
+  { id: 'cat-soft-drinks', name: 'Soft Drinks' },
+  { id: 'cat-cocktails', name: 'Cocktails' },
+  { id: 'cat-beer-wine', name: 'Beer & Wine' },
 ];
 
 export default function EditMenuItemModal({
@@ -29,52 +57,74 @@ export default function EditMenuItemModal({
   isOpen,
   onClose,
   onUpdateItem,
+  categories = [],
+  loading = false,
 }: EditMenuItemModalProps) {
-  const [name, setName] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Burgers');
-  const [sellingPrice, setSellingPrice] = useState('');
-  const [costPrice, setCostPrice] = useState('');
-  const [description, setDescription] = useState('');
+  const availableCategories = categories.length > 0 ? categories : DEFAULT_CATEGORIES;
 
+  // React Hook Form implementation
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<EditMenuItemFormData>();
+
+  // Synchronize form values whenever the edited item changes
   useEffect(() => {
     if (item) {
-      setName(item.name);
-      setSelectedCategory(item.category);
-      setSellingPrice(item.price.toString());
-      setCostPrice(item.costPrice?.toString() || '');
-      setDescription(item.description || '');
+      const matchedCat = availableCategories.find(
+        (c) => c.id === item.categoryId || c.name.toLowerCase() === item.category.toLowerCase()
+      );
+      const resolvedCatId = matchedCat?.id || (availableCategories[0] ? availableCategories[0].id : '');
+
+      reset({
+        name: item.name || '',
+        categoryId: resolvedCatId,
+        sellingPrice: item.price !== undefined ? item.price : '',
+        costPrice: item.costPrice !== undefined ? item.costPrice : '',
+        description: item.description || '',
+        isAvailable: item.isActive !== false,
+        isVegetarian: Boolean(item.isVegetarian),
+        imageUrl: item.image || '',
+      });
     }
-  }, [item]);
+  }, [item, availableCategories, reset]);
 
   if (!isOpen || !item) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) {
-      toast.error('Please enter an item name');
+  const onSubmit = async (data: EditMenuItemFormData) => {
+    const sell = typeof data.sellingPrice === 'number' ? data.sellingPrice : parseFloat(data.sellingPrice);
+    if (isNaN(sell) || sell <= 0) {
+      toast.error('Please enter a valid price greater than 0');
       return;
     }
 
-    const sell = parseFloat(sellingPrice) || item.price;
-    const cost = parseFloat(costPrice) || item.costPrice || 0;
+    const selectedCat = availableCategories.find((c) => c.id === data.categoryId) || availableCategories[0];
+    const costVal = data.costPrice
+      ? typeof data.costPrice === 'number'
+        ? data.costPrice
+        : parseFloat(data.costPrice)
+      : undefined;
 
-    const marginPercent =
-      sell > 0 ? Math.round(((sell - cost) / sell) * 100) : item.marginPercent;
+    try {
+      await onUpdateItem({
+        id: item.id,
+        name: data.name.trim(),
+        categoryId: selectedCat?.id,
+        categoryName: selectedCat?.name || item.category,
+        basePrice: sell,
+        costPrice: costVal || item.costPrice || Math.round(sell * 0.35 * 100) / 100,
+        description: data.description ? data.description.trim() : '',
+        isAvailable: Boolean(data.isAvailable),
+        isVegetarian: Boolean(data.isVegetarian),
+        imageUrl: data.imageUrl && data.imageUrl.trim() ? data.imageUrl.trim() : undefined,
+      });
 
-    const updatedItem: MenuItem = {
-      ...item,
-      name: name.trim(),
-      category: selectedCategory,
-      categoryLabel: selectedCategory,
-      price: sell,
-      costPrice: cost,
-      marginPercent: Math.max(0, marginPercent),
-      description: description.trim(),
-    };
-
-    onUpdateItem(updatedItem);
-    toast.success(`Updated "${updatedItem.name}" successfully!`);
-    onClose();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to update menu item');
+    }
   };
 
   return (
@@ -83,7 +133,7 @@ export default function EditMenuItemModal({
       onClick={onClose}
     >
       <div
-        className="bg-[#18181b] border border-zinc-800 rounded-3xl p-6 sm:p-7 w-full max-w-lg shadow-2xl space-y-5 text-white animate-in fade-in zoom-in-95 duration-200"
+        className="bg-[#18181b] border border-zinc-800 rounded-3xl p-6 sm:p-7 w-full max-w-lg shadow-2xl space-y-5 text-white animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -93,7 +143,7 @@ export default function EditMenuItemModal({
               Edit Menu Item
             </h3>
             <p className="text-sm text-zinc-400 font-normal font-['Inter'] mt-1">
-              Update pricing, category, or description for this dish.
+              Update pricing, category, availability or recipe details.
             </p>
           </div>
           <button
@@ -105,64 +155,73 @@ export default function EditMenuItemModal({
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* React Hook Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Item Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-zinc-300 font-['Inter']">
-              Item Name
+              Item Name *
             </label>
             <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Truffle Mushroom Burger"
-              className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter']"
-            />
-          </div>
-
-          {/* Category Pill Selection */}
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-zinc-300 font-['Inter']">
-              Category
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORY_OPTIONS.map((cat) => {
-                const isSelected = selectedCategory === cat.label;
-                return (
-                  <button
-                    key={cat.label}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat.label)}
-                    className={`h-9 px-3.5 rounded-xl text-sm font-medium font-['Inter'] inline-flex items-center gap-1.5 transition cursor-pointer ${
-                      isSelected
-                        ? 'bg-yellow-500 text-white font-semibold shadow-md shadow-yellow-500/20'
-                        : 'bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800'
-                    }`}
-                  >
-                    <span>{cat.icon}</span>
-                    <span>{cat.label}</span>
-                  </button>
-                );
+              {...register('name', {
+                required: 'Please enter an item name',
+                minLength: { value: 2, message: 'Item name must be at least 2 characters' },
               })}
-            </div>
+              type="text"
+              className={`w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter'] ${
+                errors.name ? 'border-red-500/80 focus:border-red-500' : 'border-zinc-800 focus:border-amber-400'
+              }`}
+            />
+            {errors.name && (
+              <p className="text-xs text-red-400 font-medium">{errors.name.message}</p>
+            )}
           </div>
 
-          {/* Two-Column Price Fields */}
+          {/* Category Selector */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-zinc-300 font-['Inter']">
+              Category *
+            </label>
+            <select
+              {...register('categoryId', { required: 'Please select a category' })}
+              className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-base text-white focus:outline-none transition font-['Inter']"
+            >
+              {availableCategories.map((cat) => (
+                <option key={cat.id} value={cat.id} className="bg-zinc-900 text-white">
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            {errors.categoryId && (
+              <p className="text-xs text-red-400 font-medium">{errors.categoryId.message}</p>
+            )}
+          </div>
+
+          {/* Price Fields */}
           <div className="grid grid-cols-2 gap-3">
             {/* Selling Price */}
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-zinc-300 font-['Inter']">
-                Selling Price ($)
+                Selling Price ($) *
               </label>
               <input
+                {...register('sellingPrice', {
+                  required: 'Please enter a selling price',
+                  validate: (val) => {
+                    const num = typeof val === 'number' ? val : parseFloat(val);
+                    return (!isNaN(num) && num > 0) || 'Must be greater than 0';
+                  },
+                })}
                 type="number"
                 step="0.01"
-                min="0"
-                value={sellingPrice}
-                onChange={(e) => setSellingPrice(e.target.value)}
-                className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter']"
+                min="0.01"
+                className={`w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter'] ${
+                  errors.sellingPrice ? 'border-red-500/80 focus:border-red-500' : 'border-zinc-800 focus:border-amber-400'
+                }`}
               />
+              {errors.sellingPrice && (
+                <p className="text-xs text-red-400 font-medium">{errors.sellingPrice.message}</p>
+              )}
             </div>
 
             {/* Cost Price */}
@@ -171,14 +230,47 @@ export default function EditMenuItemModal({
                 Cost Price ($)
               </label>
               <input
+                {...register('costPrice')}
                 type="number"
                 step="0.01"
                 min="0"
-                value={costPrice}
-                onChange={(e) => setCostPrice(e.target.value)}
                 className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter']"
               />
             </div>
+          </div>
+
+          {/* Image URL */}
+          <div className="space-y-1.5">
+            <label className="text-sm font-semibold text-zinc-300 font-['Inter']">
+              Image URL
+            </label>
+            <input
+              {...register('imageUrl')}
+              type="url"
+              placeholder="https://..."
+              className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter']"
+            />
+          </div>
+
+          {/* Availability and Vegetarian row */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <label className="flex items-center gap-2.5 p-3 rounded-xl bg-zinc-900/90 border border-zinc-800 cursor-pointer hover:bg-zinc-800/60 transition">
+              <input
+                {...register('isAvailable')}
+                type="checkbox"
+                className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-yellow-500 focus:ring-yellow-500 cursor-pointer"
+              />
+              <span className="text-sm font-medium text-zinc-200">Active (Visible)</span>
+            </label>
+
+            <label className="flex items-center gap-2.5 p-3 rounded-xl bg-zinc-900/90 border border-zinc-800 cursor-pointer hover:bg-zinc-800/60 transition">
+              <input
+                {...register('isVegetarian')}
+                type="checkbox"
+                className="w-4 h-4 rounded border-zinc-700 bg-zinc-900 text-yellow-500 focus:ring-yellow-500 cursor-pointer"
+              />
+              <span className="text-sm font-medium text-zinc-200">Vegetarian 🌱</span>
+            </label>
           </div>
 
           {/* Description Textarea */}
@@ -187,28 +279,36 @@ export default function EditMenuItemModal({
               Description <span className="text-zinc-500 font-normal">(optional)</span>
             </label>
             <textarea
+              {...register('description')}
               rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the dish for guests..."
-              className="w-full p-3 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter'] resize-none"
+              className="w-full p-3 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter'] resize-none"
             />
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          <div className="grid grid-cols-2 gap-3 pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-sm font-semibold text-zinc-300 transition cursor-pointer"
+              disabled={isSubmitting || loading}
+              className="py-3 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 rounded-xl text-sm font-semibold text-zinc-300 transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="py-3 bg-yellow-500 hover:bg-yellow-400 rounded-xl text-sm font-bold text-white shadow-lg shadow-yellow-500/20 transition cursor-pointer"
+              disabled={isSubmitting || loading}
+              className="py-3 bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 rounded-xl text-sm font-bold text-white shadow-lg shadow-yellow-500/20 transition cursor-pointer flex items-center justify-center gap-2"
             >
-              Save Changes
+              {isSubmitting || loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Saving via API...</span>
+                </>
+              ) : (
+                'Save Changes'
+              )}
             </button>
           </div>
         </form>

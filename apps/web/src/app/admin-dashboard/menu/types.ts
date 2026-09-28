@@ -1,26 +1,19 @@
-export type MenuCategory =
-  | 'All'
-  | 'Sweet'
-  | 'Savory'
-  | 'Pancake'
-  | 'Coffee'
-  | 'Drinks'
-  | 'Burgers'
-  | 'Pizza'
-  | 'Pasta'
-  | 'Salads'
-  | 'Desserts';
+export type MenuCategory = string;
 
 export interface MenuItem {
   id: string;
   name: string;
   category: string;
-  categoryLabel: string;
+  categoryLabel?: string;
+  categoryId?: string;
+  restaurantId?: string;
   price: number;
   costPrice?: number;
   marginPercent: number;
   soldToday: number;
   isActive: boolean;
+  isVegetarian?: boolean;
+  spiceLevel?: number | null;
   image: string;
   description?: string;
 }

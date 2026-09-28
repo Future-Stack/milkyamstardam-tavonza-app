@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { X, ChevronDown } from 'lucide-react';
 import { Supplier, SupplierCategory } from '../types';
 import { toast } from 'sonner';
@@ -11,35 +12,47 @@ export interface AddSupplierModalProps {
   onAddSupplier: (supplier: Supplier) => void;
 }
 
+export interface AddSupplierFormData {
+  name: string;
+  contactPerson: string;
+  category: SupplierCategory;
+  phone: string;
+  email: string;
+  location: string;
+}
+
 export default function AddSupplierModal({
   isOpen,
   onClose,
   onAddSupplier,
 }: AddSupplierModalProps) {
-  const [name, setName] = useState('');
-  const [contactPerson, setContactPerson] = useState('');
-  const [category, setCategory] = useState<SupplierCategory>('Produce');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [location, setLocation] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AddSupplierFormData>({
+    defaultValues: {
+      name: '',
+      contactPerson: '',
+      category: 'Produce',
+      phone: '',
+      email: '',
+      location: '',
+    },
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) {
-      toast.error('Please enter a supplier name');
-      return;
-    }
-
+  const onSubmit = (data: AddSupplierFormData) => {
     const newSupplier: Supplier = {
       id: `SUP-${Date.now().toString().slice(-4)}`,
-      name: name.trim(),
-      contactPerson: contactPerson.trim() || 'Account Representative',
-      category,
-      phone: phone.trim() || '+1 555-0199',
-      email: email.trim() || `orders@${name.toLowerCase().replace(/\s+/g, '')}.com`,
-      location: location.trim() || 'United States',
+      name: data.name.trim(),
+      contactPerson: data.contactPerson.trim() || 'Account Representative',
+      category: data.category,
+      phone: data.phone.trim() || '+1 555-0199',
+      email: data.email.trim() || `orders@${data.name.toLowerCase().replace(/\s+/g, '')}.com`,
+      location: data.location.trim() || 'United States',
       reliabilityPercent: 95,
       lastOrder: 'Never',
       nextDelivery: '__',
@@ -52,13 +65,7 @@ export default function AddSupplierModal({
     onAddSupplier(newSupplier);
     toast.success(`Supplier "${newSupplier.name}" added successfully!`);
 
-    // Reset and close
-    setName('');
-    setContactPerson('');
-    setCategory('Produce');
-    setPhone('');
-    setEmail('');
-    setLocation('');
+    reset();
     onClose();
   };
 
@@ -90,21 +97,25 @@ export default function AddSupplierModal({
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* React Hook Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Supplier Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-zinc-300 font-['Inter']">
-              Supplier / Company Name
+              Supplier / Company Name *
             </label>
             <input
+              {...register('name', { required: 'Please enter a supplier name' })}
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Artisanal Bread Co."
-              className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter']"
+              className={`w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border text-base text-white placeholder:text-zinc-600 focus:outline-none transition font-['Inter'] ${
+                errors.name ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-amber-400'
+              }`}
               autoFocus
             />
+            {errors.name && (
+              <p className="text-xs text-red-400 font-medium">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Row: Contact Person & Category */}
@@ -114,9 +125,8 @@ export default function AddSupplierModal({
                 Contact Person
               </label>
               <input
+                {...register('contactPerson')}
                 type="text"
-                value={contactPerson}
-                onChange={(e) => setContactPerson(e.target.value)}
                 placeholder="e.g. Sarah Jenkins"
                 className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white placeholder:text-zinc-600 focus:outline-none font-['Inter']"
               />
@@ -128,8 +138,7 @@ export default function AddSupplierModal({
               </label>
               <div className="relative">
                 <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as SupplierCategory)}
+                  {...register('category')}
                   className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white appearance-none focus:outline-none cursor-pointer"
                 >
                   <option value="Produce">Produce</option>
@@ -151,9 +160,8 @@ export default function AddSupplierModal({
                 Phone Number
               </label>
               <input
+                {...register('phone')}
                 type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 555-0192"
                 className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white placeholder:text-zinc-600 focus:outline-none font-['Inter']"
               />
@@ -164,9 +172,8 @@ export default function AddSupplierModal({
                 Email Address
               </label>
               <input
+                {...register('email')}
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 placeholder="orders@vendor.com"
                 className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white placeholder:text-zinc-600 focus:outline-none font-['Inter']"
               />
@@ -179,9 +186,8 @@ export default function AddSupplierModal({
               Location / Warehouse Address
             </label>
             <input
+              {...register('location')}
               type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g. Chicago, IL, USA"
               className="w-full h-11 px-3.5 bg-zinc-900/90 rounded-xl border border-zinc-800 focus:border-amber-400 text-sm text-white placeholder:text-zinc-600 focus:outline-none font-['Inter']"
             />

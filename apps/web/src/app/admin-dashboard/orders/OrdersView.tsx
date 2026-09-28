@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   OrdersHeader,
   OrdersStatsCards,
@@ -14,9 +14,41 @@ import { OrderRow } from './types';
 export default function OrdersView() {
   const [orders, setOrders] = useState<OrderRow[]>(initialOrdersList);
   const [statusFilter, setStatusFilter] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const sp = new URLSearchParams(window.location.search);
+      return sp.get('search') || sp.get('q') || '';
+    }
+    return '';
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [isNewOrderModalOpen, setIsNewOrderModalOpen] = useState(false);
+
+  // Sync search with URL
+  const handleSearchChange = (q: string) => {
+    setSearchQuery(q);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (q && q.trim()) {
+        url.searchParams.set('search', q.trim());
+      } else {
+        url.searchParams.delete('search');
+        url.searchParams.delete('q');
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+  };
+
+  // Listen to popstate
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handlePopState = () => {
+      const sp = new URLSearchParams(window.location.search);
+      setSearchQuery(sp.get('search') || sp.get('q') || '');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const filteredOrders = orders.filter((order) => {
     const matchesStatus = statusFilter === 'All' || order.status === statusFilter;
@@ -27,6 +59,7 @@ export default function OrdersView() {
       order.server.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesStatus && matchesSearch;
   });
+
 
   const handleAddOrder = (newOrder: OrderRow) => {
     setOrders([newOrder, ...orders]);
@@ -74,7 +107,7 @@ export default function OrdersView() {
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        setSearchQuery={handleSearchChange}
       />
 
       {/* 4. Orders Data Table with Status Badges and Pagination */}
