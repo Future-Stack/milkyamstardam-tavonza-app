@@ -154,7 +154,9 @@
    Only the active dashboard page area is blurred and dimmed by the backdrop.
    ========================================================================== */
 
-/* 1. Owner Dashboard (Header: 5rem / top-20, Sidebar: 16rem / w-64 on md+) */
+/* 1. Admin & Owner Dashboard (Header: 5rem / top-20, Sidebar: 16rem / w-64 on md+) */
+.admin-dashboard-main .fixed.inset-0:not(.mobile-sidebar-backdrop),
+.admin-modal-backdrop,
 .owner-dashboard-main .fixed.inset-0:not(.mobile-sidebar-backdrop),
 .owner-modal-backdrop {
   top: 5rem !important;
@@ -166,6 +168,8 @@
 }
 
 @media (min-width: 768px) {
+  .admin-dashboard-main .fixed.inset-0:not(.mobile-sidebar-backdrop),
+  .admin-modal-backdrop,
   .owner-dashboard-main .fixed.inset-0:not(.mobile-sidebar-backdrop),
   .owner-modal-backdrop {
     left: 16rem !important;

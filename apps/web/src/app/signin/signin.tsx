@@ -25,7 +25,7 @@ import { loginUser } from "@/redux/features/authApi";
 
 // Predefined demo accounts from backend seed
 const DEMO_ACCOUNTS = [
-  { role: "Owner", email: "owner@tavonza.demo", pass: "Demo1234!", label: "Owner", icon: Building2, color: "text-amber-400 border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20" },
+  { role: "Admin", email: "owner@tavonza.demo", pass: "Demo1234!", label: "Admin", icon: Building2, color: "text-amber-400 border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20" },
   { role: "Branch Mgr", email: "manager@tavonza.demo", pass: "Demo1234!", label: "Manager", icon: Sparkles, color: "text-blue-400 border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20" },
   { role: "Waiter", email: "waiter@tavonza.demo", pass: "Demo1234!", label: "Waiter", icon: UtensilsCrossed, color: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10 hover:bg-yellow-500/20" },
   { role: "Kitchen", email: "kitchen@tavonza.demo", pass: "Demo1234!", label: "Kitchen", icon: ChefHat, color: "text-orange-400 border-orange-500/30 bg-orange-500/10 hover:bg-orange-500/20" },
@@ -34,10 +34,10 @@ const DEMO_ACCOUNTS = [
 ];
 
 export function getDestinationRoute(user: any): string {
-  if (!user) return "/owner-dashboard";
+  if (!user) return "/admin-dashboard";
   const role = user.role;
   if (role === "RESTAURANT_OWNER" || role === "SUPER_ADMIN" || role === "ADMIN") {
-    return "/owner-dashboard";
+    return "/admin-dashboard";
   }
   if (role === "BRANCH_MANAGER") return "/manager-dashboard";
   if (role === "REGIONAL_MANAGER") return "/assistant-manager-dashboard";
@@ -67,7 +67,7 @@ export function getDestinationRoute(user: any): string {
         return "/manager-dashboard";
     }
   }
-  return "/owner-dashboard";
+  return "/admin-dashboard";
 }
 
 export default function SignIn() {
