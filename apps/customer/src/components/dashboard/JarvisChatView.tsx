@@ -9,6 +9,8 @@ import {
   Send,
   Sparkles,
   ChevronRight,
+  ChevronLeft,
+  ArrowLeft,
   Flame,
   CheckCircle2,
   UtensilsCrossed,
@@ -126,10 +128,29 @@ export default function JarvisChatView({
 
   return (
     <div className="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto min-h-screen bg-black text-white flex flex-col justify-between relative overflow-x-hidden font-sans">
-      <div className="w-full flex-1 flex flex-col gap-6 pb-36 pt-2">
+      <div className="w-full flex-1 flex flex-col gap-5 pb-36 pt-2">
+
+        {/* Top Header Bar with Back Button */}
+        <div className="flex items-center justify-between px-4 pt-1 pb-1">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white hover:bg-neutral-800 hover:text-yellow-400 transition cursor-pointer shadow-sm"
+            title="Go back"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-semibold text-white font-['Montserrat'] tracking-wide">
+              JARVIS AI Live
+            </span>
+          </div>
+          <div className="w-8" />
+        </div>
 
         {/* 1. Header Banner: 3D Robot Avatar on Left + Multimodal AI Engine (#382F07 to #070705) */}
-        <div className="  p-5 bg-gradient-to-r from-[#382F07] to-[#070705]   flex items-center gap-4 shadow-xl relative overflow-hidden">
+        <div className="mx-4 rounded-2xl p-5 bg-gradient-to-r from-[#382F07] to-[#070705] border border-amber-500/20 flex items-center gap-4 shadow-xl relative overflow-hidden">
           {/* Robot Avatar Image on Left */}
           <div className="w-24 h-24 md:w-28 md:h-28 relative shrink-0">
             <Image

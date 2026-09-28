@@ -207,7 +207,7 @@ export default function DraggableAskAi({
     if (onClick) {
       onClick();
     } else {
-      router.push('/jarvis');
+      router.push('/chat');
     }
   };
 

@@ -1,0 +1,21 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "kayes-dev",
+    "main",
+    "monolithic",
+    "origin"
+  ],
+  "parent": {
+    "kayes-dev": "main",
+    "main": null,
+    "monolithic": "main",
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "kayes-dev",
+    "monolithic",
+    "origin"
+  ]
+}
